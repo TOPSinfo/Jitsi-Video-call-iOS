@@ -655,6 +655,8 @@ extension ChatVC : FirebaseChatViewModelDelegate {
                             if self.messaes.contains(where: {$0.docId == i.docId}) {
                                 let index = self.messaes.firstIndex(where: {$0.docId == i.docId})
                                 self.messaes[index!] = i
+                            } else {
+                                self.messaes.append(i)
                             }
                         } else {
                             self.messaes.append(i)
