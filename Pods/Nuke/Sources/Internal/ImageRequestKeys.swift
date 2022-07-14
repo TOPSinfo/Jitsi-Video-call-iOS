@@ -1,6 +1,6 @@
 // The MIT License (MIT)
 //
-// Copyright (c) 2015-2021 Alexander Grebenyuk (github.com/kean).
+// Copyright (c) 2015-2022 Alexander Grebenyuk (github.com/kean).
 
 import Foundation
 
@@ -40,7 +40,7 @@ extension ImageRequest {
 struct CacheKey: Hashable {
     private let imageId: String?
     private let thumbnail: ImageRequest.ThumbnailOptions?
-    private let processors: [ImageProcessing]?
+    private let processors: [ImageProcessing]
 
     init(_ request: ImageRequest) {
         self.imageId = request.preferredImageId
@@ -51,11 +51,11 @@ struct CacheKey: Hashable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(imageId)
         hasher.combine(thumbnail)
-        hasher.combine(processors?.count ?? 0)
+        hasher.combine(processors.count)
     }
 
     static func == (lhs: CacheKey, rhs: CacheKey) -> Bool {
-        lhs.imageId == rhs.imageId && (lhs.thumbnail == rhs.thumbnail) && (lhs.processors ?? []) == (rhs.processors ?? [])
+        lhs.imageId == rhs.imageId && lhs.thumbnail == rhs.thumbnail && lhs.processors == rhs.processors
     }
 }
 

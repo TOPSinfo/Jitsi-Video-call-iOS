@@ -2,9 +2,9 @@
 This repository is the demonstration of Chat and Video call functionality using firebase and Jitsi Meet. 
 Requirement:
 
-Xcode 12.5 +
+Xcode 12.5+
 iOS 12.1
-Swift 4 +
+Swift 4+
 
 Architecture:
 

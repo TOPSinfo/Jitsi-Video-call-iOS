@@ -341,7 +341,7 @@ PODS:
     - nanopb/encode (= 2.30907.0)
   - nanopb/decode (2.30907.0)
   - nanopb/encode (2.30907.0)
-  - Nuke (10.4.1)
+  - Nuke (10.7.1)
   - PhoneNumberKit (3.3.3):
     - PhoneNumberKit/PhoneNumberKitCore (= 3.3.3)
     - PhoneNumberKit/UIKit (= 3.3.3)
@@ -434,7 +434,7 @@ SPEC CHECKSUMS:
   leveldb-library: 50c7b45cbd7bf543c81a468fe557a16ae3db8729
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   nanopb: 59221d7f958fb711001e6a449489542d92ae113e
-  Nuke: fa2d83b3ee99bb88eccc62ab6c7590e207b50096
+  Nuke: 279f17a599fd1c83cf51de5e0e1f2db143a287b0
   PhoneNumberKit: 4ce83273551c4d2ae10b7361162f4283dd02835f
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
   SKPhotoBrowser: 6aaa8f232752e87c7e76bace183bead0a137097d
@@ -444,4 +444,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 2a7cc12c224ec3ce6214b6d91201f45f1f5417c0
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.11.2
