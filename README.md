@@ -1,14 +1,5 @@
 # Jitsi-Video-call-iOS
-This repository is the demonstration of Chat and Video call functionality using firebase and Jitsi Meet. 
-Requirement:
-
-Xcode 12.5+
-iOS 12.1
-Swift 4+
-
-Architecture:
-
-MVVM
+This repository is the demonstration of Chat and Video call functionality using firebase and Jitsi Meet.
 
 Supported Feature:
 
@@ -20,7 +11,14 @@ Supported Feature:
 - Group Chat (Firebase)
 - Chat support (Text, Image, Video)
 
+Technical detail:
+
+- Project Architecture - MVVM
+- Project language - Swift 4+
+- Database - Firebase Firestore
+- Video Call Tool - Jitsi Meet
+- Minimum iOS Version - 12.1
+
 Third-Party SDK:
 
 Jitsi:- https://github.com/jitsi/jitsi-meet-ios-sdk-releases
-Firebase:-  https://github.com/firebase/firebase-ios-sdk
