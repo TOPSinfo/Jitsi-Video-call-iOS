@@ -42,6 +42,11 @@ class JitsiManager: NSObject {
         let options = JitsiMeetConferenceOptions.fromBuilder { (builder) in
             // for JaaS use <tenant>/<roomName> format
             builder.room = roomid // "TOPS" + arr[0] + arr[1]
+            
+            let userdata = AppDelegate.standard.objCurrentUser
+            
+            builder.userInfo = JitsiMeetUserInfo.init(displayName: userdata.fullName, andEmail: userdata.email, andAvatar: URL(string:userdata.profile_image))
+            
             // Settings for audio and video
             // builder.audioMuted = true;
 //             builder.videoMuted = true;

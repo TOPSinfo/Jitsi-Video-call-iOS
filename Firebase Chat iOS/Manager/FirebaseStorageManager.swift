@@ -52,5 +52,4 @@ class FirebaseStorageManager {
             completion(uploadTask, storageRef)
         }
     }
-    
 }

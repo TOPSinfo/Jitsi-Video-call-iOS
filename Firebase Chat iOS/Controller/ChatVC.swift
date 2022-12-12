@@ -101,6 +101,9 @@ class ChatVC: UIViewController {
             btnGroupInfo.isHidden = false
             lbl_isOnline.isHidden = true
             for item in self.objOppoUser.objGroupDetail?.members ?? [] {
+                
+                if item.isEmpty { continue }
+                
                 firebaseViewModel.firebaseCloudFirestoreManager.getUserDetail(userID: item) { objUser in
                     self.arrayForGroupUserDetails.append(objUser)
                     if self.arrayForGroupUserDetails.count == self.objOppoUser.objGroupDetail?.members.count {

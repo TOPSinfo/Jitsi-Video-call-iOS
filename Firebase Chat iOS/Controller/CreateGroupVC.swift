@@ -177,6 +177,7 @@ extension CreateGroupVC : FirebaseCreateGroupViewModelDelegate {
                 
                 reference?.downloadURL(completion: { [self] url, error in
                     Singleton.sharedSingleton.hideLoader()
+                    
                     guard let downloadURL = url else {
                         // Uh-oh, an error occurred!
                         print("download fail")

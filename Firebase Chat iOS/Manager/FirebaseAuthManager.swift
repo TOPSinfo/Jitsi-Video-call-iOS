@@ -16,7 +16,7 @@ class FirebaseAuthManager {
     }
     //MAKR:- verify phone number and get verification id
     func verifyPhoneNumber(phoneNumber:String, completion: @escaping((_ verificationID: String, _ error: Error?) -> Void)) {
-//        Auth.auth().settings!.isAppVerificationDisabledForTesting = true
+        Auth.auth().settings!.isAppVerificationDisabledForTesting = true
         PhoneAuthProvider.provider()
           .verifyPhoneNumber(phoneNumber, uiDelegate: nil) { verificationID, error in
               if let error = error {

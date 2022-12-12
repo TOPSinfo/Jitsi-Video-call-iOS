@@ -227,14 +227,28 @@ extension UserListVC : FirebaseAuthViewModelDelegate {
         
         isFirstTimeGroup = false
         
+        print("=======================================================")
+        print("Group List")
+        
+        
+        
         if let users = userlist as? [SignupUserData] {
         
             for user in users {
+                
+                print(user.fullName ,user.isGroup)
+                
+                guard let members = user.objGroupDetail?.members else { continue }
+                
+                if !members.contains(where: {$0 == currentUId}) {
+                    self.userArray.removeAll(where: {$0.uid == user.uid})
+                    continue
+                }
+                
                 if user.type == .added {
                     self.userArray.append(user)
                 } else if user.type == .modified {
-                    if self.userArray.contains(where: {$0.uid == user.uid})
-                    {
+                    if self.userArray.contains(where: {$0.uid == user.uid}) {
                         let index = self.userArray.firstIndex(where: {$0.uid == user.uid})
                         self.userArray[index!] = user
                     }

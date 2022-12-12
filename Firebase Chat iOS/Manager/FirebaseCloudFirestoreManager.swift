@@ -53,6 +53,7 @@ class FirebaseCloudFirestoreManager {
     
     //MARK:- get current user detail using user_id
     func getUserDetail(userID:String,completion: @escaping((_ arrayUsers: SignupUserData) -> Void), failure: @escaping((_ error: String) -> Void)){
+        
         db.collection("USER").document(userID).getDocument(completion: { (documentSnapshot, error) in
             if let error = error {
                 failure(error.localizedDescription)
