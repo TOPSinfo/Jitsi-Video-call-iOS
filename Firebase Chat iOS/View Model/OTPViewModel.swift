@@ -24,7 +24,7 @@ final class OTPViewModel {
 
 extension OTPViewModel : OTPViewControllerDelegate {
     
-    // get verification id from firebase and send to controller
+    // MARK: get verification id from firebase and send to controller
     func verifyPhone(phone: String) {
         
         guard Reachability.isConnectedToNetwork() else{
@@ -42,7 +42,7 @@ extension OTPViewModel : OTPViewControllerDelegate {
         }
     }
     
-    // get user credential from controller send to firestore and after login again send user object to controller
+    // MARK: get user credential from controller send to firestore and after login again send user object to controller
     func buttonClicked(verificationId: String, code: String) {
         
         guard Reachability.isConnectedToNetwork() else{
@@ -64,7 +64,7 @@ extension OTPViewModel : OTPViewControllerDelegate {
         }
     }
      
-    //will check user in database and send back bool value
+    // MARK: will check user in database and send back bool value
     func checkUserAvailability(userID: String) {
         
         guard Reachability.isConnectedToNetwork() else{
@@ -81,7 +81,7 @@ extension OTPViewModel : OTPViewControllerDelegate {
             } else {
                 if ((documents?.documents.count)! > 0){
                     
-                    for doc in documents!.documents {
+                    for _ in documents!.documents {
                         self.firebaseAuthViewModelDelegate?.checkAvalability?(true)
                     }
                 } else {

@@ -50,7 +50,7 @@ extension CreateGroupViewModel : CreateGroupVCDelegate {
     
     
     
-    //Upload user Image
+    // MARK: Upload user Image
     func uploadImage(fileData: Data?, fileName:String, type:MediaType) {
         
         guard Reachability.isConnectedToNetwork() else{

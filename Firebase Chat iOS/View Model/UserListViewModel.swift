@@ -20,7 +20,7 @@ final class UserListViewModel {
 }
 
 extension UserListViewModel : UserListVCDelegate {
-    //will get user list from firestore and send back to controller to list
+    // MARK: will get user list from firestore and send back to controller to list
     func getUserList() {
         
         guard Reachability.isConnectedToNetwork() else{

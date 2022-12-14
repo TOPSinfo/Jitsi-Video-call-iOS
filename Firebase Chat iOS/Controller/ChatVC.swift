@@ -14,13 +14,13 @@ import CropViewController
 import AVKit
 import SKPhotoBrowser
 
-//MARK:- Custom delegate
+// MARK: - Custom delegate
 protocol ChatVCDelegate: AnyObject {
-    func uploadMediea(_ filename:String, file:Data,type:MediaType)
-    func uploadVideo(_ files:[(filename:String, file:Data,type:MediaType)])
-    func getMessageList(_ touserID:String, isForGroup : Bool)
-    func sendMessage(conversationID:String, messageID:String, dic:[String:Any])
-    func checkUserisOnline(_ senderID:String)
+    func uploadMediea(_ filename: String, file: Data, type: MediaType)
+    func uploadVideo(_ files:[(filename: String, file:Data, type: MediaType)])
+    func getMessageList(_ touserID: String, isForGroup : Bool)
+    func sendMessage(conversationID: String, messageID: String, dic: [String:Any])
+    func checkUserisOnline(_ senderID: String)
 }
 
 
@@ -28,11 +28,11 @@ class ChatVC: UIViewController {
 
     var objJitsi : JitsiManager = JitsiManager()
     
-    //MARK:- chat view model object
+    // MARK: - chat view model object
     let chatviewmodel : ChatViewModel = ChatViewModel()
     let firebaseViewModel: FirebaseViewModel = FirebaseViewModel()
 
-    //MARK:- outlet
+    // MARK: - outlet
     @IBOutlet weak var tv_message:KMPlaceholderTextView!
     @IBOutlet weak var btn_send:UIButton!
     @IBOutlet weak var constant_ht_textfview:NSLayoutConstraint!
@@ -47,7 +47,7 @@ class ChatVC: UIViewController {
     @IBOutlet weak var btnCameraInfo: UIButton!
     
     
-    //MARK:- Variable
+    // MARK: - Variable
     var userID = String()
     var messaes = [MessageClass]()
     var isFirstTime = true
@@ -58,10 +58,10 @@ class ChatVC: UIViewController {
     var arrayForGroupUserDetails : [SignupUserData] = []
 
     @IBOutlet weak var btnGroupInfo: UIButton!
-    //MARK:- Controller lifecycle
+    // MARK: - Controller lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        //MARK:- user to dismiss keyboar  on touch
+        //MARK: - user to dismiss keyboar  on touch
         self.dismissKey()
         setupView()
     }
@@ -77,7 +77,7 @@ class ChatVC: UIViewController {
         IQKeyboardManager.shared.enableAutoToolbar = true
     }
     
-    //MARK:- Setup UI
+    // MARK: - Setup UI
     func setupView() {
         
         self.lbl_title.text = userName
@@ -124,7 +124,7 @@ class ChatVC: UIViewController {
     }
     
     
-    //MARK:- Keyboard methods
+    // MARK: - Keyboard methods
     func dismissKey()
     {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer( target: self, action: #selector(dismissKeyboard(sender:)))
@@ -140,16 +140,14 @@ class ChatVC: UIViewController {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             if self.contant_bottom_of_textfield.constant == 8 {
                 if #available(iOS 13.0, *) {
-                    let window = Singleton.appDelegate.window
-//                    let topPadding = window?.safeAreaInsets.top
+                    let window = Singleton.appDelegate?.window
                     let bottomPadding = window?.safeAreaInsets.bottom
                     UIView.animate(withDuration: 1.0) {
                         self.contant_bottom_of_textfield.constant = keyboardSize.height + 8 - (bottomPadding ?? 0)
                         self.view.layoutSubviews()
                     }
                 } else {
-                    let window = Singleton.appDelegate.window
-//                        let topPadding = window?.safeAreaInsets.top
+                    let window = Singleton.appDelegate?.window
                         let bottomPadding = window?.safeAreaInsets.bottom
                     
                     UIView.animate(withDuration: 1.0) {
@@ -167,7 +165,7 @@ class ChatVC: UIViewController {
         }
     }
     
-    //MARK:- will scroll at last position when new message arrive or send
+    // MARK: - will scroll at last position when new message arrive or send
     private func scrollToBottom(){
         DispatchQueue.main.async {
             let indexPath = IndexPath(
@@ -180,7 +178,7 @@ class ChatVC: UIViewController {
     }
     
     
-    //MARK:- Button Action
+    // MARK: - Button Action
     @IBAction func btn_sendMessageTapped(_ sender:UIButton) {
         
         if tv_message.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
@@ -208,7 +206,7 @@ class ChatVC: UIViewController {
         dic["message_type"] = Singleton.messageType.TEXT
         dic["status"] = Singleton.messageStatus.SEND
         
-        //MARK:- this will call send message controller
+        // MARK: - this will call send message controller
         self.chatviewmodel.chatVCDelegate?.sendMessage(conversationID: converastionID, messageID: messageID, dic: dic)
     }
     
@@ -247,14 +245,14 @@ class ChatVC: UIViewController {
             firebaseViewModel.firebaseCloudFirestoreManager.addGroupCallForDetailPage(arr: arrUsers) { (docId) in
                 self.objJitsi.viewController = self
                 self.objJitsi.openJetsiViewWithUser(roomid: docId)
-            } failure: { (error) in
+            } failure: { (_) in
                 
             }
         }
     }
     
     @IBAction func btnGroupInfoClick(_ sender: Any) {
-        let vc = Singleton.sharedSingleton.getController(storyName: Singleton.storyboardName.Main, controllerName: Singleton.controllerName.CreateGroupVC) as! CreateGroupVC
+        guard let vc = Singleton.sharedSingleton.getController(storyName: Singleton.storyboardName.Main, controllerName: Singleton.controllerName.CreateGroupVC) as? CreateGroupVC else { return }
         vc.objGroup = self.objOppoUser.objGroupDetail ?? GroupDetailObject()
         vc.isForDetail = true
         self.present(vc, animated: true, completion: nil)
@@ -286,7 +284,7 @@ class ChatVC: UIViewController {
     }
 }
 
-//MARK:- Tableview Delegate
+// MARK: - Tableview Delegate
 extension ChatVC : UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return messaes.count
@@ -299,45 +297,45 @@ extension ChatVC : UITableViewDataSource, UITableViewDelegate {
         if item.senderId == Auth.auth().currentUser?.uid ?? "" {
             
             if item.message_type == Singleton.messageType.IMAGE {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "ChatSenderImageCell") as! ChatSenderImageCell
-                cell.img_media.setUserImageUsingUrl(item.url , isUser: false)
-                cell.btn_play.isHidden = true
+                let cell = tableView.dequeueReusableCell(withIdentifier: "ChatSenderImageCell") as? ChatSenderImageCell
+                cell?.img_media.setUserImageUsingUrl(item.url , isUser: false)
+                cell?.btn_play.isHidden = true
                 let tap = UITapGestureRecognizer.init(target: self, action: #selector(btn_showFullImage(_:)))
-                cell.img_media.isUserInteractionEnabled = true
-                cell.img_media.tag = indexPath.row
-                cell.img_media.addGestureRecognizer(tap)
-                cell.lbl_date.text = item.timestamp
+                cell?.img_media.isUserInteractionEnabled = true
+                cell?.img_media.tag = indexPath.row
+                cell?.img_media.addGestureRecognizer(tap)
+                cell?.lbl_date.text = item.timestamp
                 
                 if item.status == Singleton.messageStatus.SEND {
-                    cell.img_tick.image = #imageLiteral(resourceName: "ic_singletick")
+                    cell?.img_tick.image = #imageLiteral(resourceName: "ic_singletick")
                 } else if item.status == Singleton.messageStatus.READ {
-                    cell.img_tick.image = #imageLiteral(resourceName: "ic_Double_Click")
+                    cell?.img_tick.image = #imageLiteral(resourceName: "ic_Double_Click")
                 } else if item.status == Singleton.messageStatus.UPLOADING {
-                    cell.img_tick.image = #imageLiteral(resourceName: "ic_clock")
+                    cell?.img_tick.image = #imageLiteral(resourceName: "ic_clock")
                 }
                 
-                cell.view_circel_progress.isHidden = true
+                cell?.view_circel_progress.isHidden = true
                 
                 if let task = item.task {
-                    let observer = task.observe(.progress) { snapshot in
+                    _ = task.observe(.progress) { snapshot in
                         let percentComplete = 100.0 * Double(snapshot.progress!.completedUnitCount)
                         / Double(snapshot.progress!.totalUnitCount)
-                        cell.view_circel_progress.progress = Float(percentComplete)
+                        cell?.view_circel_progress.progress = Float(percentComplete)
                         print(percentComplete)
-                        cell.view_circel_progress.isHidden = false
+                        cell?.view_circel_progress.isHidden = false
                         if percentComplete == 100 {
-                            cell.view_circel_progress.isHidden = true
+                            cell?.view_circel_progress.isHidden = true
 //                            MARK:- this will call send message controller
-                            var filter = Singleton.localFileUpload.filter({$0["docId"] as! String == item.docId})
+                            var filter = Singleton.localFileUpload.filter({$0["docId"] as? String ?? "" == item.docId})
                             if filter.count > 0 {
-                                Singleton.localFileUpload.removeAll(where: {$0["docId"] as! String == filter[0]["docId"] as! String})
+                                Singleton.localFileUpload.removeAll(where: {$0["docId"] as? String ?? "" == filter[0]["docId"] as? String ?? ""})
                                 item.reference!.downloadURL { (url, error) in
                                     guard let downloadURL = url else {
                                         return
                                     }
                                     filter[0]["url"] = downloadURL.description
                                     filter[0]["status"] = Singleton.messageStatus.SEND
-                                    //MARK:- this will call send message controller
+                                    //MARK: - this will call send message controller
                                     var converastionID = Singleton.sharedSingleton.getOneToOneID(senderID: item.senderId, receiverID: self.userID)
                                     if self.objOppoUser.isGroup {
                                         converastionID = self.objOppoUser.uid
@@ -351,30 +349,30 @@ extension ChatVC : UITableViewDataSource, UITableViewDelegate {
                         }
                     }
                 } else {
-                    cell.view_circel_progress.isHidden = true
+                    cell?.view_circel_progress.isHidden = true
                 }
                 
-                return cell
+                return cell ?? UITableViewCell()
                 
             } else if item.message_type == Singleton.messageType.VIDEO {
                 
-                let cell = tableView.dequeueReusableCell(withIdentifier: "ChatSenderImageCell") as! ChatSenderImageCell
-                cell.btn_play.isHidden = false
-                cell.img_media.setUserImageUsingUrl(item.url , isUser: false)
+                let cell = tableView.dequeueReusableCell(withIdentifier: "ChatSenderImageCell") as? ChatSenderImageCell
+                cell?.btn_play.isHidden = false
+                cell?.img_media.setUserImageUsingUrl(item.url , isUser: false)
                 if item.status == Singleton.messageStatus.SEND {
-                    cell.img_tick.image = #imageLiteral(resourceName: "ic_singletick")
+                    cell?.img_tick.image = #imageLiteral(resourceName: "ic_singletick")
                 } else if item.status == Singleton.messageStatus.READ {
-                    cell.img_tick.image = #imageLiteral(resourceName: "ic_Double_Click")
+                    cell?.img_tick.image = #imageLiteral(resourceName: "ic_Double_Click")
                 } else if item.status == Singleton.messageStatus.UPLOADING {
-                    cell.img_tick.image = #imageLiteral(resourceName: "ic_clock")
+                    cell?.img_tick.image = #imageLiteral(resourceName: "ic_clock")
                 }
                 
-                cell.btn_play.addTarget(self, action: #selector(btn_play(_:)), for: .touchUpInside)
-                cell.btn_play.tag = indexPath.row
-                cell.lbl_date.text = item.timestamp
+                cell?.btn_play.addTarget(self, action: #selector(btn_play(_:)), for: .touchUpInside)
+                cell?.btn_play.tag = indexPath.row
+                cell?.lbl_date.text = item.timestamp
                 var filter = Singleton.localFileUpload.filter({$0["docId"] as! String == item.docId})
                 if let task = item.task {
-                    let succedss = task.observe(.success) { snapshot in
+                    _ = task.observe(.success) { snapshot in
                         // Upload completed successfully
                         if filter.count > 0 {
                             item.reference!.downloadURL { (url, error) in
@@ -387,19 +385,19 @@ extension ChatVC : UITableViewDataSource, UITableViewDelegate {
                         }
                     }
                 }
-                cell.view_circel_progress.isHidden = true
+                cell?.view_circel_progress.isHidden = true
                 
                 if let task = item.videoTask {
-                    let observer = task.observe(.progress) { snapshot in
+                    _ = task.observe(.progress) { snapshot in
                         let percentComplete = 100.0 * Double(snapshot.progress!.completedUnitCount)
                         / Double(snapshot.progress!.totalUnitCount)
-                        cell.view_circel_progress.progress = Float(percentComplete)
-                        cell.view_circel_progress.isHidden = percentComplete == 100.0
+                        cell?.view_circel_progress.progress = Float(percentComplete)
+                        cell?.view_circel_progress.isHidden = percentComplete == 100.0
                         
                     }
-                    let succedss = task.observe(.success) { snapshot in
+                    _ = task.observe(.success) { snapshot in
                         // Upload completed successfully
-                        cell.view_circel_progress.isHidden = true
+                        cell?.view_circel_progress.isHidden = true
                         if filter.count > 0 {
                             Singleton.localFileUpload.removeAll(where: {$0["docId"] as! String == filter[0]["docId"] as! String})
                             item.videoRef!.downloadURL { (url, error) in
@@ -408,7 +406,7 @@ extension ChatVC : UITableViewDataSource, UITableViewDelegate {
                                 }
                                 filter[0]["video_url"] = downloadURL.description
                                 filter[0]["status"] = Singleton.messageStatus.SEND
-                                //MARK:- this will call send message controller
+                                //MARK: - this will call send message controller
                                 var converastionID = Singleton.sharedSingleton.getOneToOneID(senderID: item.senderId, receiverID: self.userID)
                                 if self.objOppoUser.isGroup {
                                     converastionID = self.objOppoUser.uid
@@ -420,71 +418,67 @@ extension ChatVC : UITableViewDataSource, UITableViewDelegate {
                         }
                     }
                 } else {
-                    cell.view_circel_progress.isHidden = true
+                    cell?.view_circel_progress.isHidden = true
                 }
 
                 
-                return cell
+                return cell ?? UITableViewCell()
             } else {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "ChatSenderCell") as! ChatSenderCell
-                cell.lbl_message.text = item.messageText
-                cell.layoutSubviews()
-                
-                
-                
-//                cell.img_tick.image = item.status == Singleton.messageStatus.SEND ? #imageLiteral(resourceName: "ic_singletick") : #imageLiteral(resourceName: "ic_Double_Click")
-//                cell.img_tick.tintColor = item.status == Singleton.messageStatus.SEND ? #colorLiteral(red: 0.8196078431, green: 0.8196078431, blue: 0.8196078431, alpha: 1):#colorLiteral(red: 0.2, green: 0.7176470588, blue: 0.9450980392, alpha: 1)
+                let cell = tableView.dequeueReusableCell(withIdentifier: "ChatSenderCell") as? ChatSenderCell
+                cell?.lbl_message.text = item.messageText
+                cell?.layoutSubviews()
+
                 if item.status == Singleton.messageStatus.SEND {
-                    cell.img_tick.image = #imageLiteral(resourceName: "ic_singletick")
+                    cell?.img_tick.image = #imageLiteral(resourceName: "ic_singletick")
                 } else if item.status == Singleton.messageStatus.READ {
-                    cell.img_tick.image = #imageLiteral(resourceName: "ic_Double_Click")
+                    cell?.img_tick.image = #imageLiteral(resourceName: "ic_Double_Click")
                 } else if item.status == Singleton.messageStatus.UPLOADING {
-                    cell.img_tick.image = #imageLiteral(resourceName: "ic_clock")
+                    cell?.img_tick.image = #imageLiteral(resourceName: "ic_clock")
                 }
                 
-                cell.lbl_date.text = item.timestamp
+                cell?.lbl_date.text = item.timestamp
                 DispatchQueue.main.async {
-                    cell.view_bubble.roundCorners([.topLeft,.bottomLeft, .bottomRight], radius: 5)
+                    cell?.view_bubble.roundCorners([.topLeft,.bottomLeft, .bottomRight], radius: 5)
                 }
-                return cell
+                return cell ?? UITableViewCell()
             }
         } else {
             
             if item.message_type == Singleton.messageType.IMAGE {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "ChatReceiverImageCell") as! ChatReceiverImageCell
-                cell.img_media.setUserImageUsingUrl(item.url , isUser: false)
-                cell.btn_play.isHidden = true
+                let cell = tableView.dequeueReusableCell(withIdentifier: "ChatReceiverImageCell") as? ChatReceiverImageCell
+                cell?.img_media.setUserImageUsingUrl(item.url , isUser: false)
+                cell?.btn_play.isHidden = true
                 let tap = UITapGestureRecognizer.init(target: self, action: #selector(btn_showFullImage(_:)))
-                cell.img_media.isUserInteractionEnabled = true
-                cell.img_media.tag = indexPath.row
-                cell.img_media.addGestureRecognizer(tap)
-                cell.lbl_date.text = item.timestamp
+                cell?.img_media.isUserInteractionEnabled = true
+                cell?.img_media.tag = indexPath.row
+                cell?.img_media.addGestureRecognizer(tap)
+                cell?.lbl_date.text = item.timestamp
                 if objOppoUser.isGroup {
                     let arr = arrayForGroupUserDetails.filter( {$0.uid == item.senderId })
                     if arr.count > 0 {
-                        cell.lblUserName.text = arr[0].fullName
+                        cell?.lblUserName.text = arr[0].fullName
                     }
                 } else {
-                    cell.consUserNameHeight.constant = 0
+                    cell?.consUserNameHeight.constant = 0
                 }
-                return cell
+                return cell ?? UITableViewCell()
                 
             } else if item.message_type == Singleton.messageType.VIDEO {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "ChatReceiverImageCell") as! ChatReceiverImageCell
-                cell.btn_play.isHidden = false
-                cell.img_media.setUserImageUsingUrl(item.url , isUser: false)
-                cell.btn_play.addTarget(self, action: #selector(btn_play(_:)), for: .touchUpInside)
-                cell.btn_play.tag = indexPath.row
-                cell.lbl_date.text = item.timestamp
+                let cell = tableView.dequeueReusableCell(withIdentifier: "ChatReceiverImageCell") as? ChatReceiverImageCell
+                cell?.btn_play.isHidden = false
+                cell?.img_media.setUserImageUsingUrl(item.url , isUser: false)
+                cell?.btn_play.addTarget(self, action: #selector(btn_play(_:)), for: .touchUpInside)
+                cell?.btn_play.tag = indexPath.row
+                cell?.lbl_date.text = item.timestamp
                 if objOppoUser.isGroup {
                     let arr = arrayForGroupUserDetails.filter( {$0.uid == item.senderId })
                     if arr.count > 0 {
-                        cell.lblUserName.text = arr[0].fullName
+                        cell?.lblUserName.text = arr[0].fullName
                     }
                 } else {
-                    cell.consUserNameHeight.constant = 0
+                    cell?.consUserNameHeight.constant = 0
                 }
-                return cell
+                return cell ?? UITableViewCell()
             } else {
             
                 let cell = tableView.dequeueReusableCell(withIdentifier: "ChatReceiverCell") as! ChatReceiverCell
@@ -551,7 +545,7 @@ extension ChatVC : UITableViewDataSource, UITableViewDelegate {
     }
 }
 
-//MARk:- Extended firebase chat medel view
+// MARK: - Extended firebase chat medel view
 extension ChatVC : FirebaseChatViewModelDelegate {
     
     func didCheck(_ isOnline: Bool) {
@@ -590,8 +584,8 @@ extension ChatVC : FirebaseChatViewModelDelegate {
         self.tbl_chat.reloadData()
         scrollToBottom()
         
-        //MARK:- this will call send message controller
-//        self.chatviewmodel.chatVCDelegate?.sendMessage(conversationID: converastionID, messageID: messageID, dic: dic)
+        // MARK: - this will call send message controller
+        // self.chatviewmodel.chatVCDelegate?.sendMessage(conversationID: converastionID, messageID: messageID, dic: dic)
     }
     
     func didUploadMedia(_ url: StorageReference?, task:StorageUploadTask?, type: Any) {
@@ -620,8 +614,6 @@ extension ChatVC : FirebaseChatViewModelDelegate {
                 dic["url"] = ""
                 dic["video_url"] = ""
                 dic["message_type"] = Singleton.messageType.VIDEO
-            default:
-                dic["message_type"] = Singleton.messageType.TEXT
             }
             
         } else {
@@ -630,13 +622,15 @@ extension ChatVC : FirebaseChatViewModelDelegate {
         
         let message = MessageClass.init(fromDictionary: dic)
         message.task = task
-        message.reference = url as! StorageReference
+        if let refURL = url {
+            message.reference = refURL
+        }
         Singleton.localFileUpload.append(dic)
         self.messaes.append(message)
         self.tbl_chat.reloadData()
         scrollToBottom()
-//        //MARK:- this will call send message controller
-//        self.chatviewmodel.chatVCDelegate?.sendMessage(senderID: senderID, toUserID: userID, dic: dic)
+        // MARK: - this will call send message controller
+        // self.chatviewmodel.chatVCDelegate?.sendMessage(senderID: senderID, toUserID: userID, dic: dic)
         
     }
     
@@ -684,7 +678,7 @@ extension ChatVC : FirebaseChatViewModelDelegate {
         scrollToBottom()
     }
     
-    //MARK: Will show error.
+    // MARK: Will show error.
     func error(error: String, sign: Bool) {
         Singleton.sharedSingleton.showToast(message: error)
     }
@@ -705,7 +699,7 @@ extension ChatVC : TLPhotosPickerViewControllerDelegate, CropViewControllerDeleg
         self.chatviewmodel.chatVCDelegate?.uploadMediea(ChildPath.chatImage + fileName, file: data!, type: .image)
     }
     
-    //TLPhotosPickerViewControllerDelegate
+    // TLPhotosPickerViewControllerDelegate
     func shouldDismissPhotoPicker(withTLPHAssets: [TLPHAsset]) -> Bool {
         // use selected order, fullresolution image
         self.selectedAssets = withTLPHAssets
@@ -731,7 +725,7 @@ extension ChatVC : TLPhotosPickerViewControllerDelegate, CropViewControllerDeleg
                 
             } else if i.type == .video {
                 
-                i.exportVideoFile { URL, str in
+                i.exportVideoFile { URL, _ in
                     
                     DispatchQueue.main.async {
                         let videoCropVc = videoCropperVC(nibName: "videoCropperVC", bundle: nil)

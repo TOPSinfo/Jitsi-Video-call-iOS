@@ -23,7 +23,7 @@ final class RegisterViewModel {
 extension RegisterViewModel : RegisterUserVCDelegate {
     
     
-    //Upload user Image
+    // MARK: Upload user Image
     func uploadImage(fileData: Data?, fileName:String, type:MediaType) {
         
         guard Reachability.isConnectedToNetwork() else{
@@ -42,7 +42,7 @@ extension RegisterViewModel : RegisterUserVCDelegate {
 
     }
     
-    //Button click from cotroller and register user in databse
+    // MARK: Button click from cotroller and register user in databse
     func buttonClicked(userID:String, dic:[String:Any]) {
         
         guard Reachability.isConnectedToNetwork() else{

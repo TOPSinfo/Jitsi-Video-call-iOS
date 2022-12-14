@@ -9,7 +9,7 @@ import Foundation
 import FirebaseFirestore
 import FirebaseStorage
 
-//Comversation model
+// Comversation model
 class MessageClass{
 
     var messageText : String = ""

@@ -14,7 +14,7 @@ enum recordType {
     
 }
 
-//This is user model
+// This is user model
 class SignupUserData {
     
     var email : String = ""
@@ -66,7 +66,7 @@ class SignupUserData {
     }
 }
 
-//This is group model
+// This is group model
 class GroupDetailObject {
     
     var adminId : String = ""

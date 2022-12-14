@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import Nuke
 
-//MARK:- To Conver date into milliseconds
+//MARK: - To Conver date into milliseconds
 extension Date {
     var millisecondsSince1970:Int64 {
         return Int64((self.timeIntervalSince1970 * 1000.0).rounded())
@@ -20,7 +20,7 @@ extension Date {
     }
 }
 
-//MARK:- To elivate extra property of UIView
+// MARK: - To elivate extra property of UIView
 extension UIView {
     
     @IBInspectable

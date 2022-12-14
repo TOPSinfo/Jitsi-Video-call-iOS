@@ -13,29 +13,29 @@ import IQKeyboardManagerSwift
 import Firebase
 import FirebaseFirestore
 
-//MARK:- Controller custom protocol
+// MARK: - Controller custom protocol
 protocol addMobileViewControllerDelegate: AnyObject {
     func buttonClicked(phone:String) // call when user clicked
 }
 
 class addMobileViewController: UIViewController {
     
-    //MARK: Confirm Mobile Number outlets
+    // MARK: Confirm Mobile Number outlets
     @IBOutlet weak var txtMobileNumber: MyGBTextField!
     @IBOutlet weak var cpv: CountryPickerView!
     @IBOutlet weak var btnContinue: UIButton!
     @IBOutlet weak var lblMobileChekmark: UILabel!
     
-    //MARK: Member Variable
+    // MARK: Member Variable
     var userInfo = SignupUserData()
     var phoneNumberUserEntered : String = ""
     var phoneNumber : PhoneNumber!
     var phonenumberKit = PhoneNumberKit()
     
-    //MARK: Viewmodel instancce
+    // MARK: Viewmodel instancce
     private let loginViewModel: LoginViewModel = LoginViewModel()
     
-    //MARK:- Controller lifecycle
+    // MARK: - Controller lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         IQKeyboardManager.shared.toolbarDoneBarButtonItemText = "Continue"
@@ -47,12 +47,12 @@ class addMobileViewController: UIViewController {
         loginViewModel.firebaseAuthViewModelDelegate = self
     }
     
-    //MARK: Textfield Delegate
+    // MARK: Textfield Delegate
     @objc func mobileNumberTextDidChange(_ textField: UITextField) {
         
         do{
             let phoneNumber = try phonenumberKit.parse(cpv.selectedCountry.phoneCode + txtMobileNumber.text!)
-            let result = phonenumberKit.format(phoneNumber, toType: .international, withPrefix: false)
+            _ = phonenumberKit.format(phoneNumber, toType: .international, withPrefix: false)
             lblMobileChekmark.textColor = UIColor(named: "ic_app_bar_color")
         }catch{
             lblMobileChekmark.textColor = UIColor(red: 209.0/255.0, green: 209.0/255.0, blue: 209.0/255.0, alpha: 1.0)
@@ -61,7 +61,7 @@ class addMobileViewController: UIViewController {
         
     }
     
-    //MARK:-  Setup UI 
+    // MARK: -  Setup UI 
     func setupUI() {
         
         cpv.delegate = self
@@ -75,11 +75,11 @@ class addMobileViewController: UIViewController {
         
     }
     
-    //MARK:- Button Action
-    //this will call when user press countinue button
+    // MARK: - Button Action
+    // this will call when user press countinue button
     @IBAction func btnContinuePressed(_ sender: UIButton) {
         
-        //MARK:- Phone number validation and check
+        // MARK: - Phone number validation and check
         var phoneNumberWithoutCountryCode = txtMobileNumber.text?.trimmingCharacters(in: .whitespacesAndNewlines)
         
         guard phoneNumberWithoutCountryCode != "" else {
@@ -100,7 +100,7 @@ class addMobileViewController: UIViewController {
         
         do{
             let phoneNumber = try phonenumberKit.parse(cpv.selectedCountry.phoneCode + txtMobileNumber.text!)
-            let result = phonenumberKit.format(phoneNumber, toType: .international, withPrefix: false)
+            _ = phonenumberKit.format(phoneNumber, toType: .international, withPrefix: false)
         }catch{
             Singleton.sharedSingleton.showToast(message: Singleton.alertMessages.enterValidMobileNumber)
             return
@@ -115,7 +115,7 @@ class addMobileViewController: UIViewController {
         }
         do{
             let phoneNumber = try phonenumberKit.parse(cpv.selectedCountry.phoneCode + txtMobileNumber.text!)
-            let result = phonenumberKit.format(phoneNumber, toType: .international, withPrefix: false)
+            _ = phonenumberKit.format(phoneNumber, toType: .international, withPrefix: false)
         }catch{
             Singleton.sharedSingleton.showToast(message: Singleton.alertMessages.enterValidMobileNumber)
             return
@@ -131,7 +131,7 @@ class addMobileViewController: UIViewController {
         phoneNumberUserEntered = PhoneNumber
         self.userInfo.phone = PhoneNumber
         
-        //MARK:- call delegate to vefify number
+        // MARK: - call delegate to vefify number
         self.loginViewModel.addMobileViewControllerDelegate?.buttonClicked(phone: self.phoneNumberUserEntered)
         
     }
@@ -145,7 +145,7 @@ class addMobileViewController: UIViewController {
     
 }
 
-//MARK:- extension of controller of country picker
+// MARK: - extension of controller of country picker
 extension addMobileViewController : CountryPickerViewDelegate {
     
     func countryPickerView(_ countryPickerView: CountryPickerView, didSelectCountry country: Country) {
@@ -158,7 +158,7 @@ extension addMobileViewController : CountryPickerViewDelegate {
         
         do{
             let phoneNumber = try phonenumberKit.parse(cpv.selectedCountry.phoneCode + txtMobileNumber.text!)
-            let result = phonenumberKit.format(phoneNumber, toType: .international, withPrefix: false)
+            _ = phonenumberKit.format(phoneNumber, toType: .international, withPrefix: false)
             lblMobileChekmark.textColor = UIColor(named: "ic_app_bar_color")
         }catch{
             lblMobileChekmark.textColor = UIColor(red: 209.0/255.0, green: 209.0/255.0, blue: 209.0/255.0, alpha: 1.0)
@@ -167,7 +167,7 @@ extension addMobileViewController : CountryPickerViewDelegate {
     }
 }
 
-//MARK: Extending to class to change default country selection
+// MARK: - Extending to class to change default country selection
 class MyGBTextField: PhoneNumberTextField {
     override var defaultRegion: String {
         get {
@@ -184,13 +184,12 @@ extension addMobileViewController : UITextFieldDelegate{
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         
-        //MARK: Phone number validation
+        // MARK: Phone number validation
         var phoneNumberWithoutCountryCode = txtMobileNumber.text?.trimmingCharacters(in: .whitespacesAndNewlines)
         
         guard phoneNumberWithoutCountryCode != "" else {
             return
         }
-        
         
         var PhoneWithoutCOde = phoneNumberWithoutCountryCode
         PhoneWithoutCOde = PhoneWithoutCOde!.replacingOccurrences(of: "(", with: "")
@@ -206,7 +205,7 @@ extension addMobileViewController : UITextFieldDelegate{
         
         do{
             let phoneNumber = try phonenumberKit.parse(cpv.selectedCountry.phoneCode + txtMobileNumber.text!)
-            let result = phonenumberKit.format(phoneNumber, toType: .international, withPrefix: false)
+            _ = phonenumberKit.format(phoneNumber, toType: .international, withPrefix: false)
         }catch{
             Singleton.sharedSingleton.showToast(message: Singleton.alertMessages.enterValidMobileNumber)
             return
@@ -221,7 +220,7 @@ extension addMobileViewController : UITextFieldDelegate{
         }
         do{
             let phoneNumber = try phonenumberKit.parse(cpv.selectedCountry.phoneCode + txtMobileNumber.text!)
-            let result = phonenumberKit.format(phoneNumber, toType: .international, withPrefix: false)
+            _ = phonenumberKit.format(phoneNumber, toType: .international, withPrefix: false)
         }catch{
             Singleton.sharedSingleton.showToast(message: Singleton.alertMessages.enterValidMobileNumber)
             return
@@ -233,26 +232,25 @@ extension addMobileViewController : UITextFieldDelegate{
         PhoneNumber = PhoneNumber.replacingOccurrences(of: "-", with: "")
         PhoneNumber = PhoneNumber.replacingOccurrences(of: " ", with: "")
         
-        
         phoneNumberUserEntered = PhoneNumber
         self.userInfo.phone = PhoneNumber
         
-        //MARK:- call delegate to vefify number
+        // MARK: - call delegate to vefify number
         self.loginViewModel.addMobileViewControllerDelegate?.buttonClicked(phone: self.phoneNumberUserEntered)
         
     }
 }
 
-//MARK:- Extension to extend Firebase Auth model view delegate
+// MARK: - Extension to extend Firebase Auth model view delegate
 extension addMobileViewController : FirebaseAuthViewModelDelegate{
     
-    //MARK:- Will call from view model will navigate to OTP screen
+    // MARK: - Will call from view model will navigate to OTP screen
     func sendOTP() {
-        let vc = Singleton.sharedSingleton.getController(storyName: Singleton.storyboardName.Main, controllerName: Singleton.controllerName.OTPViewController) as! OTPViewController
+        guard let vc = Singleton.sharedSingleton.getController(storyName: Singleton.storyboardName.Main, controllerName: Singleton.controllerName.OTPViewController) as? OTPViewController else { return }
         vc.userInfo = self.userInfo
         Singleton.sharedSingleton.navigate(from: self, to: vc, navigationController: self.navigationController)
     }
-    //MARK: Will show error.
+    // MARK: Will show error.
     func error(error: String, sign: Bool) {
         Singleton.sharedSingleton.showToast(message: error)
     }

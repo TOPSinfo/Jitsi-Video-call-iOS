@@ -10,7 +10,7 @@ import Firebase
 import TLPhotoPicker
 import CropViewController
 
-//MARK:- custom delegate methos
+// MARK: - custom delegate methos
 protocol RegisterUserVCDelegate: AnyObject {
     func uploadImage(fileData:Data?, fileName:String, type:MediaType)
     func buttonClicked(userID:String, dic:[String:Any])
@@ -18,11 +18,11 @@ protocol RegisterUserVCDelegate: AnyObject {
 
 class RegisterUserVC: UIViewController {
     
-    //ARRK:- variable
+    // MARK: - variable
     let registerViewModel : RegisterViewModel = RegisterViewModel()
     var userID = String()
     
-    //MARK:- Outlet
+    // MARK: - Outlet
     @IBOutlet weak var tf_FirstNmae:UITextField!
     @IBOutlet weak var tf_LastName:UITextField!
     @IBOutlet weak var tf_Email:UITextField!
@@ -30,7 +30,7 @@ class RegisterUserVC: UIViewController {
     
     var selectedAssets = [TLPHAsset]()
     
-    //MARK:- Controller life cycle
+    // MARK: - Controller life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -41,7 +41,7 @@ class RegisterUserVC: UIViewController {
         self.registerViewModel.firebaseAuthViewModelDelegate = self
     }
     
-    //MARK:- Register button tapped
+    // MARK: - Register button tapped
     @IBAction func btn_registerTapped(_ sender:UIButton) {
         
         if tf_FirstNmae.text!.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
@@ -97,7 +97,7 @@ class RegisterUserVC: UIViewController {
     
 }
 
-//MARK:- Extended firebase Auth view model
+// MARK: - Extended firebase Auth view model
 extension RegisterUserVC : FirebaseAuthViewModelDelegate {
     
     func didUploadUserImage(task: StorageUploadTask?, reference: StorageReference?) {
@@ -105,7 +105,7 @@ extension RegisterUserVC : FirebaseAuthViewModelDelegate {
         Singleton.sharedSingleton.showLoder()
         if let task = task {
             
-            task.observe(.success) { snap in
+            task.observe(.success) { _ in
                 
                 reference?.downloadURL(completion: { url, error in
                     Singleton.sharedSingleton.hideLoader()
@@ -140,16 +140,15 @@ extension RegisterUserVC : FirebaseAuthViewModelDelegate {
         }
     }
     
-    //MARK: Will show error.
-    func error(error: String, sign876
-                : Bool) {
+    // MARK: Will show error.
+    func error(error: String, sign876: Bool) {
         Singleton.sharedSingleton.showToast(message: error)
     }
-    //register callback
+    // register callback
     func register(_ isRegister: Bool) {
         
         if isRegister {
-            let vc = Singleton.sharedSingleton.getController(storyName: Singleton.storyboardName.Main, controllerName: Singleton.controllerName.UserListVC) as! UserListVC
+            guard let vc = Singleton.sharedSingleton.getController(storyName: Singleton.storyboardName.Main, controllerName: Singleton.controllerName.UserListVC) as? UserListVC else { return }
             Singleton.sharedSingleton.navigate(from: self, to: vc, navigationController: self.navigationController)
         } 
         
@@ -163,7 +162,7 @@ extension RegisterUserVC : TLPhotosPickerViewControllerDelegate , CropViewContro
         cropViewController.dismiss(animated: true, completion: nil)
     }
     
-    //TLPhotosPickerViewControllerDelegate
+    // TLPhotosPickerViewControllerDelegate
     func shouldDismissPhotoPicker(withTLPHAssets: [TLPHAsset]) -> Bool {
         // use selected order, fullresolution image
         self.selectedAssets = withTLPHAssets
@@ -181,21 +180,6 @@ extension RegisterUserVC : TLPhotosPickerViewControllerDelegate , CropViewContro
             let cropViewController = CropViewController(croppingStyle: .circular, image: i.fullResolutionImage ?? UIImage())
             cropViewController.delegate = self
             self.present(cropViewController, animated: true, completion: nil)
-            
-//            var config = ImageCropperConfiguration(with: i.fullResolutionImage ?? UIImage(), and: .circle)
-//            config.maskFillColor = UIColor(displayP3Red: 0.7, green: 0.5, blue: 0.2, alpha: 0.75)
-//            config.borderColor = UIColor.black
-//            config.showGrid = true
-//            config.gridColor = UIColor.white
-//            config.doneTitle = "CROP"
-//            config.cancelTitle = "Back"
-//
-//             cropper = ImageCropperViewController.initialize(with: config) { image in
-//                self.img_user.image = image
-//            } dismiss: {
-//                self.cropper?.navigationController?.popViewController(animated: true)
-//            }
-//            self.navigationController?.pushViewController(cropper!, animated: true)
             
         }
     }

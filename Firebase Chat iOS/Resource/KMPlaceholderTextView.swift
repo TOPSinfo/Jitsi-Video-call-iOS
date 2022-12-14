@@ -23,7 +23,7 @@
 
 import UIKit
 
-//@IBDesignable
+// @IBDesignable
 open class KMPlaceholderTextView: UITextView {
     
     private struct Constants {

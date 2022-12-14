@@ -23,7 +23,7 @@ class CreateGroupVC: UIViewController {
     var selectedForGroupCall = [SignupUserData]()
     let createGroupViewmodel : CreateGroupViewModel = CreateGroupViewModel()
     var groupID = ""
-    //MARK:- Outlet
+    // MARK: - Outlet
     @IBOutlet weak var btn_back:UIButton!
     @IBOutlet weak var tf_groupName:UITextField!
     @IBOutlet weak var img_groupImage:UIImageView!
@@ -58,7 +58,7 @@ class CreateGroupVC: UIViewController {
         self.navigationController?.popViewController(animated: true)
     }
     
-    //MARK:- Register button tapped
+    // MARK: - Register button tapped
     @IBAction func btn_CreateGroupTapped(_ sender:UIButton) {
 
         if tf_groupName.text!.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
@@ -99,7 +99,7 @@ extension CreateGroupVC : TLPhotosPickerViewControllerDelegate , CropViewControl
         cropViewController.dismiss(animated: true, completion: nil)
     }
     
-    //TLPhotosPickerViewControllerDelegate
+    // TLPhotosPickerViewControllerDelegate
     func shouldDismissPhotoPicker(withTLPHAssets: [TLPHAsset]) -> Bool {
         // use selected order, fullresolution image
         self.selectedAssets = withTLPHAssets
@@ -135,7 +135,7 @@ extension CreateGroupVC : TLPhotosPickerViewControllerDelegate , CropViewControl
 }
 
 
-//MARK:- Extended tableview delegate and datasource method
+// MARK: - Extended tableview delegate and datasource method
 extension CreateGroupVC : UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if self.isForDetail {
@@ -145,7 +145,7 @@ extension CreateGroupVC : UICollectionViewDelegate, UICollectionViewDataSource, 
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! userListCollectionCell
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as? userListCollectionCell else { return UICollectionViewCell() }
         if isForDetail {
             FirebaseCloudFirestoreManager().getUserDetail(userID: self.objGroup.members[indexPath.row]) { objUser in
                 cell.lbl_userName.text = objUser.fullName
@@ -189,12 +189,12 @@ extension CreateGroupVC : FirebaseCreateGroupViewModelDelegate {
                     
                     var dic = [String:Any]()
                     dic["id"] = self.groupID
-                    dic["adminId"] = Singleton.appDelegate.objCurrentUser.uid
-                    dic["adminName"] = Singleton.appDelegate.objCurrentUser.fullName
+                    dic["adminId"] = Singleton.appDelegate?.objCurrentUser.uid
+                    dic["adminName"] = Singleton.appDelegate?.objCurrentUser.fullName
                     dic["createdAt"] = Timestamp.init(date: Date())
                     dic["groupIcon"] = downloadURL.description
                     var member = self.selectedForGroupCall.map({$0.uid})
-                    member.append(Singleton.appDelegate.objCurrentUser.uid)
+                    member.append(Singleton.appDelegate?.objCurrentUser.uid ?? "")
                     dic["members"] = member
                     dic["name"] = self.tf_groupName.text ?? ""
                     

@@ -19,7 +19,7 @@ final class FirebaseViewModel {
         
     }
     
-    //Verify Phone method
+    // MARK: Verify Phone method
     func verifyPhone(phone:String, completion: @escaping((_ verificationID:String) -> Void), failure: @escaping((_ error: String) -> Void)){
     
         guard Reachability.isConnectedToNetwork() else{
@@ -36,7 +36,7 @@ final class FirebaseViewModel {
         }
     }
     
-    //MARK:- Login callback
+    // MARK: - Login callback
     func login(credential:PhoneAuthCredential, completion: @escaping((_ authResult: AuthDataResult?) -> Void), failure: @escaping((_ error: String) -> Void)) {
         
         guard Reachability.isConnectedToNetwork() else{
@@ -52,7 +52,7 @@ final class FirebaseViewModel {
             }
         }
     }
-    //MARK: Logout callback
+    // MARK: Logout callback
     func logautUser(completion: @escaping((_ isLogOut: Bool) -> Void), failure: @escaping((_ error: String) -> Void)){
         guard Reachability.isConnectedToNetwork() else{
             Singleton.sharedSingleton.showToast(message: "Please check your internet connection")

@@ -21,6 +21,7 @@ struct ChildPath {
 
 class FirebaseStorageManager {
     
+    // object of storage reference
     let storage = Storage.storage().reference()
     
     init() {
@@ -31,7 +32,7 @@ class FirebaseStorageManager {
         Singleton.sharedSingleton.showLoder()
         
     }
-    
+    // MARK: Upload image to firebase storage
     func uploadImage(childPath:String,imageNeedstoUpload : Data?,type:MediaType,completion: @escaping (_ uploadtask: StorageUploadTask?, _ reference:StorageReference?) -> Void) {
         
         let storageRef = Storage.storage().reference().child(childPath)
@@ -44,8 +45,6 @@ class FirebaseStorageManager {
                 metadata.contentType = "image/jpeg"
             case .video:
                 metadata.contentType = "video/mp4"
-            default:
-                metadata.contentType = "application/octet-stream"
             }
             
             let uploadTask = storageRef.putData(uploadData, metadata: metadata)

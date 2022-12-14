@@ -30,16 +30,16 @@ In Chat screen, User can chat with selected group or individule by sending Text,
 
 # UI controls 
 
-- Firebase Authentication
-- Firebase Firestore Database
-- Jitsi Meet
-- TableView
-- Activity Indicator
-- ImageView
-- Toast
-- TextField
-- TextView
-- Buttons 
+-  Firebase Authentication
+-  Firebase Firestore Database
+-  Jitsi Meet
+-  TableView
+-  Activity Indicator
+-  ImageView
+-  Toast
+-  TextField
+-  TextView
+-  Buttons 
 
 # Technical detail:
 

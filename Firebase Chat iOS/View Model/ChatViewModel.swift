@@ -65,7 +65,7 @@ extension ChatViewModel : ChatVCDelegate {
         
         for file in files {
             group.enter()
-            firebaseViewModel.firebaseStorageManager.uploadImage(childPath: file.filename, imageNeedstoUpload: file.file, type: file.type) { task,reference  in
+            firebaseViewModel.firebaseStorageManager.uploadImage(childPath: file.filename, imageNeedstoUpload: file.file, type: file.type) { task, reference  in
                 if let ref = reference {
                 
                     print(ref.fullPath)
@@ -118,7 +118,7 @@ extension ChatViewModel : ChatVCDelegate {
         
     }
     
-    // will send message to reciever using IDs and get revert to controller
+    // MARK: will send message to reciever using IDs and get revert to controller
     func sendMessage(conversationID:String, messageID: String, dic: [String : Any]) {
         
         guard Reachability.isConnectedToNetwork() else{
@@ -131,18 +131,10 @@ extension ChatViewModel : ChatVCDelegate {
         } failure: { error in
             self.firebasechatViewModelDelegate?.error?(error: error, sign: true)
         }
-
-        
-//        firebaseViewModel.firebaseCloudFirestoreManager.sendMessage(senderID: senderID, touserID: toUserID, dic: dic) { message in
-//            self.firebasechatViewModelDelegate?.didSendMessage?(message)
-//        } failure: { error in
-//            self.firebasechatViewModelDelegate?.error?(error: error, sign: true)
-//        }
     }
     
-    //Will get message list between two users  and send back to controller
+    // MARK: Will get message list between two users  and send back to controller
     func getMessageList(_ touserID: String, isForGroup: Bool) {
-//
         guard Reachability.isConnectedToNetwork() else{
             Singleton.sharedSingleton.showToast(message: "Please check your internet connection")
             return

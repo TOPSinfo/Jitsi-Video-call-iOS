@@ -22,12 +22,12 @@ protocol UserListVCDelegate: AnyObject {
 
 class UserListVC: UIViewController {
     
-    //MARK:- Variable
+    // MARK: - Variable
     let userViewModel : UserListViewModel = UserListViewModel()
     var userArray = [SignupUserData]()
     var selectedForGroupCall = [SignupUserData]()
     
-    //MARK:- Outlet
+    // MARK: - Outlet
     @IBOutlet weak var tbl_userList:UITableView!
     @IBOutlet weak var btn_logout:UIButton!
     @IBOutlet weak var btnCall: UIButton!
@@ -46,13 +46,13 @@ class UserListVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //Set tableview delgate and datasource
+        // Set tableview delgate and datasource
         self.tbl_userList.delegate = self
         self.tbl_userList.dataSource = self
         btnCall.isHidden = true
         btnCreate.isHidden = true
         
-        //Will call to get list of register user
+        // Will call to get list of register user
         
         print(currentUId)
         Singleton.sharedSingleton.doOnlineOffline(isOnline: true)
@@ -64,7 +64,7 @@ class UserListVC: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        //set delegate of auth view model
+        // set delegate of auth view model
         isFirstTime = true
         isFirstTimeGroup = true
         userViewModel.userListVCDelegate?.getUserList()
@@ -80,7 +80,7 @@ class UserListVC: UIViewController {
         Singleton.userListner?.remove()
     }
     
-    //MARK:- USer will logout from auth session and app
+    // MARK: - USer will logout from auth session and app
     @IBAction func btn_logout(_ sender:UIButton) {
         Singleton.sharedSingleton.doOnlineOffline(isOnline: false)
         userViewModel.firebaseViewModel.logautUser { (isLogout) in
@@ -116,7 +116,7 @@ class UserListVC: UIViewController {
     
     @IBAction func btnCreateClick(_ sender: Any) {
         if selectedForGroupCall.count > 1 {
-            let vc = Singleton.sharedSingleton.getController(storyName: Singleton.storyboardName.Main, controllerName: Singleton.controllerName.CreateGroupVC) as! CreateGroupVC
+            guard let vc = Singleton.sharedSingleton.getController(storyName: Singleton.storyboardName.Main, controllerName: Singleton.controllerName.CreateGroupVC) as? CreateGroupVC else { return }
             vc.selectedForGroupCall = self.selectedForGroupCall
             self.navigationController?.pushViewController(vc, animated: true)
         } else {
@@ -162,24 +162,16 @@ class UserListVC: UIViewController {
             
         }))
         self.present(alert, animated: true, completion: nil)
-        
-        //        let alert = UIAlertController(title: "New Group Call", message: "You are invited in the group call. Do you want to join ?", preferredStyle: .alert)
-        //        alert.addAction(UIAlertAction(title: "Join Now", style: .default, handler: { alert in
-        //            self.objJitsi.viewController = self
-        //            self.objJitsi.openJetsiViewWithUser(roomid: roomId)
-        //        }))
-        //        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { alert in
-        //        }))
-        //        self.present(alert, animated: true, completion: nil)
+    
     }
     
     deinit {
         Singleton.userListner?.remove()
     }
 }
-//MArk:- extended Firebase Auth view model protocol
+// MARK: - extended Firebase Auth view model protocol
 extension UserListVC : FirebaseAuthViewModelDelegate {
-    //MARK: Will show error.
+    // MARK: Will show error.
     func error(error: String, sign: Bool) {
         
         if isFirstTimeGroup {
@@ -189,7 +181,7 @@ extension UserListVC : FirebaseAuthViewModelDelegate {
         Singleton.sharedSingleton.showToast(message: error)
     }
     
-    //will get call when user list recieve
+    // will get call when user list recieve
     func didGetUserList(_ userlist: Array<Any>) {
         
         if let users = userlist as? [SignupUserData] {
@@ -227,11 +219,6 @@ extension UserListVC : FirebaseAuthViewModelDelegate {
         
         isFirstTimeGroup = false
         
-        print("=======================================================")
-        print("Group List")
-        
-        
-        
         if let users = userlist as? [SignupUserData] {
         
             for user in users {
@@ -263,14 +250,14 @@ extension UserListVC : FirebaseAuthViewModelDelegate {
 }
 
 
-//MARK:- Extended tableview delegate and datasource method
+// MARK: - Extended tableview delegate and datasource method
 extension UserListVC : UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.userArray.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "userListCell") as! userListCell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "userListCell") as? userListCell else { return UITableViewCell() }
         let item = self.userArray[indexPath.row]
         cell.lbl_userName.text = item.firstName + " " + item.lastName
         cell.img_user.setUserImageUsingUrl(item.profile_image , isUser: true)
@@ -312,7 +299,7 @@ extension UserListVC : UITableViewDataSource, UITableViewDelegate {
             }
             self.tbl_userList.reloadData()
         } else {
-            let vc = Singleton.sharedSingleton.getController(storyName: Singleton.storyboardName.Main, controllerName: Singleton.controllerName.ChatVC) as! ChatVC
+            guard let vc = Singleton.sharedSingleton.getController(storyName: Singleton.storyboardName.Main, controllerName: Singleton.controllerName.ChatVC) as? ChatVC else { return }
             vc.userID = item.uid
             vc.userName = item.firstName + " " + item.lastName
             vc.objOppoUser = item

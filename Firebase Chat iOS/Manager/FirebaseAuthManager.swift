@@ -14,7 +14,7 @@ class FirebaseAuthManager {
     
     init() {
     }
-    //MAKR:- verify phone number and get verification id
+    // MARK: - verify phone number and get verification id
     func verifyPhoneNumber(phoneNumber:String, completion: @escaping((_ verificationID: String, _ error: Error?) -> Void)) {
         Auth.auth().settings!.isAppVerificationDisabledForTesting = true
         PhoneAuthProvider.provider()
@@ -27,7 +27,7 @@ class FirebaseAuthManager {
         }
     }
     
-    //MARK:- Login using phone credential
+    // MARK: - Login using phone credential
     func login(credential:PhoneAuthCredential, completion: @escaping((_ authResult: AuthDataResult?, _ error: Error?) -> Void)) {
         
         Auth.auth().signIn(with: credential, completion: { (user, error) in
@@ -35,7 +35,7 @@ class FirebaseAuthManager {
         })
     }
     
-    //MARK:- Logout from firebase session
+    // MARK: - Logout from firebase session
     func signOut(completion: @escaping(() -> Void), failure: @escaping((_ error: String) -> Void)){
         do {
             try Auth.auth().signOut()

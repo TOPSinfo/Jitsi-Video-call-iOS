@@ -11,16 +11,16 @@ import AVFoundation
 import MobileCoreServices
 import ICGVideoTrimmer
 
-//MARK:- protocols
+// MARK: - protocols
 
 protocol croppedVideoDeleget {
     func cropedVideoUrl(videoURL:String)
 }
 
 class videoCropperVC: UIViewController {
-
     
-    //MARK:- IBOutlet
+    
+    // MARK: - IBOutlet
     
     @IBOutlet weak var playerView: UIView!
     @IBOutlet weak var trimmerView: ICGVideoTrimmerView!
@@ -30,7 +30,7 @@ class videoCropperVC: UIViewController {
     @IBOutlet weak var lbl_remainingTime: UILabel!
     @IBOutlet weak var lbl_selectedTime: UILabel!
     
-    //MARK:- Variables
+    // MARK: - Variables
     
     var icgtrimmerview = ICGVideoTrimmerView()
     var asset : AVAsset!
@@ -43,7 +43,7 @@ class videoCropperVC: UIViewController {
     var endTime : CGFloat?
     
     
-    //MARK:- Loadview
+    // MARK: - Loadview
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -55,15 +55,12 @@ class videoCropperVC: UIViewController {
             self.addVideoPlayer(with: self.asset, playerView: self.playerView)
             
             let global = UIScreen.main.bounds
-            let window = UIApplication.shared.keyWindow
             if #available(iOS 11.0, *) {
-                let bottomPadding = window?.safeAreaInsets.bottom
-                let y = global.height - (global.height*0.15 + (bottomPadding ?? 0) + 20)
                 self.icgtrimmerview.frame = self.trimmerView.frame
             } else {
                 self.icgtrimmerview.frame = CGRect(x: 0, y: global.height-((global.height*0.15 + 20)), width: global.width, height: global.height*0.15)
             }
-
+            
             self.icgtrimmerview.themeColor = UIColor(named: "ic_app_bar_color")
             self.icgtrimmerview.asset = self.asset
             self.icgtrimmerview.showsRulerView = false
@@ -86,15 +83,10 @@ class videoCropperVC: UIViewController {
             }
             
             self.view.addSubview(self.icgtrimmerview)
-//            let image:UIImage? = #imageLiteral(resourceName: "sliderOval")
-//            self.videoSeekBar.setThumbImage(image, for: .normal)
-//            self.videoSeekBar.setThumbImage(image, for: .highlighted)
-            
-            
         }
     }
     
-    //MARK:- Actions
+    // MARK: - Actions
     
     @IBAction func btnBackTapped(_ sender: Any) {
         
@@ -104,7 +96,7 @@ class videoCropperVC: UIViewController {
     @IBAction func btnPlayPauseTapped(_ sender: UIButton) {
         
         guard let player = player else { return }
-        //button_play
+        // button_play
         if !player.isPlaying {
             player.play()
             sender.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
@@ -135,7 +127,7 @@ class videoCropperVC: UIViewController {
             }
             
         }
-       
+        
         if let url = NSURL(string: videoURL){
             self.cropVideo(sourceURL1: url, statTime: Float(startTime ?? 0.0), endTime: Float(endTime ?? 0.0))
         }
@@ -178,7 +170,7 @@ class videoCropperVC: UIViewController {
         self.lbl_remainingTime.text = String(format: "%02d:%02d", 0,counter)
         playbackTimeCheckerTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self,
                                                         selector:
-            #selector(self.onPlaybackTimeChecker), userInfo: nil, repeats: true)
+                                                            #selector(self.onPlaybackTimeChecker), userInfo: nil, repeats: true)
     }
     
     func stopPlaybackTimeChecker() {
@@ -203,8 +195,8 @@ class videoCropperVC: UIViewController {
         self.icgtrimmerview.seek(toTime: CGFloat(seconds))
         
         let playBackTime = player.currentTime()
-        counter = counter + 1
-        self.videoSeekBar.value = self.videoSeekBar.value + 1.0
+        counter += 1
+        self.videoSeekBar.value += 1.0
         
         if playBackTime >= CMTimeMakeWithSeconds(Float64(endTime), preferredTimescale: 1000) {
             player.pause()
@@ -245,8 +237,8 @@ class videoCropperVC: UIViewController {
         Singleton.sharedSingleton.showLoder()
         
         guard let documentDirectory = try? manager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true) else {return}
-        guard let mediaType = "mp4" as? String else { return }
-        guard let url = sourceURL1 as? NSURL else { return }
+        let mediaType = "mp4" // as? String else { return }
+        let url = sourceURL1 // as? NSURL else { return }
         
         if mediaType == kUTTypeMovie as String || mediaType == "mp4" as String {
             let asset = AVAsset(url: url as URL)
@@ -265,7 +257,7 @@ class videoCropperVC: UIViewController {
                 print(error)
             }
             
-            //Remove existing file
+            // Remove existing file
             _ = try? manager.removeItem(at: outputURL)
             
             
@@ -284,19 +276,14 @@ class videoCropperVC: UIViewController {
                     
                     DispatchQueue.main.async {
                         Singleton.sharedSingleton.hideLoader()
-                       print("exported at \(outputURL)")
-                       self.delegete?.cropedVideoUrl(videoURL: "\(outputURL)")
-                       self.dismiss(animated: true, completion: nil)
+                        self.delegete?.cropedVideoUrl(videoURL: "\(outputURL)")
+                        self.dismiss(animated: true, completion: nil)
                     }
-                   
+                    
                 case .failed:
                     Singleton.sharedSingleton.hideLoader()
-                    print("failed \(exportSession.error ?? "" as! Error)")
-                    
                 case .cancelled:
                     Singleton.sharedSingleton.hideLoader()
-                    print("cancelled \(exportSession.error ?? "" as! Error)")
-                    
                 default:
                     Singleton.sharedSingleton.hideLoader()
                     break
@@ -309,7 +296,7 @@ class videoCropperVC: UIViewController {
 extension videoCropperVC: ICGVideoTrimmerDelegate {
     
     func trimmerView(_ trimmerView: ICGVideoTrimmerView!, didChangeLeftPosition startTime: CGFloat, rightPosition endTime: CGFloat) {
-     
+        
         self.startTime = startTime
         self.endTime = endTime
         let playerTime = CMTimeMakeWithSeconds(Float64(startTime), preferredTimescale: 1000)
@@ -333,7 +320,7 @@ extension videoCropperVC: ICGVideoTrimmerDelegate {
         return (seconds / 3600, (seconds % 3600) / 60, (seconds % 3600) % 60)
     }
     
-
+    
 }
 
 extension AVPlayer {
