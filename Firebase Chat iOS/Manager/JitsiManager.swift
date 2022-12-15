@@ -12,7 +12,7 @@ import Firebase
 class JitsiManager: NSObject {
 
     fileprivate var jitsiMeetView: JitsiMeetView?
-    var viewController : UIViewController?
+    var viewController: UIViewController?
     
     override init() {
         let defaultOptions = JitsiMeetConferenceOptions.fromBuilder { (builder) in
@@ -33,7 +33,7 @@ class JitsiManager: NSObject {
         JitsiMeet.sharedInstance().defaultConferenceOptions = defaultOptions
     }
         
-    func openJetsiViewWithUser(roomid : String, isHost : Bool = false) {
+    func openJetsiViewWithUser(roomid: String, isHost: Bool = false) {
 
         // create and configure jitsimeet view
         let jitsiMeetView = JitsiMeetView()
@@ -48,8 +48,8 @@ class JitsiManager: NSObject {
             builder.userInfo = JitsiMeetUserInfo.init(displayName: userdata.fullName, andEmail: userdata.email, andAvatar: URL(string:userdata.profile_image))
             
             // Settings for audio and video
-            // builder.audioMuted = true;
-//             builder.videoMuted = true;
+            // builder.audioMuted = true
+//             builder.videoMuted = true
             builder.welcomePageEnabled = false
 //            builder.setFeatureFlag("meeting-password.enabled", withBoolean: false)
 //            builder.setFeatureFlag("add-people.enabled", withBoolean: false)
@@ -84,14 +84,14 @@ class JitsiManager: NSObject {
         }
         
         // setup view controller
-        let vc = UIViewController()
-        vc.modalPresentationStyle = .fullScreen
-        vc.view = jitsiMeetView
+        let vcJM = UIViewController()
+        vcJM.modalPresentationStyle = .fullScreen
+        vcJM.view = jitsiMeetView
         
         // join room and display jitsi-call
         jitsiMeetView.join(options)
         AppDelegate.standard.currentCallId = roomid
-        viewController?.present(vc, animated: true, completion: nil)
+        viewController?.present(vcJM, animated: true, completion: nil)
     }
     
     fileprivate func cleanUp() {
@@ -103,13 +103,13 @@ class JitsiManager: NSObject {
 }
 
 extension JitsiManager: JitsiMeetViewDelegate {
-    func conferenceTerminated(_ data: [AnyHashable : Any]!) {
+    func conferenceTerminated(_ data: [AnyHashable: Any]!) {
         FirebaseViewModel().firebaseCloudFirestoreManager.changeCallStatus(AppDelegate.standard.currentCallId, isActive: false)
         AppDelegate.standard.currentCallId = ""
         cleanUp()
     }
     
-    func conferenceJoined(_ data: [AnyHashable : Any]!) {
+    func conferenceJoined(_ data: [AnyHashable: Any]!) {
         print("joined")
         FirebaseViewModel().firebaseCloudFirestoreManager.changeCallStatus(AppDelegate.standard.currentCallId, isActive: true)
     }

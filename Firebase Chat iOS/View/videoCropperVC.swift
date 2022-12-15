@@ -17,15 +17,14 @@ protocol croppedVideoDeleget {
     func cropedVideoUrl(videoURL:String)
 }
 
-class videoCropperVC: UIViewController {
-    
+class VideoCropperVC: UIViewController {
     
     // MARK: - IBOutlet
     
     @IBOutlet weak var playerView: UIView!
     @IBOutlet weak var trimmerView: ICGVideoTrimmerView!
     @IBOutlet weak var btn_PlayPause: UIButton!
-    @IBOutlet weak var lbl_palyPause : UILabel!
+    @IBOutlet weak var lbl_palyPause: UILabel!
     @IBOutlet weak var videoSeekBar: UISlider!
     @IBOutlet weak var lbl_remainingTime: UILabel!
     @IBOutlet weak var lbl_selectedTime: UILabel!
@@ -33,14 +32,14 @@ class videoCropperVC: UIViewController {
     // MARK: - Variables
     
     var icgtrimmerview = ICGVideoTrimmerView()
-    var asset : AVAsset!
+    var asset: AVAsset!
     var player: AVPlayer?
     var playbackTimeCheckerTimer: Timer?
-    var videoURL : String!
-    var delegete : croppedVideoDeleget?
+    var videoURL: String!
+    var delegete: croppedVideoDeleget?
     var maxLength = 15
-    var startTime : CGFloat?
-    var endTime : CGFloat?
+    var startTime: CGFloat?
+    var endTime: CGFloat?
     
     
     // MARK: - Loadview
@@ -93,6 +92,7 @@ class videoCropperVC: UIViewController {
         self.dismiss(animated: true, completion: nil)
         
     }
+    
     @IBAction func btnPlayPauseTapped(_ sender: UIButton) {
         
         guard let player = player else { return }
@@ -108,27 +108,23 @@ class videoCropperVC: UIViewController {
             lbl_palyPause.text = "Play"
             stopPlaybackTimeChecker()
         }
-        
     }
+    
     @IBAction func btnDoneTapped(_ sender: UIButton) {
         
-        
-        if let url = URL(string: videoURL ?? "")
-        {
+        if let url = URL(string: videoURL ?? "") {
             let asset = AVAsset(url: url)
             
             let duration = asset.duration
             let durationTime = CMTimeGetSeconds(duration)
             print(durationTime)
-            if durationTime < 3
-            {
+            if durationTime < 3 {
                 Singleton.sharedSingleton.showToast(message: "Video should be of minimum 3 seconds")
                 return
             }
-            
         }
         
-        if let url = NSURL(string: videoURL){
+        if let url = NSURL(string: videoURL) {
             self.cropVideo(sourceURL1: url, statTime: Float(startTime ?? 0.0), endTime: Float(endTime ?? 0.0))
         }
         
@@ -222,12 +218,10 @@ class videoCropperVC: UIViewController {
     }
     
     
-    func cropVideo(sourceURL1: NSURL, statTime:Float, endTime:Float)
-    {
+    func cropVideo(sourceURL1: NSURL, statTime:Float, endTime:Float) {
         let manager = FileManager.default
         
-        if player!.isPlaying
-        {
+        if player!.isPlaying {
             player!.pause()
             btn_PlayPause.setImage(#imageLiteral(resourceName: "button_play"), for: .normal)
             lbl_palyPause.text = "Play"
@@ -270,7 +264,7 @@ class videoCropperVC: UIViewController {
             let timeRange = CMTimeRange(start: startTime, end: endTime)
             
             exportSession.timeRange = timeRange
-            exportSession.exportAsynchronously{
+            exportSession.exportAsynchronously {
                 switch exportSession.status {
                 case .completed:
                     
@@ -286,14 +280,13 @@ class videoCropperVC: UIViewController {
                     Singleton.sharedSingleton.hideLoader()
                 default:
                     Singleton.sharedSingleton.hideLoader()
-                    break
                 }
             }
         }
     }
 }
 
-extension videoCropperVC: ICGVideoTrimmerDelegate {
+extension VideoCropperVC: ICGVideoTrimmerDelegate {
     
     func trimmerView(_ trimmerView: ICGVideoTrimmerView!, didChangeLeftPosition startTime: CGFloat, rightPosition endTime: CGFloat) {
         
@@ -308,19 +301,16 @@ extension videoCropperVC: ICGVideoTrimmerDelegate {
         let (_,em,es) = secondsToHoursMinutesSeconds(seconds: Int(endTime.rounded()))
         
         let duration = Int(self.endTime!.rounded() - self.startTime!.rounded())
-        self.videoSeekBar.value = 0//Float(Int(self.startTime!.rounded()))
-        self.videoSeekBar.minimumValue = 0//Float(Int(self.startTime!.rounded()))
+        self.videoSeekBar.value = 0 // Float(Int(self.startTime!.rounded()))
+        self.videoSeekBar.minimumValue = 0 // Float(Int(self.startTime!.rounded()))
         self.videoSeekBar.maximumValue = Float(duration)
         self.lbl_selectedTime.text = String(format: "%02d:%02d - %02d:%02d", sm,ss,em,es)
         print(duration)
-        
     }
     
-    func secondsToHoursMinutesSeconds (seconds : Int) -> (Int, Int, Int) {
+    func secondsToHoursMinutesSeconds(seconds: Int) -> (Int, Int, Int) {
         return (seconds / 3600, (seconds % 3600) / 60, (seconds % 3600) % 60)
     }
-    
-    
 }
 
 extension AVPlayer {

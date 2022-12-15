@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="eTv-e9-276">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="eTv-e9-276">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -31,25 +31,25 @@
         <!--Add Mobile View Controller-->
         <scene sceneID="gjk-HM-ZAa">
             <objects>
-                <viewController storyboardIdentifier="addMobileViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="O2N-yO-FOr" customClass="addMobileViewController" customModule="Firebase_Chat_iOS" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="addMobileViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="O2N-yO-FOr" customClass="AddMobileViewController" customModule="Firebase_Chat_iOS" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Sxy-89-kfo">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter your mobile number" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BHi-SA-4aD">
-                                <rect key="frame" x="20" y="114" width="278" height="28"/>
+                                <rect key="frame" x="20" y="114" width="283" height="29.5"/>
                                 <fontDescription key="fontDescription" name="ProximaNova-Bold" family="Proxima Nova" pointSize="24"/>
                                 <color key="textColor" red="0.4823529412" green="0.47843137250000001" blue="0.48627450979999998" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iEf-sD-0nK">
-                                <rect key="frame" x="20" y="152" width="374" height="0.0"/>
+                                <rect key="frame" x="20" y="153.5" width="374" height="0.0"/>
                                 <fontDescription key="fontDescription" name="ProximaNova-Regular" family="Proxima Nova" pointSize="19"/>
                                 <color key="textColor" red="0.4823529412" green="0.47843137250000001" blue="0.48627450979999998" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8Qz-yG-pyd" customClass="CountryPickerView" customModule="CountryPickerView">
-                                <rect key="frame" x="20" y="202" width="100" height="40"/>
+                                <rect key="frame" x="20" y="203.5" width="100" height="40"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="100" id="X1m-eL-P1v"/>
@@ -57,7 +57,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Ua-R7-57S">
-                                <rect key="frame" x="140" y="202" width="264" height="40"/>
+                                <rect key="frame" x="140" y="203.5" width="264" height="40"/>
                                 <subviews>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ec0-hA-ddm" customClass="MyGBTextField" customModule="Firebase_Chat_iOS" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="239" height="40"/>
@@ -69,7 +69,7 @@
                                         </connections>
                                     </textField>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E65-yp-Ln8">
-                                        <rect key="frame" x="245.5" y="10.5" width="18.5" height="19"/>
+                                        <rect key="frame" x="241" y="12" width="23" height="16"/>
                                         <fontDescription key="fontDescription" name="Tab-App" family="Tab-App" pointSize="16"/>
                                         <color key="textColor" red="0.81960784310000001" green="0.81960784310000001" blue="0.81960784310000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
@@ -165,13 +165,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Verify your mobile number" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="926-4F-dRG">
-                                <rect key="frame" x="20" y="114" width="280.5" height="28"/>
+                                <rect key="frame" x="20" y="114" width="288.5" height="29.5"/>
                                 <fontDescription key="fontDescription" name="ProximaNova-Bold" family="Proxima Nova" pointSize="24"/>
                                 <color key="textColor" red="0.4823529412" green="0.47843137250000001" blue="0.48627450979999998" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="ejD-R9-BED">
-                                <rect key="frame" x="16" y="142" width="378" height="60"/>
+                                <rect key="frame" x="16" y="143.5" width="378" height="60"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="60" id="iaE-ck-0FT"/>
@@ -181,7 +181,7 @@
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <view contentMode="scaleToFill" restorationIdentifier="SVPinView" translatesAutoresizingMaskIntoConstraints="NO" id="1l9-6F-QIq" customClass="SVPinView" customModule="SVPinView">
-                                <rect key="frame" x="20" y="217" width="374" height="50"/>
+                                <rect key="frame" x="20" y="218.5" width="374" height="50"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="dvH-l0-fxT"/>
@@ -199,7 +199,7 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QcM-zw-b9A">
-                                <rect key="frame" x="20" y="287" width="111" height="30"/>
+                                <rect key="frame" x="20" y="288.5" width="108" height="30"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="FRk-kj-u43"/>
@@ -216,7 +216,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Vo-jx-cpk">
-                                <rect key="frame" x="394" y="302" width="0.0" height="0.0"/>
+                                <rect key="frame" x="394" y="303.5" width="0.0" height="0.0"/>
                                 <fontDescription key="fontDescription" name="ProximaNova-Regular" family="Proxima Nova" pointSize="17"/>
                                 <color key="textColor" red="0.4823529412" green="0.47843137250000001" blue="0.48627450979999998" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -294,7 +294,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="ue6-vC-hfZ">
-                                <rect key="frame" x="20" y="321" width="374" height="165"/>
+                                <rect key="frame" x="20" y="321.5" width="374" height="165"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FeG-Ye-l9O">
                                         <rect key="frame" x="0.0" y="0.0" width="374" height="45"/>
@@ -461,7 +461,7 @@
                                 </userDefinedRuntimeAttributes>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Upload your profile picture" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RYm-ZF-tGA">
-                                <rect key="frame" x="112" y="272" width="190" height="19"/>
+                                <rect key="frame" x="113.5" y="272" width="187.5" height="19.5"/>
                                 <fontDescription key="fontDescription" name="ProximaNova-Regular" family="Proxima Nova" pointSize="16"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -598,15 +598,15 @@
                                 <rect key="frame" x="0.0" y="88" width="414" height="808"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="userListCell" id="XtY-Il-kcI" customClass="userListCell" customModule="Firebase_Chat_iOS" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="414" height="50"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="userListCell" id="XtY-Il-kcI" customClass="UserListCell" customModule="Firebase_Chat_iOS" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="44.5" width="414" height="47"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="XtY-Il-kcI" id="Hmn-Cc-xd6">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="50"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="47"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_user" translatesAutoresizingMaskIntoConstraints="NO" id="T8a-Hl-wS2">
-                                                    <rect key="frame" x="15" y="7.5" width="35" height="35"/>
+                                                    <rect key="frame" x="15" y="6" width="35" height="35"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="35" id="8pv-Bf-7LG"/>
                                                         <constraint firstAttribute="width" constant="35" id="ixx-X0-rDR"/>
@@ -618,13 +618,13 @@
                                                     </userDefinedRuntimeAttributes>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="emI-ky-7iE">
-                                                    <rect key="frame" x="60" y="15" width="339" height="19"/>
+                                                    <rect key="frame" x="60" y="15" width="339" height="16"/>
                                                     <fontDescription key="fontDescription" name="ProximaNova-Semibold" family="Proxima Nova" pointSize="16"/>
                                                     <color key="textColor" red="0.4823529412" green="0.47843137250000001" blue="0.48627450979999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tEK-rE-rby">
-                                                    <rect key="frame" x="15" y="49" width="399" height="1"/>
+                                                    <rect key="frame" x="15" y="46" width="399" height="1"/>
                                                     <color key="backgroundColor" red="0.82745098039215681" green="0.82745098039215681" blue="0.82745098039215681" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="1" id="aJU-VW-wvG"/>
@@ -634,7 +634,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="fCW-ID-Qdt">
-                                                    <rect key="frame" x="40" y="32.5" width="10" height="10"/>
+                                                    <rect key="frame" x="40" y="31" width="10" height="10"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="10" id="5TK-u5-dad"/>
                                                         <constraint firstAttribute="height" constant="10" id="NgR-c1-zeQ"/>
@@ -824,7 +824,7 @@
                                                 </connections>
                                             </button>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Unknown" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wCm-JR-scg">
-                                                <rect key="frame" x="80" y="0.5" width="324" height="23.5"/>
+                                                <rect key="frame" x="80" y="4" width="324" height="20"/>
                                                 <fontDescription key="fontDescription" name="ProximaNova-Semibold" family="Proxima Nova" pointSize="20"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
@@ -860,7 +860,7 @@
                                                 </connections>
                                             </button>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Online" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fqT-kR-nGU">
-                                                <rect key="frame" x="80" y="26" width="35" height="14"/>
+                                                <rect key="frame" x="80" y="26" width="35" height="15"/>
                                                 <fontDescription key="fontDescription" name="ProximaNova-Regular" family="Proxima Nova" pointSize="12"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
@@ -911,16 +911,16 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="btnBack" destination="Lwj-tU-0pw" id="e3b-WE-COl"/>
                         <outlet property="btnCameraInfo" destination="5z1-zp-N3w" id="b9o-ne-qfC"/>
                         <outlet property="btnGroupInfo" destination="fD2-ec-daQ" id="7MO-MA-Ijt"/>
-                        <outlet property="btn_back" destination="Lwj-tU-0pw" id="JL3-Av-56h"/>
-                        <outlet property="btn_send" destination="1rk-a8-T6x" id="S1d-K2-Hrd"/>
-                        <outlet property="constant_ht_textfview" destination="h0g-al-Rni" id="N3u-1k-B0Y"/>
-                        <outlet property="contant_bottom_of_textfield" destination="LJC-F9-Jn3" id="t3f-oy-Mk8"/>
-                        <outlet property="lbl_isOnline" destination="fqT-kR-nGU" id="M7q-9H-1GN"/>
-                        <outlet property="lbl_title" destination="wCm-JR-scg" id="vzn-wp-wO3"/>
-                        <outlet property="tbl_chat" destination="X3I-VH-rhS" id="El4-bK-K1h"/>
-                        <outlet property="tv_message" destination="uBb-av-ski" id="32K-B6-xc5"/>
+                        <outlet property="btnSend" destination="1rk-a8-T6x" id="RdU-T4-ibr"/>
+                        <outlet property="constantHtTextfview" destination="h0g-al-Rni" id="fNT-27-khE"/>
+                        <outlet property="contantBottomOfTextfield" destination="LJC-F9-Jn3" id="1xb-K3-hD5"/>
+                        <outlet property="lblIsOnline" destination="fqT-kR-nGU" id="btX-Ty-vMf"/>
+                        <outlet property="lblTitle" destination="wCm-JR-scg" id="edR-Tq-Std"/>
+                        <outlet property="tblChat" destination="X3I-VH-rhS" id="iXy-68-llV"/>
+                        <outlet property="tvMessage" destination="uBb-av-ski" id="tgD-DJ-IQM"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qTj-2o-eTz" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -952,12 +952,11 @@
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </state>
                                                 <connections>
-                                                    <action selector="btn_backButtonTapped:" destination="mqv-aL-zgI" eventType="touchUpInside" id="mi8-mz-UD4"/>
-                                                    <action selector="btn_backTapped:" destination="vgx-bK-IMJ" eventType="touchUpInside" id="mNn-f2-AW0"/>
+                                                    <action selector="btn_backButtonTapped:" destination="mqv-aL-zgI" eventType="touchUpInside" id="Rxp-H8-08Y"/>
                                                 </connections>
                                             </button>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="New Group" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cg9-9L-vwq">
-                                                <rect key="frame" x="70" y="10.5" width="334" height="23.5"/>
+                                                <rect key="frame" x="70" y="10" width="334" height="24.5"/>
                                                 <fontDescription key="fontDescription" name="ProximaNova-Bold" family="Proxima Nova" pointSize="20"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
@@ -1059,7 +1058,7 @@
                                     <inset key="sectionInset" minX="10" minY="0.0" maxX="10" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="4gq-vC-aG7" customClass="userListCollectionCell" customModule="Firebase_Chat_iOS" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="4gq-vC-aG7" customClass="UserListCollectionCell" customModule="Firebase_Chat_iOS" customModuleProvider="target">
                                         <rect key="frame" x="10" y="0.0" width="120" height="120"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="jpV-RN-xif">
@@ -1155,12 +1154,12 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="btnBack" destination="DA4-AD-sJA" id="FzD-c0-dV3"/>
                         <outlet property="btnCreateGroup" destination="s2a-oR-thX" id="dzH-dm-Wmm"/>
-                        <outlet property="btn_back" destination="DA4-AD-sJA" id="IGO-1d-roY"/>
                         <outlet property="collectionUsers" destination="8Z6-DR-nol" id="EuD-1V-cIm"/>
-                        <outlet property="img_groupImage" destination="Hy0-up-9tb" id="hhF-7k-YbR"/>
+                        <outlet property="imgGroupImage" destination="Hy0-up-9tb" id="oLL-v0-HHu"/>
                         <outlet property="lblParticipant" destination="uws-0C-kwg" id="Je9-3q-pJV"/>
-                        <outlet property="tf_groupName" destination="a64-t0-VCt" id="Wfk-3I-P3z"/>
+                        <outlet property="tfGroupName" destination="a64-t0-VCt" id="VP9-TC-pvh"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Y3l-bC-Xad" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

@@ -12,20 +12,20 @@ import FirebaseStorage
 // Comversation model
 class MessageClass{
 
-    var messageText : String = ""
-    var receiverId : String = ""
-    var senderId : String = ""
-    var timestamp : String?
-    var url : String = ""
-    var video_url : String = ""
-    var message_type : String = ""
-    var status : String = ""
-    var type : DocumentChangeType?
-    var docId : String = ""
-    var task : StorageUploadTask?
-    var reference : StorageReference?
-    var videoTask : StorageUploadTask?
-    var videoRef : StorageReference?
+    var messageText: String = ""
+    var receiverId: String = ""
+    var senderId: String = ""
+    var timestamp: String?
+    var url: String = ""
+    var videoUrl: String = ""
+    var messageType: String = ""
+    var status: String = ""
+    var type: DocumentChangeType?
+    var docId: String = ""
+    var task: StorageUploadTask?
+    var reference: StorageReference?
+    var videoTask: StorageUploadTask?
+    var videoRef: StorageReference?
     
     init() {
         
@@ -48,8 +48,8 @@ class MessageClass{
         }
         
         url = dictionary["url"] as? String ?? ""
-        video_url = dictionary["video_url"] as? String ?? ""
-        message_type = dictionary["message_type"] as? String ?? ""
+        videoUrl = dictionary["video_url"] as? String ?? ""
+        messageType = dictionary["message_type"] as? String ?? ""
         status = dictionary["status"] as? String ?? ""
         docId = dictionary["docId"] as? String ?? ""
     }

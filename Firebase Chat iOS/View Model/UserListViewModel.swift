@@ -10,8 +10,8 @@ import Foundation
 final class UserListViewModel {
     
     let firebaseViewModel: FirebaseViewModel = FirebaseViewModel()
-    var userListVCDelegate: UserListVCDelegate?
-    var firebaseAuthViewModelDelegate: FirebaseAuthViewModelDelegate?
+    weak var userListVCDelegate: UserListVCDelegate?
+    weak var firebaseAuthViewModelDelegate: FirebaseAuthViewModelDelegate?
     
     init() {
         self.userListVCDelegate = self
@@ -19,7 +19,7 @@ final class UserListViewModel {
     
 }
 
-extension UserListViewModel : UserListVCDelegate {
+extension UserListViewModel: UserListVCDelegate {
     // MARK: will get user list from firestore and send back to controller to list
     func getUserList() {
         

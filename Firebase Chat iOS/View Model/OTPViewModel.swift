@@ -13,8 +13,8 @@ import CodableFirebase
 final class OTPViewModel {
     
     let firebaseViewModel: FirebaseViewModel = FirebaseViewModel()
-    var OTPViewControllerDelegate: OTPViewControllerDelegate?
-    var firebaseAuthViewModelDelegate: FirebaseAuthViewModelDelegate?
+    weak var OTPViewControllerDelegate: OTPViewControllerDelegate?
+    weak var firebaseAuthViewModelDelegate: FirebaseAuthViewModelDelegate?
     
     init() {
         self.OTPViewControllerDelegate = self
@@ -22,7 +22,7 @@ final class OTPViewModel {
     
 }
 
-extension OTPViewModel : OTPViewControllerDelegate {
+extension OTPViewModel: OTPViewControllerDelegate {
     
     // MARK: get verification id from firebase and send to controller
     func verifyPhone(phone: String) {
@@ -67,7 +67,7 @@ extension OTPViewModel : OTPViewControllerDelegate {
     // MARK: will check user in database and send back bool value
     func checkUserAvailability(userID: String) {
         
-        guard Reachability.isConnectedToNetwork() else{
+        guard Reachability.isConnectedToNetwork() else {
             Singleton.sharedSingleton.showToast(message: "Please check your internet connection")
             return
         }
@@ -79,7 +79,7 @@ extension OTPViewModel : OTPViewControllerDelegate {
             if let err = err {
                 self.firebaseAuthViewModelDelegate?.error!(error: err.localizedDescription, sign: true)
             } else {
-                if ((documents?.documents.count)! > 0){
+                if ((documents?.documents.count)! > 0) {
                     
                     for _ in documents!.documents {
                         self.firebaseAuthViewModelDelegate?.checkAvalability?(true)

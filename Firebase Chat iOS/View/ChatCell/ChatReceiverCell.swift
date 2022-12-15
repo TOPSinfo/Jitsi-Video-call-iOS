@@ -17,20 +17,17 @@ class ChatReceiverCell: UITableViewCell {
     @IBOutlet weak var lblUserName: UILabel!
     @IBOutlet weak var consUserNameHeight: NSLayoutConstraint!
     
-    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
     }
 
     override func layoutSubviews() {
-        view_bubble.roundCorners([.topRight,.bottomLeft,.bottomRight], radius: 5)
+        view_bubble.roundCorners([.topRight, .bottomLeft, .bottomRight], radius: 5)
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
         // Configure the view for the selected state
     }
-    
 }

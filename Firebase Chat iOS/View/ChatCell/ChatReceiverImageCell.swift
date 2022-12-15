@@ -31,3 +31,4 @@ class ChatReceiverImageCell: UITableViewCell {
     }
     
 }
+   

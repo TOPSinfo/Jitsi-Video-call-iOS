@@ -9,11 +9,11 @@ import UIKit
 
 class ActiveCallList: NSObject {
 
-    var CallStatus : String = ""
-    var HostId : String = ""
-    var HostName : String = ""
-    var documentId : String = ""
-    var userIds : [String] = []
+    var CallStatus: String = ""
+    var HostId: String = ""
+    var HostName: String = ""
+    var documentId: String = ""
+    var userIds: [String] = []
     
     override init() {
         

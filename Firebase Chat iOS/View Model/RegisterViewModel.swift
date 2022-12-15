@@ -11,8 +11,8 @@ import UIKit
 final class RegisterViewModel {
     
     let firebaseViewModel: FirebaseViewModel = FirebaseViewModel()
-    var registerVCDelegate: RegisterUserVCDelegate?
-    var firebaseAuthViewModelDelegate: FirebaseAuthViewModelDelegate?
+    weak var registerVCDelegate: RegisterUserVCDelegate?
+    weak var firebaseAuthViewModelDelegate: FirebaseAuthViewModelDelegate?
     
     init() {
         self.registerVCDelegate = self
@@ -20,18 +20,17 @@ final class RegisterViewModel {
     
 }
 
-extension RegisterViewModel : RegisterUserVCDelegate {
-    
+extension RegisterViewModel: RegisterUserVCDelegate {
     
     // MARK: Upload user Image
-    func uploadImage(fileData: Data?, fileName:String, type:MediaType) {
+    func uploadImage(fileData: Data?, fileName: String, type: MediaType) {
         
         guard Reachability.isConnectedToNetwork() else{
             Singleton.sharedSingleton.showToast(message: "Please check your internet connection")
             return
         }
         
-        firebaseViewModel.firebaseStorageManager.uploadImage(childPath: fileName, imageNeedstoUpload: fileData, type: type) { task,ref  in
+        firebaseViewModel.firebaseStorageManager.uploadImage(childPath: fileName, imageNeedstoUpload: fileData, type: type) { task, ref  in
             if task != nil {
                 self.firebaseAuthViewModelDelegate?.didUploadUserImage?(task: task, reference: ref)
             } else {
@@ -39,11 +38,10 @@ extension RegisterViewModel : RegisterUserVCDelegate {
             }
         }
 
-
     }
     
     // MARK: Button click from cotroller and register user in databse
-    func buttonClicked(userID:String, dic:[String:Any]) {
+    func buttonClicked(userID: String, dic: [String:Any]) {
         
         guard Reachability.isConnectedToNetwork() else{
             Singleton.sharedSingleton.showToast(message: "Please check your internet connection")

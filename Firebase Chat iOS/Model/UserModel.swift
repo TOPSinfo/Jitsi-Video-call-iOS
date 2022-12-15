@@ -10,24 +10,20 @@ import FirebaseFirestore
 import UIKit
 import Firebase
 
-enum recordType {
-    
-}
-
 // This is user model
 class SignupUserData {
     
-    var email : String = ""
-    var firstName : String = ""
-    var lastName : String = ""
-    var phone : String = ""
-    var uid : String = ""
-    var profile_image : String = ""
-    var createdAt : Timestamp = Timestamp(date: Date())
-    var isOnline : Bool = false
-    var type : DocumentChangeType?
-    var isGroup : Bool = false
-    var objGroupDetail : GroupDetailObject?
+    var email: String = ""
+    var firstName: String = ""
+    var lastName: String = ""
+    var phone: String = ""
+    var uid: String = ""
+    var profile_image: String = ""
+    var createdAt: Timestamp = Timestamp(date: Date())
+    var isOnline: Bool = false
+    var type: DocumentChangeType?
+    var isGroup: Bool = false
+    var objGroupDetail: GroupDetailObject?
 
     init() {
         
@@ -69,13 +65,13 @@ class SignupUserData {
 // This is group model
 class GroupDetailObject {
     
-    var adminId : String = ""
-    var adminName : String = ""
-    var createdAt : String = ""
-    var groupIcon : String = ""
-    var id : String = ""
-    var members : [String] = []
-    var name : String = ""
+    var adminId: String = ""
+    var adminName: String = ""
+    var createdAt: String = ""
+    var groupIcon: String = ""
+    var id: String = ""
+    var members: [String] = []
+    var name: String = ""
 
     init() {
         

@@ -14,9 +14,9 @@ import FirebaseFirestore
 
 // MARK: - Custom delegate
 protocol OTPViewControllerDelegate: AnyObject {
-    func verifyPhone(phone:String) // verify phone to send OTP
-    func buttonClicked(verificationId:String,code:String) // Button click
-    func checkUserAvailability(userID:String) // check user availability
+    func verifyPhone(phone: String) // verify phone to send OTP
+    func buttonClicked(verificationId: String,code: String) // Button click
+    func checkUserAvailability(userID: String) // check user availability
 }
 
 class OTPViewController: UIViewController,UITextViewDelegate {
@@ -34,21 +34,21 @@ class OTPViewController: UIViewController,UITextViewDelegate {
     @IBOutlet weak var lblTimer: UILabel!
     @IBOutlet weak var pinView: SVPinView!
     
-    var forUpdateMobileNumber : Bool = false // This variable true means user want to update his mobile number
+    var forUpdateMobileNumber: Bool = false // This variable true means user want to update his mobile number
     
     // User Info From Previous controller
     var userInfo = SignupUserData()
     
     // Verification id
-    var verificationId : String = ""
-    var isExpire : Bool = false
+    var verificationId: String = ""
+    var isExpire: Bool = false
     
     // For Timer Purpose
     var countdownTimer: Timer!
     var totalTime = 60
     
     // UserId From phone number authentication
-    var userId : String = "AAAAAAAAAAAA"
+    var userId: String = "AAAAAAAAAAAA"
     
     // MARK: - Controller Lifecycle
     override func viewDidLoad() {
@@ -59,7 +59,7 @@ class OTPViewController: UIViewController,UITextViewDelegate {
         verifyPhoneNumber()
         
         // Pinview call back method to recieve entered pin
-        pinView.didFinishCallback = { [weak self] pin in
+        pinView.didFinishCallback = { [weak self] _ in
             self!.pinEntered()
         }
         
@@ -109,8 +109,8 @@ class OTPViewController: UIViewController,UITextViewDelegate {
     // MARK: -  Setup UI 
     func setupUI() {
         pinView.pinLength = 6
-        pinView.borderLineColor = Singleton.appColors.grayColor
-        pinView.activeBorderLineColor = Singleton.appColors.grayColor
+        pinView.borderLineColor = Singleton.AppColors.grayColor
+        pinView.activeBorderLineColor = Singleton.AppColors.grayColor
     }
     
     // MARK: Countinue Button Action
@@ -120,7 +120,7 @@ class OTPViewController: UIViewController,UITextViewDelegate {
     
     // MARK: - Resend Code
     @IBAction func btnResendpressed(_ sender: UIButton) {
-        if (totalTime == 0){
+        if (totalTime == 0) {
             pinView.clearPin()
             countdownTimer.invalidate()
             totalTime = 60
@@ -137,7 +137,7 @@ class OTPViewController: UIViewController,UITextViewDelegate {
     func startTimer() {
         self.lblTimer.isHidden = false
         btnResendCode.isEnabled = false
-        btnResendCode.setTitleColor(Singleton.appColors.themeColoer.withAlphaComponent(0.3), for: .disabled)
+        btnResendCode.setTitleColor(Singleton.AppColors.themeColoer.withAlphaComponent(0.3), for: .disabled)
         countdownTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTime), userInfo: nil, repeats: true)
     }
     
@@ -159,8 +159,7 @@ class OTPViewController: UIViewController,UITextViewDelegate {
         self.lblTimer.isHidden = true
         btnResendCode.isEnabled =  true
         
-        
-        btnResendCode.setTitleColor(Singleton.appColors.themeColoer, for: .normal)
+        btnResendCode.setTitleColor(Singleton.AppColors.themeColoer, for: .normal)
         
         isExpire = true
         countdownTimer.invalidate()
@@ -172,9 +171,8 @@ class OTPViewController: UIViewController,UITextViewDelegate {
             self.navigationController?.popViewController(animated: true)
             return true
         } else {
-            
             for controller in self.navigationController!.viewControllers as Array {
-                if controller.isKind(of: addMobileViewController.self) {
+                if controller.isKind(of: AddMobileViewController.self) {
                     self.navigationController!.popToViewController(controller, animated: true)
                     break
                 }
@@ -187,17 +185,17 @@ class OTPViewController: UIViewController,UITextViewDelegate {
     // MARK: - OTP Validation method
     func pinEntered() {
         guard pinView.getPin().count == 6 else {
-            Singleton.sharedSingleton.showToast(message: Singleton.alertMessages.enterProperPin)
+            Singleton.sharedSingleton.showToast(message: Singleton.AlertMessages.enterProperPin)
             return
         }
         
         guard verificationId != "" else {
-            Singleton.sharedSingleton.showToast(message: Singleton.alertMessages.somethingWentWrong)
+            Singleton.sharedSingleton.showToast(message: Singleton.AlertMessages.somethingWentWrong)
             return
         }
         
         guard isExpire == false else {
-            Singleton.sharedSingleton.showToast(message: Singleton.alertMessages.otpExpired)
+            Singleton.sharedSingleton.showToast(message: Singleton.AlertMessages.otpExpired)
             return
         }
         
@@ -226,7 +224,6 @@ extension OTPViewController: FirebaseAuthViewModelDelegate {
     
     // Will get user id after login and call check user availability
     func login(_ authResult: AuthDataResult?) {
-        
         if let userDetail = authResult {
             let id = userDetail.user.uid
             otpViewModel.OTPViewControllerDelegate?.checkUserAvailability(userID: id)
@@ -237,22 +234,15 @@ extension OTPViewController: FirebaseAuthViewModelDelegate {
     func checkAvalability(_ isRegisterd: Bool) {
         
         if isRegisterd {
-            
-            otpViewModel.firebaseViewModel.firebaseCloudFirestoreManager.getUserDetail(userID: Auth.auth().currentUser!.uid) { (userData) in
-                
-                guard let vc = Singleton.sharedSingleton.getController(storyName: Singleton.storyboardName.Main, controllerName: Singleton.controllerName.UserListVC) as? UserListVC else { return }
-                Singleton.sharedSingleton.navigate(from: self, to: vc, navigationController: self.navigationController)
-                
+            otpViewModel.firebaseViewModel.firebaseCloudFirestoreManager.getUserDetail(userID: Auth.auth().currentUser!.uid) { (_) in
+                guard let vcUL = Singleton.sharedSingleton.getController(storyName: Singleton.StoryboardName.Main, controllerName: Singleton.ControllerName.UserListVC) as? UserListVC else { return }
+                Singleton.sharedSingleton.navigate(from: self, to: vcUL, navigationController: self.navigationController)
             } failure: { (error) in
                 print(error)
             }
-            
-            
         } else {
-            guard let vc = Singleton.sharedSingleton.getController(storyName: Singleton.storyboardName.Main, controllerName: Singleton.controllerName.RegisterUserVC) as? RegisterUserVC else { return }
-            Singleton.sharedSingleton.navigate(from: self, to: vc, navigationController: self.navigationController)
+            guard let vcRU = Singleton.sharedSingleton.getController(storyName: Singleton.StoryboardName.Main, controllerName: Singleton.ControllerName.RegisterUserVC) as? RegisterUserVC else { return }
+            Singleton.sharedSingleton.navigate(from: self, to: vcRU, navigationController: self.navigationController)
         }
-        
     }
-    
 }

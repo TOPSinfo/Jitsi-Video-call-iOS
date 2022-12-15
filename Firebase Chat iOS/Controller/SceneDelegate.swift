@@ -50,8 +50,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         Singleton.sharedSingleton.doOnlineOffline(isOnline: true)
     }
     
-    
-    
     @available(iOS 13.0, *)
     func sceneDidEnterBackground(_ scene: UIScene) {
         // Called as the scene transitions from the foreground to the background.

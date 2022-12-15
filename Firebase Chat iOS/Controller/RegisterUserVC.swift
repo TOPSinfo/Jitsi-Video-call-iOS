@@ -12,28 +12,27 @@ import CropViewController
 
 // MARK: - custom delegate methos
 protocol RegisterUserVCDelegate: AnyObject {
-    func uploadImage(fileData:Data?, fileName:String, type:MediaType)
-    func buttonClicked(userID:String, dic:[String:Any])
+    func uploadImage(fileData: Data?, fileName: String, type: MediaType)
+    func buttonClicked(userID: String, dic: [String:Any])
 }
 
 class RegisterUserVC: UIViewController {
     
     // MARK: - variable
-    let registerViewModel : RegisterViewModel = RegisterViewModel()
+    let registerViewModel: RegisterViewModel = RegisterViewModel()
     var userID = String()
     
     // MARK: - Outlet
-    @IBOutlet weak var tf_FirstNmae:UITextField!
-    @IBOutlet weak var tf_LastName:UITextField!
-    @IBOutlet weak var tf_Email:UITextField!
-    @IBOutlet weak var img_user:UIImageView!
+    @IBOutlet weak var tf_FirstNmae: UITextField!
+    @IBOutlet weak var tf_LastName: UITextField!
+    @IBOutlet weak var tf_Email: UITextField!
+    @IBOutlet weak var img_user: UIImageView!
     
     var selectedAssets = [TLPHAsset]()
     
     // MARK: - Controller life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -42,19 +41,19 @@ class RegisterUserVC: UIViewController {
     }
     
     // MARK: - Register button tapped
-    @IBAction func btn_registerTapped(_ sender:UIButton) {
+    @IBAction func btn_registerTapped(_ sender: UIButton) {
         
         if tf_FirstNmae.text!.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            Singleton.sharedSingleton.showToast(message: Singleton.alertMessages.enterFirstName)
+            Singleton.sharedSingleton.showToast(message: Singleton.AlertMessages.enterFirstName)
         } else if tf_LastName.text!.trimmingCharacters(in: .whitespacesAndNewlines)
                     .isEmpty {
-            Singleton.sharedSingleton.showToast(message: Singleton.alertMessages.enterlastName)
+            Singleton.sharedSingleton.showToast(message: Singleton.AlertMessages.enterlastName)
         } else if tf_Email.text!.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            Singleton.sharedSingleton.showToast(message: Singleton.alertMessages.enteremail)
+            Singleton.sharedSingleton.showToast(message: Singleton.AlertMessages.enteremail)
         } else if !Singleton.sharedSingleton.isValidEmail(tf_Email.text!) {
-            Singleton.sharedSingleton.showToast(message: Singleton.alertMessages.enterValidemail)
+            Singleton.sharedSingleton.showToast(message: Singleton.AlertMessages.enterValidemail)
         } else if selectedAssets.count == 0 {
-            Singleton.sharedSingleton.showToast(message: Singleton.alertMessages.profileImage)
+            Singleton.sharedSingleton.showToast(message: Singleton.AlertMessages.profileImage)
         } else {
             
             var filename = String()
@@ -65,12 +64,8 @@ class RegisterUserVC: UIViewController {
                 let imgData = img.jpegData(compressionQuality: 1.0)
                 registerViewModel.registerVCDelegate?.uploadImage(fileData: imgData, fileName: ChildPath.userProfileImage + filename, type: .image)
             }
-            
         }
-        
     }
-    
-    
     
     @IBAction func btn_pickPhoto(_ sender:UIButton) {
         self.view.endEditing(true)
@@ -88,7 +83,7 @@ class RegisterUserVC: UIViewController {
     
     @IBAction func btn_back(_ sender:UIButton) {
         Singleton.sharedSingleton.doOnlineOffline(isOnline: false)
-        registerViewModel.firebaseViewModel.logautUser { (isLogout) in
+        registerViewModel.firebaseViewModel.logautUser { (_) in
             Singleton.sharedSingleton.setNavigation()
         } failure: { (error) in
             Singleton.sharedSingleton.showToast(message: error)
@@ -98,7 +93,7 @@ class RegisterUserVC: UIViewController {
 }
 
 // MARK: - Extended firebase Auth view model
-extension RegisterUserVC : FirebaseAuthViewModelDelegate {
+extension RegisterUserVC: FirebaseAuthViewModelDelegate {
     
     func didUploadUserImage(task: StorageUploadTask?, reference: StorageReference?) {
  
@@ -107,7 +102,7 @@ extension RegisterUserVC : FirebaseAuthViewModelDelegate {
             
             task.observe(.success) { _ in
                 
-                reference?.downloadURL(completion: { url, error in
+                reference?.downloadURL(completion: { url, _ in
                     Singleton.sharedSingleton.hideLoader()
                     guard let downloadURL = url else {
                         // Uh-oh, an error occurred!
@@ -129,7 +124,7 @@ extension RegisterUserVC : FirebaseAuthViewModelDelegate {
                 })
             }
             
-            task.observe(.failure) { snap in
+            task.observe(.failure) { _ in
                 Singleton.sharedSingleton.showToast(message: "Registration fail")
                 Singleton.sharedSingleton.hideLoader()
             }
@@ -146,16 +141,14 @@ extension RegisterUserVC : FirebaseAuthViewModelDelegate {
     }
     // register callback
     func register(_ isRegister: Bool) {
-        
         if isRegister {
-            guard let vc = Singleton.sharedSingleton.getController(storyName: Singleton.storyboardName.Main, controllerName: Singleton.controllerName.UserListVC) as? UserListVC else { return }
-            Singleton.sharedSingleton.navigate(from: self, to: vc, navigationController: self.navigationController)
-        } 
-        
+            guard let vcUL = Singleton.sharedSingleton.getController(storyName: Singleton.StoryboardName.Main, controllerName: Singleton.ControllerName.UserListVC) as? UserListVC else { return }
+            Singleton.sharedSingleton.navigate(from: self, to: vcUL, navigationController: self.navigationController)
+        }         
     }
 }
 
-extension RegisterUserVC : TLPhotosPickerViewControllerDelegate , CropViewControllerDelegate {
+extension RegisterUserVC: TLPhotosPickerViewControllerDelegate , CropViewControllerDelegate {
     
     func cropViewController(_ cropViewController: CropViewController, didCropToImage image: UIImage, withRect cropRect: CGRect, angle: Int) {
         self.img_user.image = image
@@ -176,11 +169,9 @@ extension RegisterUserVC : TLPhotosPickerViewControllerDelegate , CropViewContro
     func dismissComplete() {
         // picker viewcontroller dismiss completion
         for i in selectedAssets {
-                        
             let cropViewController = CropViewController(croppingStyle: .circular, image: i.fullResolutionImage ?? UIImage())
             cropViewController.delegate = self
             self.present(cropViewController, animated: true, completion: nil)
-            
         }
     }
         

@@ -13,14 +13,14 @@ final class FirebaseViewModel {
     
     let firebaseAuthManager: FirebaseAuthManager = FirebaseAuthManager()
     let firebaseCloudFirestoreManager: FirebaseCloudFirestoreManager = FirebaseCloudFirestoreManager()
-    let firebaseStorageManager : FirebaseStorageManager = FirebaseStorageManager()
+    let firebaseStorageManager: FirebaseStorageManager = FirebaseStorageManager()
     
     init() {
         
     }
     
     // MARK: Verify Phone method
-    func verifyPhone(phone:String, completion: @escaping((_ verificationID:String) -> Void), failure: @escaping((_ error: String) -> Void)){
+    func verifyPhone(phone:String, completion: @escaping((_ verificationID:String) -> Void), failure: @escaping((_ error: String) -> Void)) {
     
         guard Reachability.isConnectedToNetwork() else{
             Singleton.sharedSingleton.showToast(message: "Please check your internet connection")
@@ -37,9 +37,9 @@ final class FirebaseViewModel {
     }
     
     // MARK: - Login callback
-    func login(credential:PhoneAuthCredential, completion: @escaping((_ authResult: AuthDataResult?) -> Void), failure: @escaping((_ error: String) -> Void)) {
+    func login(credential: PhoneAuthCredential, completion: @escaping((_ authResult: AuthDataResult?) -> Void), failure: @escaping((_ error: String) -> Void)) {
         
-        guard Reachability.isConnectedToNetwork() else{
+        guard Reachability.isConnectedToNetwork() else {
             Singleton.sharedSingleton.showToast(message: "Please check your internet connection")
             return
         }
@@ -53,8 +53,8 @@ final class FirebaseViewModel {
         }
     }
     // MARK: Logout callback
-    func logautUser(completion: @escaping((_ isLogOut: Bool) -> Void), failure: @escaping((_ error: String) -> Void)){
-        guard Reachability.isConnectedToNetwork() else{
+    func logautUser(completion: @escaping((_ isLogOut: Bool) -> Void), failure: @escaping((_ error: String) -> Void)) {
+        guard Reachability.isConnectedToNetwork() else {
             Singleton.sharedSingleton.showToast(message: "Please check your internet connection")
             return
         }

@@ -17,16 +17,16 @@ enum MessageStatus {
 
 class FirebaseCloudFirestoreManager {
     
-    //MARK: - firestore database object
+    // MARK: - firestore database object
     var db: Firestore = Firestore.firestore()
     
-    //MARK: - check user is registred or not
-    func checkUserAvailableQuery(uid : String) -> Query {
+    // MARK: - check user is registred or not
+    func checkUserAvailableQuery(uid: String) -> Query {
         let userRef = db.collection("USER")
         return userRef.whereField("uid", isEqualTo: uid)
     }
     
-    //MARK: - register User using basic detail
+    // MARK: - register User using basic detail
     func registerUser(userID:String, dic:[String:Any], completion: @escaping(() -> Void), failure: @escaping((_ error: String) -> Void)) {
         
         db.collection("USER").document(userID).setData(dic) { (error) in
@@ -51,13 +51,13 @@ class FirebaseCloudFirestoreManager {
         }
     }
     
-    //MARK: - get current user detail using user_id
+    // MARK: - get current user detail using user_id
     func getUserDetail(userID:String,completion: @escaping((_ arrayUsers: SignupUserData) -> Void), failure: @escaping((_ error: String) -> Void)){
         
         db.collection("USER").document(userID).getDocument(completion: { (documentSnapshot, error) in
             if let error = error {
                 failure(error.localizedDescription)
-            } else{
+            } else {
                 if let documentSnapshot = documentSnapshot, documentSnapshot.exists {
 //                    do {
                         if let document = documentSnapshot.data() {
@@ -77,7 +77,7 @@ class FirebaseCloudFirestoreManager {
     }
     
     
-    //MARK: - Get all user who are registred in except self
+    // MARK: - Get all user who are registred in except self
     func getAlluser(completion: @escaping((_ arrayUsers: [SignupUserData]) -> Void), failure: @escaping((_ error: String) -> Void)){
         
         let uid = Auth.auth().currentUser?.uid ?? "0"
@@ -123,7 +123,7 @@ class FirebaseCloudFirestoreManager {
             } else {
                 var arrayGrouop = [SignupUserData]()
                 if let documents = QuerySnapshot?.documents, documents.count > 0 {
-                    /// This is the on change listner
+                    // This is the on change listner
                     QuerySnapshot!.documentChanges.forEach({ (diff) in
                         if (diff.type == .added) {
                             let user = SignupUserData.init(fromDictionaryGroup: diff.document.data())
@@ -148,7 +148,7 @@ class FirebaseCloudFirestoreManager {
     }
     
     // MARK: - TO Get conversation between two users with realtime update lithner
-    func getConversation(toUserid:String, isForGroup : Bool, completion: @escaping((_ arrayUsers: [MessageClass]) -> Void), failure: @escaping((_ error: String) -> Void)) {
+    func getConversation(toUserid:String, isForGroup: Bool, completion: @escaping((_ arrayUsers: [MessageClass]) -> Void), failure: @escaping((_ error: String) -> Void)) {
         
         let id = Auth.auth().currentUser?.uid ?? ""
         var docid = Singleton.sharedSingleton.getOneToOneID(senderID: id, receiverID: toUserid)
@@ -192,9 +192,9 @@ class FirebaseCloudFirestoreManager {
                 let filtered = messages.filter({$0.senderId == toUserid})
                 
                 filtered.forEach { messaes in
-                    if messaes.status == Singleton.messageStatus.SEND {
+                    if messaes.status == Singleton.MessageStatus.SEND {
                         let docRef = Firestore.firestore().collection("Messages").document(docid).collection("message").document(messaes.docId)
-                        batch.updateData(["status" : Singleton.messageStatus.READ], forDocument: docRef)
+                        batch.updateData(["status": Singleton.MessageStatus.READ], forDocument: docRef)
                     }
                 }
                 batch.commit { error in
@@ -241,15 +241,15 @@ class FirebaseCloudFirestoreManager {
         arrUserid = arrUserid.map( {$0 + "___InActive"})
         arrUserid.append((objCurrentUser?.uid ?? "") + "___Active")
         arrUserid.sort { $0 < $1 }
-        var dict : [String:Any] = [:]
+        var dict: [String:Any] = [:]
         dict["userIds"] = arrUserid
         dict["CallStatus"] = "Active"
         dict["HostId"] = objCurrentUser?.uid ?? ""
         dict["HostName"] = AppDelegate.standard.objCurrentUser.fullName
 
-        let groupCall = db.collection("GroupCall").document();
-        let id = groupCall.documentID;
-        groupCall.setData(dict);
+        let groupCall = db.collection("GroupCall").document()
+        let id = groupCall.documentID
+        groupCall.setData(dict)
         completion(id)
     }
     
@@ -261,15 +261,15 @@ class FirebaseCloudFirestoreManager {
         arrUserid = arrUserid.map( {$0 + "___InActive"})
         arrUserid.append((objCurrentUser?.uid ?? "") + "___Active")
         arrUserid.sort { $0 < $1 }
-        var dict : [String:Any] = [:]
+        var dict: [String:Any] = [:]
         dict["userIds"] = arrUserid
         dict["CallStatus"] = "Active"
         dict["HostId"] = objCurrentUser?.uid ?? ""
         dict["HostName"] = AppDelegate.standard.objCurrentUser.fullName
 
-        let groupCall = db.collection("GroupCall").document();
-        let id = groupCall.documentID;
-        groupCall.setData(dict);
+        let groupCall = db.collection("GroupCall").document()
+        let id = groupCall.documentID
+        groupCall.setData(dict)
         completion(id)
     }
     
@@ -282,7 +282,7 @@ class FirebaseCloudFirestoreManager {
             } else {
                 if let documents = QuerySnapshot?.documents, documents.count > 0 {
                     print(documents)
-                    /// This is the on change listner
+                    // This is the on change listner
                     QuerySnapshot!.documentChanges.forEach({ (diff) in
                         print(diff.document.data())
                         if (diff.type == .added) {
@@ -311,12 +311,12 @@ class FirebaseCloudFirestoreManager {
                     print(documents)
                     QuerySnapshot!.documentChanges.forEach({ (diff) in
                         print(diff.document.data())
-                        for item in AppDelegate.standard.arrForActiveCallList {
-                            if item.documentId == diff.document.documentID {
+                        for item in AppDelegate.standard.arrForActiveCallList where item.documentId == diff.document.documentID {
+//                            if item.documentId == diff.document.documentID {
                                 if let row = AppDelegate.standard.arrForActiveCallList.firstIndex(where: {$0.documentId == diff.document.documentID}) {
                                     AppDelegate.standard.arrForActiveCallList.remove(at: row)
                                 }
-                            }
+//                            }
                         }
                     })
                 }
@@ -325,13 +325,13 @@ class FirebaseCloudFirestoreManager {
     }
     
     // MARK: - Change group/one to one call status
-    func changeCallStatus(_ roomId : String, isActive : Bool) {
+    func changeCallStatus(_ roomId: String, isActive: Bool) {
         let docRef = db
             .collection("GroupCall")
             .document(roomId)
         
         // Get data
-        docRef.getDocument { (document, error) in
+        docRef.getDocument { (document, _) in
             guard let document = document, document.exists else {
                 print("Document does not exist")
                 return
@@ -365,7 +365,7 @@ class FirebaseCloudFirestoreManager {
 
     func doOnlineOffline(_ isOnline:Bool,userID:String) {
         
-        db.collection("USER").document(userID).updateData(["isOnline":isOnline]) { error in
+        db.collection("USER").document(userID).updateData(["isOnline":isOnline]) { _ in
         }
     }
     
@@ -377,7 +377,7 @@ class FirebaseCloudFirestoreManager {
             } else {
                 var array = [SignupUserData]()
                 if let documents = QuerySnapshot?.documents, documents.count > 0 {
-                    /// This is the on change listner
+                    // This is the on change listner
                     QuerySnapshot!.documentChanges.forEach({ (diff) in
                         if (diff.type == .added) {
                             let user = SignupUserData.init(fromDictionary: diff.document.data())
@@ -404,13 +404,13 @@ class FirebaseCloudFirestoreManager {
     }
  
     // MARK: - Change group/one to one call status
-    func getCurrentUserDetails(_ userId : String) {
+    func getCurrentUserDetails(_ userId: String) {
         let docRef = db
             .collection("USER")
             .document(userId)
         
         // Get data
-        docRef.getDocument { (document, error) in
+        docRef.getDocument { (document, _) in
             guard let document = document, document.exists else {
                 print("Document does not exist")
                 return

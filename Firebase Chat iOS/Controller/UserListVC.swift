@@ -9,7 +9,7 @@ import UIKit
 import JitsiMeetSDK
 import FirebaseAuth
 
-class userListCell : UITableViewCell {
+class UserListCell: UITableViewCell {
     @IBOutlet weak var img_user:UIImageView!
     @IBOutlet weak var lbl_userName:UILabel!
     @IBOutlet weak var imgOnlineOffLine: UIImageView!
@@ -23,7 +23,7 @@ protocol UserListVCDelegate: AnyObject {
 class UserListVC: UIViewController {
     
     // MARK: - Variable
-    let userViewModel : UserListViewModel = UserListViewModel()
+    let userViewModel: UserListViewModel = UserListViewModel()
     var userArray = [SignupUserData]()
     var selectedForGroupCall = [SignupUserData]()
     
@@ -37,11 +37,11 @@ class UserListVC: UIViewController {
     var isFirstTimeGroup = true
     fileprivate var jitsiMeetView: JitsiMeetView?
     
-    var isMultipleSelection : Bool = false
+    var isMultipleSelection: Bool = false
     let currentUId = Auth.auth().currentUser?.uid ?? ""
     let firebaseViewModel: FirebaseViewModel = FirebaseViewModel()
     
-    var objJitsi : JitsiManager = JitsiManager()
+    var objJitsi: JitsiManager = JitsiManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,9 +56,9 @@ class UserListVC: UIViewController {
         
         print(currentUId)
         Singleton.sharedSingleton.doOnlineOffline(isOnline: true)
-        firebaseViewModel.firebaseCloudFirestoreManager.setGroupCallListner(userID: currentUId) { roomId in
+        firebaseViewModel.firebaseCloudFirestoreManager.setGroupCallListner(userID: currentUId) { _ in
             
-        } failure: { (error) in
+        } failure: { (_) in
             
         }
     }
@@ -83,7 +83,7 @@ class UserListVC: UIViewController {
     // MARK: - USer will logout from auth session and app
     @IBAction func btn_logout(_ sender:UIButton) {
         Singleton.sharedSingleton.doOnlineOffline(isOnline: false)
-        userViewModel.firebaseViewModel.logautUser { (isLogout) in
+        userViewModel.firebaseViewModel.logautUser { (_) in
             Singleton.sharedSingleton.setNavigation()
         } failure: { (error) in
             Singleton.sharedSingleton.showToast(message: error)
@@ -116,12 +116,12 @@ class UserListVC: UIViewController {
     
     @IBAction func btnCreateClick(_ sender: Any) {
         if selectedForGroupCall.count > 1 {
-            guard let vc = Singleton.sharedSingleton.getController(storyName: Singleton.storyboardName.Main, controllerName: Singleton.controllerName.CreateGroupVC) as? CreateGroupVC else { return }
-            vc.selectedForGroupCall = self.selectedForGroupCall
-            self.navigationController?.pushViewController(vc, animated: true)
+            guard let vcCG = Singleton.sharedSingleton.getController(storyName: Singleton.StoryboardName.Main, controllerName: Singleton.ControllerName.CreateGroupVC) as? CreateGroupVC else { return }
+            vcCG.selectedForGroupCall = self.selectedForGroupCall
+            self.navigationController?.pushViewController(vcCG, animated: true)
         } else {
             let alert = UIAlertController(title: "", message: "Please select more than 2 user for group call", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Ok", style:.default, handler: nil))
+            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
     }
@@ -131,12 +131,12 @@ class UserListVC: UIViewController {
             firebaseViewModel.firebaseCloudFirestoreManager.addGroupCall(arr: selectedForGroupCall) { (docId) in
                 self.objJitsi.viewController = self
                 self.objJitsi.openJetsiViewWithUser(roomid: docId)
-            } failure: { (error) in
+            } failure: { (_) in
                 
             }
         } else {
             let alert = UIAlertController(title: "", message: "Please select more than 2 user for group call", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Ok", style:.default, handler: nil))
+            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
     }
@@ -144,21 +144,21 @@ class UserListVC: UIViewController {
     func newCallAlert() {
         let alert = UIAlertController(title: "Please select a call", message: "", preferredStyle: .actionSheet)
         
-        for item in AppDelegate.standard.arrForActiveCallList {
-            if item.userIds.count > 2 {
-                alert.addAction(UIAlertAction(title: "Call From \(item.HostName)" , style: .default, handler: { alert in
+        for item in AppDelegate.standard.arrForActiveCallList where item.userIds.count > 2 {
+//            if item.userIds.count > 2 {
+                alert.addAction(UIAlertAction(title: "Call From \(item.HostName)" , style: .default, handler: { _ in
                     self.objJitsi.viewController = self
                     self.objJitsi.openJetsiViewWithUser(roomid: item.documentId)
                 }))
-            }
+//            }
         }
         
-        alert.addAction(UIAlertAction(title: "New Group Call", style: .default, handler: { alert in
+        alert.addAction(UIAlertAction(title: "New Group Call", style: .default, handler: { _ in
             self.isMultipleSelection = true
             self.btnCall.isHidden = false
         }))
         
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { alert in
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in
             
         }))
         self.present(alert, animated: true, completion: nil)
@@ -170,7 +170,7 @@ class UserListVC: UIViewController {
     }
 }
 // MARK: - extended Firebase Auth view model protocol
-extension UserListVC : FirebaseAuthViewModelDelegate {
+extension UserListVC: FirebaseAuthViewModelDelegate {
     // MARK: Will show error.
     func error(error: String, sign: Bool) {
         
@@ -243,7 +243,6 @@ extension UserListVC : FirebaseAuthViewModelDelegate {
                     self.userArray.removeAll(where: {$0.uid == user.uid})
                 }
             }
-            
             self.tbl_userList.reloadData()
         }
     }
@@ -251,13 +250,13 @@ extension UserListVC : FirebaseAuthViewModelDelegate {
 
 
 // MARK: - Extended tableview delegate and datasource method
-extension UserListVC : UITableViewDataSource, UITableViewDelegate {
+extension UserListVC: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.userArray.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "userListCell") as? userListCell else { return UITableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "userListCell") as? UserListCell else { return UITableViewCell() }
         let item = self.userArray[indexPath.row]
         cell.lbl_userName.text = item.firstName + " " + item.lastName
         cell.img_user.setUserImageUsingUrl(item.profile_image , isUser: true)
@@ -299,11 +298,11 @@ extension UserListVC : UITableViewDataSource, UITableViewDelegate {
             }
             self.tbl_userList.reloadData()
         } else {
-            guard let vc = Singleton.sharedSingleton.getController(storyName: Singleton.storyboardName.Main, controllerName: Singleton.controllerName.ChatVC) as? ChatVC else { return }
-            vc.userID = item.uid
-            vc.userName = item.firstName + " " + item.lastName
-            vc.objOppoUser = item
-            Singleton.sharedSingleton.navigate(from: self, to: vc, navigationController: self.navigationController)
+            guard let vcc = Singleton.sharedSingleton.getController(storyName: Singleton.StoryboardName.Main, controllerName: Singleton.ControllerName.ChatVC) as? ChatVC else { return }
+            vcc.userID = item.uid
+            vcc.userName = item.firstName + " " + item.lastName
+            vcc.objOppoUser = item
+            Singleton.sharedSingleton.navigate(from: self, to: vcc, navigationController: self.navigationController)
         }
     }
 }

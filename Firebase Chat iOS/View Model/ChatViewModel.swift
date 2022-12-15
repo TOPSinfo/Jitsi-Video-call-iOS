@@ -9,19 +9,19 @@ import Foundation
 import FirebaseStorage
 
 @objc protocol FirebaseChatViewModelDelegate {
-    @objc optional func didUploadMedia(_ url:StorageReference?, task:StorageUploadTask?, type:Any)
-    @objc optional func didUploadVideo(_ imageRef:StorageReference?,imageTask:StorageUploadTask?,videoRef:StorageReference?,videoTask:StorageUploadTask?)
-    @objc optional func getMessages(_ arrayMessage:Array<Any>)
-    @objc optional func didSendMessage(_ message:Any)
+    @objc optional func didUploadMedia(_ url: StorageReference?, task: StorageUploadTask?, type: Any)
+    @objc optional func didUploadVideo(_ imageRef: StorageReference?, imageTask: StorageUploadTask?, videoRef: StorageReference?, videoTask: StorageUploadTask?)
+    @objc optional func getMessages(_ arrayMessage: Array<Any>)
+    @objc optional func didSendMessage(_ message: Any)
     @objc optional func error(error: String, sign: Bool)
-    @objc optional func didCheck(_ isOnline:Bool)
+    @objc optional func didCheck(_ isOnline: Bool)
 }
 
 final class ChatViewModel {
     
     let firebaseViewModel: FirebaseViewModel = FirebaseViewModel()
-    var chatVCDelegate: ChatVCDelegate?
-    var firebasechatViewModelDelegate: FirebaseChatViewModelDelegate?
+    weak var chatVCDelegate: ChatVCDelegate?
+    weak var firebasechatViewModelDelegate: FirebaseChatViewModelDelegate?
     
     init() {
         self.chatVCDelegate = self
@@ -29,7 +29,7 @@ final class ChatViewModel {
     
 }
 
-extension ChatViewModel : ChatVCDelegate {
+extension ChatViewModel: ChatVCDelegate {
     
     
     func checkUserisOnline(_ userID: String) {
@@ -57,10 +57,10 @@ extension ChatViewModel : ChatVCDelegate {
         }
         
         Singleton.sharedSingleton.showLoder()
-        var imageTask : StorageUploadTask?
-        var videoTask : StorageUploadTask?
-        var imageRef : StorageReference?
-        var videoRef : StorageReference?
+        var imageTask: StorageUploadTask?
+        var videoTask: StorageUploadTask?
+        var imageRef: StorageReference?
+        var videoRef: StorageReference?
         let group = DispatchGroup()
         
         for file in files {
@@ -119,7 +119,7 @@ extension ChatViewModel : ChatVCDelegate {
     }
     
     // MARK: will send message to reciever using IDs and get revert to controller
-    func sendMessage(conversationID:String, messageID: String, dic: [String : Any]) {
+    func sendMessage(conversationID: String, messageID: String, dic: [String : Any]) {
         
         guard Reachability.isConnectedToNetwork() else{
             Singleton.sharedSingleton.showToast(message: "Please check your internet connection")
