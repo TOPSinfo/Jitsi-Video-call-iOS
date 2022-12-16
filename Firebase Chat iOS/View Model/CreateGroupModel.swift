@@ -15,42 +15,43 @@ import FirebaseStorage
 }
 
 final class CreateGroupViewModel {
-    
+
     let firebaseViewModel: FirebaseViewModel = FirebaseViewModel()
     weak var createGroupVCDelegate: CreateGroupVCDelegate?
     weak var firebaseCreateGroupViewModelDelegate: FirebaseCreateGroupViewModelDelegate?
-    
+
     init() {
         self.createGroupVCDelegate = self
     }
-    
+
 }
 
 extension CreateGroupViewModel: CreateGroupVCDelegate {
-    
+
     func createGroup(groupID: String, dic: [String: Any]) {
         guard Reachability.isConnectedToNetwork() else{
             Singleton.sharedSingleton.showToast(message: "Please check your internet connection")
             return
         }
-        
+
         firebaseViewModel.firebaseCloudFirestoreManager.createGroup(groupID: groupID, dic: dic) {
             self.firebaseCreateGroupViewModelDelegate?.groupCreated!(true)
         } failure: { error in
             self.firebaseCreateGroupViewModelDelegate?.error?(error: error, sign: false)
-            
         }
     }
-    
+
     // MARK: Upload user Image
     func uploadImage(fileData: Data?, fileName: String, type: MediaType) {
-        
+
         guard Reachability.isConnectedToNetwork() else {
             Singleton.sharedSingleton.showToast(message: "Please check your internet connection")
             return
         }
-        
-        firebaseViewModel.firebaseStorageManager.uploadImage(childPath: fileName, imageNeedstoUpload: fileData, type: type) { task, ref  in
+
+        firebaseViewModel.firebaseStorageManager.uploadImage(childPath: fileName,
+                                                             imageNeedstoUpload: fileData,
+                                                             type: type) { task, ref  in
             if task != nil {
                 self.firebaseCreateGroupViewModelDelegate?.didUploadUserImage?(task: task, reference: ref)
             } else {
@@ -58,6 +59,4 @@ extension CreateGroupViewModel: CreateGroupVCDelegate {
             }
         }
     }
-   
 }
-

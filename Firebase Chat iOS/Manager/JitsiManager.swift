@@ -13,17 +13,17 @@ class JitsiManager: NSObject {
 
     fileprivate var jitsiMeetView: JitsiMeetView?
     var viewController: UIViewController?
-    
+
     override init() {
         let defaultOptions = JitsiMeetConferenceOptions.fromBuilder { (builder) in
             // for JaaS replace url with https://8x8.vc
 //            builder.serverURL = URL(string: "https://jitsi.topsdemo.in")
             builder.serverURL = URL(string: "https://meet.jit.si")
-            
+
             // for JaaS use the obtained Jitsi JWT
             // builder.token = "SampleJWT"
             builder.welcomePageEnabled = false
-            
+
             // Set different feature flags
             builder.setFeatureFlag("toolbox.enabled", withBoolean: true)
             builder.setFeatureFlag("filmstrip.enabled", withBoolean: true)
@@ -32,7 +32,7 @@ class JitsiManager: NSObject {
         }
         JitsiMeet.sharedInstance().defaultConferenceOptions = defaultOptions
     }
-        
+
     func openJetsiViewWithUser(roomid: String, isHost: Bool = false) {
 
         // create and configure jitsimeet view
@@ -42,10 +42,11 @@ class JitsiManager: NSObject {
         let options = JitsiMeetConferenceOptions.fromBuilder { (builder) in
             // for JaaS use <tenant>/<roomName> format
             builder.room = roomid // "TOPS" + arr[0] + arr[1]
-            
+
             let userdata = AppDelegate.standard.objCurrentUser
-            
-            builder.userInfo = JitsiMeetUserInfo.init(displayName: userdata.fullName, andEmail: userdata.email, andAvatar: URL(string:userdata.profile_image))
+
+            builder.userInfo = JitsiMeetUserInfo.init(displayName: userdata.fullName, andEmail: userdata.email,
+                                                      andAvatar: URL(string: userdata.profile_image))
             
             // Settings for audio and video
             // builder.audioMuted = true
@@ -71,31 +72,29 @@ class JitsiManager: NSObject {
 //            builder.setFeatureFlag("raise-hand.enabled", withBoolean: false)
 //            builder.setFeatureFlag("overflow-menu.enabled", withBoolean: false)
 //            builder.setFeatureFlag("meeting-name.enabled", withBoolean: false)
-            
+
 //            builder.setFeatureFlag("ios.screensharing.enabled", withBoolean: true)
 //            builder.setFeatureFlag("ios.recording.enabled", withBoolean: true)
             print(builder.room ?? "")
-            
+
             if isHost {
-                
             } else {
-                
             }
         }
-        
+
         // setup view controller
         let vcJM = UIViewController()
         vcJM.modalPresentationStyle = .fullScreen
         vcJM.view = jitsiMeetView
-        
+
         // join room and display jitsi-call
         jitsiMeetView.join(options)
         AppDelegate.standard.currentCallId = roomid
         viewController?.present(vcJM, animated: true, completion: nil)
     }
-    
+
     fileprivate func cleanUp() {
-        if(jitsiMeetView != nil) {
+        if jitsiMeetView != nil {
             viewController?.dismiss(animated: true, completion: nil)
             jitsiMeetView = nil
         }
@@ -104,16 +103,15 @@ class JitsiManager: NSObject {
 
 extension JitsiManager: JitsiMeetViewDelegate {
     func conferenceTerminated(_ data: [AnyHashable: Any]!) {
-        FirebaseViewModel().firebaseCloudFirestoreManager.changeCallStatus(AppDelegate.standard.currentCallId, isActive: false)
+        let fcfm = FirebaseViewModel().firebaseCloudFirestoreManager
+        fcfm.changeCallStatus(AppDelegate.standard.currentCallId, isActive: false)
         AppDelegate.standard.currentCallId = ""
         cleanUp()
     }
-    
+
     func conferenceJoined(_ data: [AnyHashable: Any]!) {
         print("joined")
-        FirebaseViewModel().firebaseCloudFirestoreManager.changeCallStatus(AppDelegate.standard.currentCallId, isActive: true)
+        let fcfm = FirebaseViewModel().firebaseCloudFirestoreManager
+        fcfm.changeCallStatus(AppDelegate.standard.currentCallId, isActive: true)
     }
-    
-
 }
-

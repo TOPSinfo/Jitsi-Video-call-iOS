@@ -68,17 +68,7 @@ class RegisterUserVC: UIViewController {
     }
     
     @IBAction func btn_pickPhoto(_ sender:UIButton) {
-        self.view.endEditing(true)
-        let viewController = TLPhotosPickerViewController()
-        viewController.delegate = self
-        var configure = TLPhotosPickerConfigure()
-        configure.maxSelectedAssets = 1
-        configure.singleSelectedMode = true
-        configure.allowedVideoRecording = false
-        configure.allowedVideo = false
-        configure.allowedLivePhotos = false
-        viewController.configure = configure
-        self.present(viewController, animated: true, completion: nil)
+        openImagePicker(self)
     }
     
     @IBAction func btn_back(_ sender:UIButton) {

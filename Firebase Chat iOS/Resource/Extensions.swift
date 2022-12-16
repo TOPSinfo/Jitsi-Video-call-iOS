@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import Nuke
+import TLPhotoPicker
 
 // MARK: - To Conver date into milliseconds
 extension Date {
@@ -22,39 +23,35 @@ extension Date {
 
 // MARK: - To elivate extra property of UIView
 extension UIView {
-    
+
     @IBInspectable
     var cornerRadius: CGFloat {
         get {
             return layer.cornerRadius
         }
         set {
-            
-            if newValue == 1
-            {
+            if newValue == 1 {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.02) {
                     self.layer.cornerRadius = self.frame.size.height/2
                 }
-                
                 DispatchQueue.main.async {
                      self.layer.cornerRadius = self.frame.size.height/2
                 }
-            }
-            else
-            {
+            } else {
                 layer.cornerRadius = newValue
             }
-            
         }
     }
-    
+
     func roundCorners(_ corners:UIRectCorner, radius: CGFloat) {
-        let path = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+        let path = UIBezierPath(roundedRect: self.bounds,
+                                byRoundingCorners: corners,
+                                cornerRadii: CGSize(width: radius, height: radius))
         let mask = CAShapeLayer()
         mask.path = path.cgPath
         self.layer.mask = mask
     }
-    
+
     @IBInspectable
     var borderWidth: CGFloat {
         get {
@@ -64,7 +61,7 @@ extension UIView {
             layer.borderWidth = newValue
         }
     }
-    
+
     @IBInspectable
     var borderColor1: UIColor? {
         get {
@@ -81,7 +78,7 @@ extension UIView {
             }
         }
     }
-    
+
     @IBInspectable
     var shadowRadius: CGFloat {
         get {
@@ -91,7 +88,7 @@ extension UIView {
             layer.shadowRadius = newValue
         }
     }
-    
+
     @IBInspectable
     var shadowOpacity: Float {
         get {
@@ -101,7 +98,7 @@ extension UIView {
             layer.shadowOpacity = newValue
         }
     }
-    
+
     @IBInspectable
     var shadowOffset: CGSize {
         get {
@@ -111,7 +108,7 @@ extension UIView {
             layer.shadowOffset = newValue
         }
     }
-    
+
     @IBInspectable
     var shadowColor: UIColor? {
         get {
@@ -128,13 +125,10 @@ extension UIView {
             }
         }
     }
-    
 }
 
 extension UIImageView {
-    
-    func setUserImageUsingUrl(_ imageUrl: String?,isUser:Bool){
-            
+    func setUserImageUsingUrl(_ imageUrl: String?, isUser: Bool) {
         if imageUrl?.isEmpty == false {
             let options = ImageLoadingOptions(
                 placeholder: isUser ? #imageLiteral(resourceName: "ic_user"):#imageLiteral(resourceName: "ic_placeholder"),
@@ -145,5 +139,18 @@ extension UIImageView {
             self.image = isUser ? #imageLiteral(resourceName: "ic_user"):#imageLiteral(resourceName: "ic_placeholder")
         }
     }
-    
+}
+
+func openImagePicker(_ viewController: UIViewController) {
+    viewController.view.endEditing(true)
+    let imagePicker = TLPhotosPickerViewController()
+    imagePicker.delegate = viewController as? TLPhotosPickerViewControllerDelegate
+    var configure = TLPhotosPickerConfigure()
+    configure.maxSelectedAssets = 1
+    configure.singleSelectedMode = true
+    configure.allowedVideoRecording = false
+    configure.allowedVideo = false
+    configure.allowedLivePhotos = false
+    imagePicker.configure = configure
+    viewController.present(imagePicker, animated: true, completion: nil)
 }

@@ -14,12 +14,12 @@ class ActiveCallList: NSObject {
     var HostName: String = ""
     var documentId: String = ""
     var userIds: [String] = []
-    
+
     override init() {
-        
+
     }
 
-    init(fromDictionary dictionary: [String:Any], dId:String){
+    init(fromDictionary dictionary: [String: Any], dId: String) {
         CallStatus = dictionary["CallStatus"] as? String ?? ""
         HostId = dictionary["HostId"] as? String ?? ""
         HostName = dictionary["HostName"] as? String ?? ""

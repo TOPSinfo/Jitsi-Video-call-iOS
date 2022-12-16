@@ -12,7 +12,7 @@ import Firebase
 
 // This is user model
 class SignupUserData {
-    
+
     var email: String = ""
     var firstName: String = ""
     var lastName: String = ""
@@ -26,10 +26,10 @@ class SignupUserData {
     var objGroupDetail: GroupDetailObject?
 
     init() {
-        
+
     }
-    
-    init(fromDictionary dictionary: [String:Any]){
+
+    init(fromDictionary dictionary: [String: Any]) {
         print(dictionary)
         email = dictionary["email"] as? String ?? ""
         firstName = dictionary["first_name"] as? String ?? ""
@@ -43,8 +43,7 @@ class SignupUserData {
         isGroup = false
     }
 
-    
-    init(fromDictionaryGroup dictionary: [String:Any]){
+    init(fromDictionaryGroup dictionary: [String: Any]) {
         email = ""
         firstName = dictionary["name"] as? String ?? ""
         lastName = ""
@@ -56,8 +55,8 @@ class SignupUserData {
         createdAt = dictionary["createdAt"] as? Timestamp ?? Timestamp(date: Date())
         objGroupDetail = GroupDetailObject(fromDictionary: dictionary)
     }
-    
-    var fullName : String {
+
+    var fullName: String {
         firstName + " " + lastName
     }
 }
@@ -74,10 +73,10 @@ class GroupDetailObject {
     var name: String = ""
 
     init() {
-        
+
     }
-    
-    init(fromDictionary dictionary: [String:Any]){
+
+    init(fromDictionary dictionary: [String: Any]) {
         adminId = dictionary["adminId"] as? String ?? ""
         adminName = dictionary["adminName"] as? String ?? ""
         createdAt = dictionary["createdAt"] as? String ?? ""
@@ -87,4 +86,3 @@ class GroupDetailObject {
         members = dictionary["members"] as? [String] ?? []
     }
 }
-

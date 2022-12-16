@@ -9,12 +9,12 @@ import UIKit
 
 class ChatSenderImageCell: UITableViewCell {
 
-    @IBOutlet weak var lbl_date: UILabel!
-    @IBOutlet weak var img_media:UIImageView!
-    @IBOutlet weak var btn_play:UIButton!
-    @IBOutlet weak var img_tick:UIImageView!
+    @IBOutlet weak var lblDate: UILabel!
+    @IBOutlet weak var imgMedia:UIImageView!
+    @IBOutlet weak var btnPlay:UIButton!
+    @IBOutlet weak var imgTick:UIImageView!
     @IBOutlet weak var viewBGColor:UIView!
-    @IBOutlet weak var view_circel_progress:CircularProgressView!
+    @IBOutlet weak var viewCircelProgress:CircularProgressView!
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -26,5 +26,4 @@ class ChatSenderImageCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-    
 }

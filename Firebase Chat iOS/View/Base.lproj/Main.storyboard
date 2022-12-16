@@ -1087,8 +1087,8 @@
                                         </collectionViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <connections>
-                                            <outlet property="img_user" destination="M3c-S1-HTm" id="Vhf-2E-rSr"/>
-                                            <outlet property="lbl_userName" destination="zNG-h1-sUj" id="O6d-qw-pfW"/>
+                                            <outlet property="imgUser" destination="M3c-S1-HTm" id="Yco-ld-R5r"/>
+                                            <outlet property="lblUserName" destination="zNG-h1-sUj" id="gRX-pI-s01"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>

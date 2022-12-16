@@ -11,12 +11,14 @@ import Firebase
 import FirebaseFirestore
 
 class FirebaseAuthManager {
-    
+
     init() {
     }
+
     // MARK: - verify phone number and get verification id
-    func verifyPhoneNumber(phoneNumber:String, completion: @escaping((_ verificationID: String, _ error: Error?) -> Void)) {
-//        Auth.auth().settings!.isAppVerificationDisabledForTesting = true
+    func verifyPhoneNumber(phoneNumber: String,
+                           completion: @escaping((_ verificationID: String, _ error: Error?) -> Void)) {
+        Auth.auth().settings!.isAppVerificationDisabledForTesting = true
         PhoneAuthProvider.provider()
           .verifyPhoneNumber(phoneNumber, uiDelegate: nil) { verificationID, error in
               if let error = error {
@@ -26,15 +28,16 @@ class FirebaseAuthManager {
             completion(verificationID ?? "", error)
         }
     }
-    
+
     // MARK: - Login using phone credential
-    func login(credential:PhoneAuthCredential, completion: @escaping((_ authResult: AuthDataResult?, _ error: Error?) -> Void)) {
+    func login(credential: PhoneAuthCredential,
+               completion: @escaping((_ authResult: AuthDataResult?, _ error: Error?) -> Void)) {
         
         Auth.auth().signIn(with: credential, completion: { (user, error) in
             completion(user, error)
         })
     }
-    
+
     // MARK: - Logout from firebase session
     func signOut(completion: @escaping(() -> Void), failure: @escaping((_ error: String) -> Void)){
         do {
@@ -44,6 +47,4 @@ class FirebaseAuthManager {
             failure(error.localizedDescription)
         }
     }
-   
-    
 }

@@ -260,17 +260,7 @@ class ChatVC: UIViewController {
     }
     
     @IBAction func btn_pickPhoto(_ sender:UIButton) {
-        self.view.endEditing(true)
-        let viewController = TLPhotosPickerViewController()
-        viewController.delegate = self
-        var configure = TLPhotosPickerConfigure()
-        configure.maxSelectedAssets = 1
-        configure.singleSelectedMode = true
-        configure.allowedVideoRecording = true
-        configure.allowedVideo = true
-        configure.allowedLivePhotos = true
-        viewController.configure = configure
-        self.present(viewController, animated: true, completion: nil)
+        openImagePicker(self)
     }
     
     deinit {
@@ -293,33 +283,33 @@ extension ChatVC: UITableViewDataSource, UITableViewDelegate {
             
             if item.messageType == Singleton.MessageType.IMAGE {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "ChatSenderImageCell") as? ChatSenderImageCell
-                cell?.img_media.setUserImageUsingUrl(item.url , isUser: false)
-                cell?.btn_play.isHidden = true
+                cell?.imgMedia.setUserImageUsingUrl(item.url, isUser: false)
+                cell?.btnPlay.isHidden = true
                 let tap = UITapGestureRecognizer.init(target: self, action: #selector(btn_showFullImage(_:)))
-                cell?.img_media.isUserInteractionEnabled = true
-                cell?.img_media.tag = indexPath.row
-                cell?.img_media.addGestureRecognizer(tap)
-                cell?.lbl_date.text = item.timestamp
+                cell?.imgMedia.isUserInteractionEnabled = true
+                cell?.imgMedia.tag = indexPath.row
+                cell?.imgMedia.addGestureRecognizer(tap)
+                cell?.lblDate.text = item.timestamp
                 
                 if item.status == Singleton.MessageStatus.SEND {
-                    cell?.img_tick.image = #imageLiteral(resourceName: "ic_singletick")
+                    cell?.imgTick.image = #imageLiteral(resourceName: "ic_singletick")
                 } else if item.status == Singleton.MessageStatus.READ {
-                    cell?.img_tick.image = #imageLiteral(resourceName: "ic_Double_Click")
+                    cell?.imgTick.image = #imageLiteral(resourceName: "ic_Double_Click")
                 } else if item.status == Singleton.MessageStatus.UPLOADING {
-                    cell?.img_tick.image = #imageLiteral(resourceName: "ic_clock")
+                    cell?.imgTick.image = #imageLiteral(resourceName: "ic_clock")
                 }
                 
-                cell?.view_circel_progress.isHidden = true
+                cell?.viewCircelProgress.isHidden = true
                 
                 if let task = item.task {
                     _ = task.observe(.progress) { snapshot in
                         let percentComplete = 100.0 * Double(snapshot.progress!.completedUnitCount)
                         / Double(snapshot.progress!.totalUnitCount)
-                        cell?.view_circel_progress.progress = Float(percentComplete)
+                        cell?.viewCircelProgress.progress = Float(percentComplete)
                         print(percentComplete)
-                        cell?.view_circel_progress.isHidden = false
+                        cell?.viewCircelProgress.isHidden = false
                         if percentComplete == 100 {
-                            cell?.view_circel_progress.isHidden = true
+                            cell?.viewCircelProgress.isHidden = true
                             // MARK: - this will call send message controller
                             var filter = Singleton.localFileUpload.filter({$0["docId"] as? String ?? "" == item.docId})
                             if filter.count > 0 {
@@ -344,7 +334,7 @@ extension ChatVC: UITableViewDataSource, UITableViewDelegate {
                         }
                     }
                 } else {
-                    cell?.view_circel_progress.isHidden = true
+                    cell?.viewCircelProgress.isHidden = true
                 }
                 
                 return cell ?? UITableViewCell()
@@ -352,19 +342,19 @@ extension ChatVC: UITableViewDataSource, UITableViewDelegate {
             } else if item.messageType == Singleton.MessageType.VIDEO {
                 
                 let cell = tableView.dequeueReusableCell(withIdentifier: "ChatSenderImageCell") as? ChatSenderImageCell
-                cell?.btn_play.isHidden = false
-                cell?.img_media.setUserImageUsingUrl(item.url , isUser: false)
+                cell?.btnPlay.isHidden = false
+                cell?.imgMedia.setUserImageUsingUrl(item.url, isUser: false)
                 if item.status == Singleton.MessageStatus.SEND {
-                    cell?.img_tick.image = #imageLiteral(resourceName: "ic_singletick")
+                    cell?.imgTick.image = #imageLiteral(resourceName: "ic_singletick")
                 } else if item.status == Singleton.MessageStatus.READ {
-                    cell?.img_tick.image = #imageLiteral(resourceName: "ic_Double_Click")
+                    cell?.imgTick.image = #imageLiteral(resourceName: "ic_Double_Click")
                 } else if item.status == Singleton.MessageStatus.UPLOADING {
-                    cell?.img_tick.image = #imageLiteral(resourceName: "ic_clock")
+                    cell?.imgTick.image = #imageLiteral(resourceName: "ic_clock")
                 }
                 
-                cell?.btn_play.addTarget(self, action: #selector(btn_play(_:)), for: .touchUpInside)
-                cell?.btn_play.tag = indexPath.row
-                cell?.lbl_date.text = item.timestamp
+                cell?.btnPlay.addTarget(self, action: #selector(btn_play(_:)), for: .touchUpInside)
+                cell?.btnPlay.tag = indexPath.row
+                cell?.lblDate.text = item.timestamp
                 var filter = Singleton.localFileUpload.filter({$0["docId"] as? String ?? "" == item.docId})
                 if let task = item.task {
                     _ = task.observe(.success) { snapshot in
@@ -380,19 +370,19 @@ extension ChatVC: UITableViewDataSource, UITableViewDelegate {
                         }
                     }
                 }
-                cell?.view_circel_progress.isHidden = true
+                cell?.viewCircelProgress.isHidden = true
                 
                 if let task = item.videoTask {
                     _ = task.observe(.progress) { snapshot in
                         let percentComplete = 100.0 * Double(snapshot.progress!.completedUnitCount)
                         / Double(snapshot.progress!.totalUnitCount)
-                        cell?.view_circel_progress.progress = Float(percentComplete)
-                        cell?.view_circel_progress.isHidden = percentComplete == 100.0
+                        cell?.viewCircelProgress.progress = Float(percentComplete)
+                        cell?.viewCircelProgress.isHidden = percentComplete == 100.0
                         
                     }
                     _ = task.observe(.success) { snapshot in
                         // Upload completed successfully
-                        cell?.view_circel_progress.isHidden = true
+                        cell?.viewCircelProgress.isHidden = true
                         if filter.count > 0 {
                             Singleton.localFileUpload.removeAll(where: {$0["docId"] as? String ?? "" == filter[0]["docId"] as? String ?? ""})
                             item.videoRef!.downloadURL { (url, _) in
@@ -413,27 +403,27 @@ extension ChatVC: UITableViewDataSource, UITableViewDelegate {
                         }
                     }
                 } else {
-                    cell?.view_circel_progress.isHidden = true
+                    cell?.viewCircelProgress.isHidden = true
                 }
 
                 
                 return cell ?? UITableViewCell()
             } else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "ChatSenderCell") as? ChatSenderCell
-                cell?.lbl_message.text = item.messageText
+                cell?.lblMessage.text = item.messageText
                 cell?.layoutSubviews()
 
                 if item.status == Singleton.MessageStatus.SEND {
-                    cell?.img_tick.image = #imageLiteral(resourceName: "ic_singletick")
+                    cell?.imgTick.image = #imageLiteral(resourceName: "ic_singletick")
                 } else if item.status == Singleton.MessageStatus.READ {
-                    cell?.img_tick.image = #imageLiteral(resourceName: "ic_Double_Click")
+                    cell?.imgTick.image = #imageLiteral(resourceName: "ic_Double_Click")
                 } else if item.status == Singleton.MessageStatus.UPLOADING {
-                    cell?.img_tick.image = #imageLiteral(resourceName: "ic_clock")
+                    cell?.imgTick.image = #imageLiteral(resourceName: "ic_clock")
                 }
                 
-                cell?.lbl_date.text = item.timestamp
+                cell?.lblDate.text = item.timestamp
                 DispatchQueue.main.async {
-                    cell?.view_bubble.roundCorners([.topLeft,.bottomLeft, .bottomRight], radius: 5)
+                    cell?.viewBubble.roundCorners([.topLeft, .bottomLeft, .bottomRight], radius: 5)
                 }
                 return cell ?? UITableViewCell()
             }
@@ -441,13 +431,13 @@ extension ChatVC: UITableViewDataSource, UITableViewDelegate {
             
             if item.messageType == Singleton.MessageType.IMAGE {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "ChatReceiverImageCell") as? ChatReceiverImageCell
-                cell?.img_media.setUserImageUsingUrl(item.url , isUser: false)
-                cell?.btn_play.isHidden = true
+                cell?.imgMedia.setUserImageUsingUrl(item.url, isUser: false)
+                cell?.btnPlay.isHidden = true
                 let tap = UITapGestureRecognizer.init(target: self, action: #selector(btn_showFullImage(_:)))
-                cell?.img_media.isUserInteractionEnabled = true
-                cell?.img_media.tag = indexPath.row
-                cell?.img_media.addGestureRecognizer(tap)
-                cell?.lbl_date.text = item.timestamp
+                cell?.imgMedia.isUserInteractionEnabled = true
+                cell?.imgMedia.tag = indexPath.row
+                cell?.imgMedia.addGestureRecognizer(tap)
+                cell?.lblDate.text = item.timestamp
                 if objOppoUser.isGroup {
                     let arr = arrayForGroupUserDetails.filter( {$0.uid == item.senderId })
                     if arr.count > 0 {
@@ -460,11 +450,11 @@ extension ChatVC: UITableViewDataSource, UITableViewDelegate {
                 
             } else if item.messageType == Singleton.MessageType.VIDEO {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "ChatReceiverImageCell") as? ChatReceiverImageCell
-                cell?.btn_play.isHidden = false
-                cell?.img_media.setUserImageUsingUrl(item.url , isUser: false)
-                cell?.btn_play.addTarget(self, action: #selector(btn_play(_:)), for: .touchUpInside)
-                cell?.btn_play.tag = indexPath.row
-                cell?.lbl_date.text = item.timestamp
+                cell?.btnPlay.isHidden = false
+                cell?.imgMedia.setUserImageUsingUrl(item.url, isUser: false)
+                cell?.btnPlay.addTarget(self, action: #selector(btn_play(_:)), for: .touchUpInside)
+                cell?.btnPlay.tag = indexPath.row
+                cell?.lblDate.text = item.timestamp
                 if objOppoUser.isGroup {
                     let arr = arrayForGroupUserDetails.filter( {$0.uid == item.senderId })
                     if arr.count > 0 {
@@ -479,11 +469,11 @@ extension ChatVC: UITableViewDataSource, UITableViewDelegate {
                 guard let cell = tableView.dequeueReusableCell(withIdentifier: "ChatReceiverCell") as? ChatReceiverCell else {
                     return UITableViewCell()
                 }
-                cell.lbl_message.text = item.messageText
+                cell.lblMessage.text = item.messageText
                 cell.layoutSubviews()
-                cell.lbl_date.text = item.timestamp
+                cell.lblDate.text = item.timestamp
                 DispatchQueue.main.async {
-                    cell.view_bubble.roundCorners([.topRight,.bottomLeft, .bottomRight], radius: 5)
+                    cell.viewBubble.roundCorners([.topRight, .bottomLeft, .bottomRight], radius: 5)
                     
                 }
                 

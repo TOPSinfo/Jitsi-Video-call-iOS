@@ -28,15 +28,17 @@ class FirebaseStorageManager {
         
     }
     
-    func uploadVideo(_ files: [(filename: String, file: Data,type: MediaType)], completion: @escaping (_ url: String?) -> Void) {
+    func uploadVideo(_ files: [(filename: String, file: Data, type: MediaType)],
+                     completion: @escaping (_ url: String?) -> Void) {
         Singleton.sharedSingleton.showLoder()
         
     }
     // MARK: Upload image to firebase storage
-    func uploadImage(childPath: String, imageNeedstoUpload: Data?, type: MediaType, completion: @escaping (_ uploadtask: StorageUploadTask?, _ reference: StorageReference?) -> Void) {
+    func uploadImage(childPath: String, imageNeedstoUpload: Data?, type: MediaType,
+                     completion: @escaping (_ uploadtask: StorageUploadTask?, _ reference: StorageReference?) -> Void) {
         
         let storageRef = Storage.storage().reference().child(childPath)
-        if let uploadData = imageNeedstoUpload{
+        if let uploadData = imageNeedstoUpload {
             
             let metadata = StorageMetadata()
             

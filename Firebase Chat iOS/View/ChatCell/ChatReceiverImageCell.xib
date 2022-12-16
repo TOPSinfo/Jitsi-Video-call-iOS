@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -96,11 +96,11 @@
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <connections>
-                <outlet property="btn_play" destination="JDd-QZ-XQf" id="qOT-IC-AoT"/>
+                <outlet property="btnPlay" destination="JDd-QZ-XQf" id="ETe-hq-zGr"/>
                 <outlet property="consUserNameHeight" destination="161-xb-0pc" id="gcA-ex-oHr"/>
-                <outlet property="img_media" destination="d4D-Oc-6Ln" id="tzA-AC-J5P"/>
+                <outlet property="imgMedia" destination="d4D-Oc-6Ln" id="qmW-EM-oEL"/>
+                <outlet property="lblDate" destination="sXt-xc-NCw" id="ON8-3L-gg5"/>
                 <outlet property="lblUserName" destination="n3F-op-29F" id="Omn-3W-sYo"/>
-                <outlet property="lbl_date" destination="sXt-xc-NCw" id="QRP-5X-VPK"/>
                 <outlet property="viewBGColor" destination="xRS-G8-meG" id="x6T-gS-UbY"/>
             </connections>
             <point key="canvasLocation" x="-14.492753623188406" y="60.267857142857139"/>

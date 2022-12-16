@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -107,12 +107,12 @@
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <connections>
-                <outlet property="btn_play" destination="Lxf-uq-ZDB" id="UKr-2L-56A"/>
-                <outlet property="img_media" destination="d9L-ds-Ou7" id="WbH-Pp-p5h"/>
-                <outlet property="img_tick" destination="Rec-1P-AwV" id="aBF-8b-Qc9"/>
-                <outlet property="lbl_date" destination="gW4-X9-kl9" id="Aza-aC-0yw"/>
+                <outlet property="btnPlay" destination="Lxf-uq-ZDB" id="5NE-8J-ydA"/>
+                <outlet property="imgMedia" destination="d9L-ds-Ou7" id="83P-e5-N4D"/>
+                <outlet property="imgTick" destination="Rec-1P-AwV" id="Cld-Ib-X0i"/>
+                <outlet property="lblDate" destination="gW4-X9-kl9" id="qtU-X6-zP5"/>
                 <outlet property="viewBGColor" destination="IJM-9q-1Nu" id="71X-ab-Icn"/>
-                <outlet property="view_circel_progress" destination="rak-Ml-v9Y" id="7Vc-yl-Pr1"/>
+                <outlet property="viewCircelProgress" destination="rak-Ml-v9Y" id="oBg-L3-lKi"/>
             </connections>
             <point key="canvasLocation" x="76.08695652173914" y="105.80357142857143"/>
         </tableViewCell>

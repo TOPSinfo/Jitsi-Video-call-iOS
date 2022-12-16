@@ -13,11 +13,11 @@ import Firebase
 import AVKit
 
 class Singleton: NSObject {
-    
+
     typealias SucessBlock = (_ return: Bool) -> Void
 //    typealias textFieldTextBlock = (_ returnText: String, _ isSubmitPressed: Bool) -> Void
     // MARK: -  Singleton Object 
-    
+
     static let sharedSingleton = Singleton()
     static let appDelegate: AppDelegate? = UIApplication.shared.delegate as? AppDelegate
     static var progresshud = MBProgressHUD()
@@ -25,30 +25,29 @@ class Singleton: NSObject {
     static var groupListner: ListenerRegistration?
     static var converstaonListner: ListenerRegistration?
     static var onlineOfflineLisnter: ListenerRegistration?
-    static var localFileUpload = [[String:Any]]()
+    static var localFileUpload = [[String: Any]]()
     // MARK: - App color user to set programatically
     struct AppColors {
-//        static let purpoleSelected : UIColor = UIColor(red: 150.0/255.0, green: 0.0/255.0, blue: 124.0/255.0, alpha: 1.0)
-       
         static let themeColoer: UIColor = UIColor(named: "ic_app_bar_color")!
-        
+
         static let grayColor: UIColor = UIColor(red: 123.0/255.0, green: 122.0/255.0, blue: 124.0/255.0, alpha: 1.0)
     }
     // MARK: - set Conditional navgation
-    func setNavigation(){
-        
+    func setNavigation() {
+
         if Auth.auth().currentUser != nil {
             // MARK: - user is login
             if let userID = Auth.auth().currentUser?.uid {
                 let firebaseViewModel: FirebaseViewModel = FirebaseViewModel()
                 firebaseViewModel.firebaseCloudFirestoreManager.getCurrentUserDetails(userID)
                 Singleton.sharedSingleton.showLoder()
-                firebaseViewModel.firebaseCloudFirestoreManager.checkUserAvailableQuery(uid: userID).getDocuments { (documents, err) in
+                let fcfm = firebaseViewModel.firebaseCloudFirestoreManager
+                fcfm.checkUserAvailableQuery(uid: userID).getDocuments { (documents, err) in
                     Singleton.sharedSingleton.hideLoader()
                     if let err = err {
                         Singleton.sharedSingleton.showToast(message: err.localizedDescription)
                     } else {
-                        if ((documents?.documents.count)! > 0) {
+                        if (documents?.documents.count)! > 0 {
                             self.goToUserList()
                         } else {
                             self.goToRegistration()
@@ -56,39 +55,41 @@ class Singleton: NSObject {
                     }
                 }
             }
-           
         } else {
             // MARK: - user is logout
             goToLogin()
         }
     }
-    
+
     // MARK: - To creatd conversation ID
     // This will creare conversation id using both user ID
-    func getOneToOneID(senderID:String,receiverID:String) -> String {
-        
+    func getOneToOneID(senderID: String, receiverID: String) -> String {
         if senderID < receiverID {
             return senderID + receiverID
         } else {
             return receiverID + senderID
         }
     }
-    
-    func doOnlineOffline(isOnline:Bool) {
-        
+
+    func doOnlineOffline(isOnline: Bool) {
         if Auth.auth().currentUser != nil {
             if let userID = Auth.auth().currentUser?.uid {
                 let firebaseViewModel: FirebaseViewModel = FirebaseViewModel()
                 firebaseViewModel.firebaseCloudFirestoreManager.doOnlineOffline(isOnline, userID: userID)
             }
         }
-        
     }
-    
+
     // MARK: - GO To Registration page
     func goToRegistration() {
-        guard let navVC = Singleton.sharedSingleton.getController(storyName: Singleton.StoryboardName.Main, controllerName: "InitialNavigation") as? UINavigationController else { return }
-        let vcRU = Singleton.sharedSingleton.getController(storyName: Singleton.StoryboardName.Main, controllerName: Singleton.ControllerName.RegisterUserVC)
+
+        let singleton = Singleton.sharedSingleton
+        guard let navVC = singleton.getController(storyName: Singleton.StoryboardName.Main,
+                                                  controllerName: "InitialNavigation") as? UINavigationController
+        else { return }
+
+        let vcRU = singleton.getController(storyName: Singleton.StoryboardName.Main,
+                                                           controllerName: Singleton.ControllerName.RegisterUserVC)
         navVC.viewControllers = [vcRU]
         if let window = Singleton.appDelegate?.window {
             window.rootViewController = navVC
@@ -97,8 +98,12 @@ class Singleton: NSObject {
     }
     // MARK: - GO TO User List dashboard
     func goToUserList() {
-        guard let navVC = Singleton.sharedSingleton.getController(storyName: Singleton.StoryboardName.Main, controllerName: "InitialNavigation") as? UINavigationController else { return }
-        let vcUL = Singleton.sharedSingleton.getController(storyName: Singleton.StoryboardName.Main, controllerName: Singleton.ControllerName.UserListVC)
+        let singleton = Singleton.sharedSingleton
+        guard let navVC = singleton.getController(storyName: Singleton.StoryboardName.Main,
+                                                  controllerName: "InitialNavigation") as? UINavigationController
+        else { return }
+        let vcUL = singleton.getController(storyName: Singleton.StoryboardName.Main,
+                                           controllerName: Singleton.ControllerName.UserListVC)
         navVC.viewControllers = [vcUL]
         if let window = Singleton.appDelegate?.window {
             window.rootViewController = navVC
@@ -107,8 +112,12 @@ class Singleton: NSObject {
     }
     // MARK: - GO TO Login Page
     func goToLogin() {
-        guard let navVC = Singleton.sharedSingleton.getController(storyName: Singleton.StoryboardName.Main, controllerName: "InitialNavigation") as? UINavigationController else { return }
-        let vcAM = Singleton.sharedSingleton.getController(storyName: Singleton.StoryboardName.Main, controllerName: Singleton.ControllerName.AddMobileViewController)
+        let singleton = Singleton.sharedSingleton
+        guard let navVC = singleton.getController(storyName: Singleton.StoryboardName.Main,
+                                                  controllerName: "InitialNavigation") as? UINavigationController
+        else { return }
+        let vcAM = singleton.getController(storyName: Singleton.StoryboardName.Main,
+                                           controllerName: Singleton.ControllerName.AddMobileViewController)
         navVC.viewControllers = [vcAM]
         if let window = Singleton.appDelegate?.window {
             window.rootViewController = navVC
@@ -116,19 +125,18 @@ class Singleton: NSObject {
         }
     }
     // MARK: Loader Methods
-    func showLoder()
-    {
+    func showLoder()  {
         if let window = Singleton.appDelegate?.window {
             MBProgressHUD.showAdded(to: window, animated: true)
         }
     }
-    
-    func hideLoader(){
+
+    func hideLoader() {
         if let window = Singleton.appDelegate?.window {
             MBProgressHUD.hide(for: window, animated: true)
         }
     }
-    
+
     // MARK: - Show Toast messages
     func showToast(message: String) {
 
@@ -136,7 +144,7 @@ class Singleton: NSObject {
         window.last?.makeToast(message, duration: 3.0, position: .bottom)
 
     }
-    
+
     // MARK: - Alert Message
     struct AlertMessages {
         static let enterMobileNumber: String           = "Please enter mobile number"
@@ -154,12 +162,12 @@ class Singleton: NSObject {
         static let groupImage: String                = "Please add group image"
         static let groupname: String                = "Please enter group name"
     }
-    
+
     // MARK: - Storyboards
     struct StoryboardName {
         static let Main = "Main"
     }
-    
+
     // MARK: - Controllers
     struct ControllerName {
         static let AddMobileViewController  = "addMobileViewController"
@@ -170,21 +178,20 @@ class Singleton: NSObject {
         static let VideoTrimmerViewController = "VideoTrimmerViewController"
         static let CreateGroupVC            = "CreateGroupVC"
     }
-    
+
     struct MessageType {
         static let TEXT = "TEXT"
         static let IMAGE = "IMAGE"
         static let VIDEO = "VIDEO"
     }
-    
+
     struct MessageStatus {
         static let READ = "READ"
         static let SEND = "SEND"
         static let UPLOADING = "UPLOADING"
     }
-    
-    
-    // MARK:will create thumnail from video url
+
+    // MARK: will create thumnail from video url
     func createThumbnailOfVideoFromRemoteUrl(url: String) -> UIImage? {
         let asset = AVAsset(url: URL(string: url)!)
         let assetImgGenerate = AVAssetImageGenerator(asset: asset)
@@ -201,15 +208,15 @@ class Singleton: NSObject {
             return nil
         }
     }
-    
+
     // MARK: - TO get storyboards
-    func getStoryBoard (storyboardName: String) -> UIStoryboard{
+    func getStoryBoard(storyboardName: String) -> UIStoryboard {
         let storyboard = UIStoryboard(name: storyboardName, bundle: nil)
         return storyboard
     }
-                                            
+
     // MARK: - To get Controllers
-    func getController (storyName: String,controllerName: String) -> UIViewController {
+    func getController(storyName: String, controllerName: String) -> UIViewController {
         var controller  = UIViewController()
         if #available(iOS 13.0, *) {
             controller = getStoryBoard(storyboardName: storyName).instantiateViewController(identifier: controllerName)
@@ -221,18 +228,16 @@ class Singleton: NSObject {
     }
    // MARK: - To navigate from one to another controller
     func navigate(from: UIViewController?, to: UIViewController?, navigationController: UINavigationController?) {
-        if from != nil && to != nil && navigationController != nil{
+        if from != nil && to != nil && navigationController != nil {
             navigationController!.pushViewController(to!, animated: true)
         }
     }
-    
+
     // MARK: - TO validate Email
     func isValidEmail(_ email: String) -> Bool {
         let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
 
-        let emailPred = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+        let emailPred = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
         return emailPred.evaluate(with: email)
     }
-    
 }
-

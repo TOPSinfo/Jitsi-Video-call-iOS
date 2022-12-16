@@ -13,7 +13,7 @@ import CropViewController
 
 protocol CreateGroupVCDelegate: AnyObject {
     func uploadImage(fileData: Data?, fileName: String, type: MediaType)
-    func createGroup(groupID: String, dic: [String:Any])
+    func createGroup(groupID: String, dic: [String: Any])
 }
 
 class CreateGroupVC: UIViewController {
@@ -23,18 +23,19 @@ class CreateGroupVC: UIViewController {
     var selectedForGroupCall = [SignupUserData]()
     let createGroupViewmodel: CreateGroupViewModel = CreateGroupViewModel()
     var groupID = ""
+
     // MARK: - Outlet
-    @IBOutlet weak var btnBack:UIButton!
-    @IBOutlet weak var tfGroupName:UITextField!
-    @IBOutlet weak var imgGroupImage:UIImageView!
+    @IBOutlet weak var btnBack: UIButton!
+    @IBOutlet weak var tfGroupName: UITextField!
+    @IBOutlet weak var imgGroupImage: UIImageView!
     @IBOutlet weak var collectionUsers: UICollectionView!
     @IBOutlet weak var lblParticipant: UILabel!
-    
+
     var objGroup: GroupDetailObject = GroupDetailObject()
     var isForDetail: Bool = false
     
     @IBOutlet weak var btnCreateGroup: UIButton!
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         if self.isForDetail {
@@ -42,7 +43,7 @@ class CreateGroupVC: UIViewController {
             tfGroupName.text = objGroup.name
             tfGroupName.isUserInteractionEnabled = false
             imgGroupImage.isUserInteractionEnabled = false
-            imgGroupImage.setUserImageUsingUrl(objGroup.groupIcon , isUser: true)
+            imgGroupImage.setUserImageUsingUrl(objGroup.groupIcon, isUser: true)
             btnCreateGroup.isHidden = true
         } else {
             lblParticipant.text = String(format: "Participants : %d", self.selectedForGroupCall.count)
@@ -53,82 +54,72 @@ class CreateGroupVC: UIViewController {
         // will set delegate firebase Auth view model
         self.createGroupViewmodel.firebaseCreateGroupViewModelDelegate = self
     }
-        
-    @IBAction func btn_backButtonTapped(_ sender:UIButton) {
+
+    @IBAction func btn_backButtonTapped(_ sender: UIButton) {
         self.navigationController?.popViewController(animated: true)
     }
     
     // MARK: - Register button tapped
-    @IBAction func btn_CreateGroupTapped(_ sender:UIButton) {
-
+    @IBAction func btn_CreateGroupTapped(_ sender: UIButton) {
         if tfGroupName.text!.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             Singleton.sharedSingleton.showToast(message: Singleton.AlertMessages.groupname)
         } else if selectedAssets.count == 0 {
             Singleton.sharedSingleton.showToast(message: Singleton.AlertMessages.groupImage)
         } else {
-        
             var filename = String()
-            for i in selectedAssets {
-                filename = i.extType().rawValue
+            for ind in selectedAssets {
+                filename = ind.extType().rawValue
             }
             if let img = imgGroupImage.image {
                 let imgData = img.jpegData(compressionQuality: 1.0)
-                createGroupViewmodel.createGroupVCDelegate?.uploadImage(fileData: imgData, fileName: ChildPath.userProfileImage + filename, type: .image)
+                createGroupViewmodel.createGroupVCDelegate?.uploadImage(fileData: imgData,
+                                                                        fileName: ChildPath.userProfileImage + filename, type: .image)
             }
         }
     }
-    
-    @IBAction func btn_imageTapped(_ sender:UIButton) {
-        self.view.endEditing(true)
-        let viewController = TLPhotosPickerViewController()
-        viewController.delegate = self
-        var configure = TLPhotosPickerConfigure()
-        configure.maxSelectedAssets = 1
-        configure.singleSelectedMode = true
-        configure.allowedVideoRecording = false
-        configure.allowedVideo = false
-        configure.allowedLivePhotos = false
-        viewController.configure = configure
-        self.present(viewController, animated: true, completion: nil)
+
+    @IBAction func btn_imageTapped(_ sender: UIButton) {
+        openImagePicker(self)
     }
 }
-extension CreateGroupVC: TLPhotosPickerViewControllerDelegate , CropViewControllerDelegate {
-    
-    func cropViewController(_ cropViewController: CropViewController, didCropToImage image: UIImage, withRect cropRect: CGRect, angle: Int) {
+
+extension CreateGroupVC: TLPhotosPickerViewControllerDelegate, CropViewControllerDelegate {
+
+    func cropViewController(_ cropViewController: CropViewController,
+                            didCropToImage image: UIImage, withRect cropRect: CGRect, angle: Int) {
         self.imgGroupImage.image = image
         cropViewController.dismiss(animated: true, completion: nil)
     }
-    
+
     // TLPhotosPickerViewControllerDelegate
     func shouldDismissPhotoPicker(withTLPHAssets: [TLPHAsset]) -> Bool {
         // use selected order, fullresolution image
         self.selectedAssets = withTLPHAssets
         return true
     }
-    
+
     func photoPickerDidCancel() {
         // cancel
     }
-    
+
     func dismissComplete() {
         // picker viewcontroller dismiss completion
-        for i in selectedAssets {
-                        
-            let cropViewController = CropViewController(croppingStyle: .circular, image: i.fullResolutionImage ?? UIImage())
+        for ind in selectedAssets {
+            let cropViewController = CropViewController(croppingStyle: .circular,
+                                                        image: ind.fullResolutionImage ?? UIImage())
             cropViewController.delegate = self
             self.present(cropViewController, animated: true, completion: nil)
-                        
         }
     }
-        
+
     func didExceedMaximumNumberOfSelection(picker: TLPhotosPickerViewController) {
         // exceed max selection
     }
-    
+
     func handleNoAlbumPermissions(picker: TLPhotosPickerViewController) {
         // handle denied albums permissions case
     }
-    
+
     func handleNoCameraPermissions(picker: TLPhotosPickerViewController) {
         // handle denied camera permissions case
     }
@@ -144,36 +135,37 @@ extension CreateGroupVC: UICollectionViewDelegate, UICollectionViewDataSource, U
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as? UserListCollectionCell else { return UICollectionViewCell() }
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell",
+                                                            for: indexPath) as? UserListCollectionCell else { return UICollectionViewCell() }
         if isForDetail {
             FirebaseCloudFirestoreManager().getUserDetail(userID: self.objGroup.members[indexPath.row]) { objUser in
-                cell.lbl_userName.text = objUser.fullName
-                cell.img_user.setUserImageUsingUrl(objUser.profile_image, isUser: true)
+                cell.lblUserName.text = objUser.fullName
+                cell.imgUser.setUserImageUsingUrl(objUser.profile_image, isUser: true)
             } failure: { _ in
                 
             }
         } else {
             let item = self.selectedForGroupCall[indexPath.row]
-            cell.lbl_userName.text = item.fullName
-            cell.img_user.setUserImageUsingUrl(item.profile_image, isUser: true)
+            cell.lblUserName.text = item.fullName
+            cell.imgUser.setUserImageUsingUrl(item.profile_image, isUser: true)
         }
         return cell
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.frame.size.width / 5 , height: 115)
+        return CGSize(width: collectionView.frame.size.width / 5, height: 115)
     }
 }
 
 extension CreateGroupVC: FirebaseCreateGroupViewModelDelegate {
-    
+
     func didUploadUserImage(task: StorageUploadTask?, reference: StorageReference?) {
-        
+
         Singleton.sharedSingleton.showLoder()
         if let task = task {
-            
+
             task.observe(.success) { _ in
-                
+
                 reference?.downloadURL(completion: { [self] url, _ in
                     Singleton.sharedSingleton.hideLoader()
                     
@@ -182,11 +174,11 @@ extension CreateGroupVC: FirebaseCreateGroupViewModelDelegate {
                         print("download fail")
                         return
                     }
-                    
-                    let db: Firestore = Firestore.firestore()
-                    self.groupID = db.collection("GroupDetail").document().documentID
-                    
-                    var dic = [String:Any]()
+
+                    let dbs: Firestore = Firestore.firestore()
+                    self.groupID = dbs.collection("GroupDetail").document().documentID
+
+                    var dic = [String: Any]()
                     dic["id"] = self.groupID
                     dic["adminId"] = Singleton.appDelegate?.objCurrentUser.uid
                     dic["adminName"] = Singleton.appDelegate?.objCurrentUser.fullName
@@ -200,18 +192,18 @@ extension CreateGroupVC: FirebaseCreateGroupViewModelDelegate {
                     self.createGroupViewmodel.createGroupVCDelegate?.createGroup(groupID: self.groupID, dic: dic)
                 })
             }
-            
+
             task.observe(.failure) { _ in
                 Singleton.sharedSingleton.showToast(message: "Registration fail")
                 Singleton.sharedSingleton.hideLoader()
             }
-            
+
         } else {
-            Singleton.sharedSingleton.showToast(message:"Registration fail")
+            Singleton.sharedSingleton.showToast(message: "Registration fail")
             Singleton.sharedSingleton.hideLoader()
         }
     }
-    
+
     func groupCreated(_ isRegister: Bool) {
         if isRegister {
             self.navigationController?.popViewController(animated: true)
@@ -220,6 +212,6 @@ extension CreateGroupVC: FirebaseCreateGroupViewModelDelegate {
 }
 
 class UserListCollectionCell: UICollectionViewCell {
-    @IBOutlet weak var img_user:UIImageView!
-    @IBOutlet weak var lbl_userName:UILabel!
+    @IBOutlet weak var imgUser:UIImageView!
+    @IBOutlet weak var lblUserName:UILabel!
 }
