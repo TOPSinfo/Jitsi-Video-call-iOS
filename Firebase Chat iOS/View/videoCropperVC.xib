@@ -22,10 +22,10 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="VideoCropperVC" customModule="Firebase_Chat_iOS" customModuleProvider="target">
             <connections>
-                <outlet property="btn_PlayPause" destination="wHq-pb-fkk" id="VII-nF-Ap2"/>
-                <outlet property="lbl_palyPause" destination="LDY-AR-dFS" id="Ij7-9V-37O"/>
-                <outlet property="lbl_remainingTime" destination="MfL-in-aYh" id="J5V-6U-XdC"/>
-                <outlet property="lbl_selectedTime" destination="QUH-rp-RUY" id="ywZ-Rj-H9h"/>
+                <outlet property="btnPlayPause" destination="wHq-pb-fkk" id="Xoc-nE-q38"/>
+                <outlet property="lblPalyPause" destination="LDY-AR-dFS" id="d84-xd-7mt"/>
+                <outlet property="lblRemainingTime" destination="MfL-in-aYh" id="hXC-DV-tk5"/>
+                <outlet property="lblSelectedTime" destination="QUH-rp-RUY" id="Obu-mn-TLX"/>
                 <outlet property="playerView" destination="pnD-Yc-nWm" id="6Fo-QJ-XvI"/>
                 <outlet property="trimmerView" destination="jay-cS-Dqo" id="46o-FJ-V68"/>
                 <outlet property="videoSeekBar" destination="By8-Kj-JxX" id="6Cf-pA-vPg"/>

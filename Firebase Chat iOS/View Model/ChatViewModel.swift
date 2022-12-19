@@ -49,7 +49,7 @@ extension ChatViewModel: ChatVCDelegate {
     
     func uploadVideo(_ files: [(filename: String, file: Data, type: MediaType)]) {
         
-        guard Reachability.isConnectedToNetwork() else{
+        guard Reachability.isConnectedToNetwork() else {
             Singleton.sharedSingleton.showToast(message: "Please check your internet connection")
             return
         }
@@ -108,7 +108,7 @@ extension ChatViewModel: ChatVCDelegate {
 
         Singleton.sharedSingleton.showLoder()
         firebaseViewModel.firebaseStorageManager.uploadImage(childPath: filename,
-                                                             imageNeedstoUpload: file, type: type) { task,url  in
+                                                             imageNeedstoUpload: file, type: type) { task, url  in
             Singleton.sharedSingleton.hideLoader()
 
             if task != nil {
@@ -122,7 +122,7 @@ extension ChatViewModel: ChatVCDelegate {
     // MARK: will send message to reciever using IDs and get revert to controller
     func sendMessage(conversationID: String, messageID: String, dic: [String : Any]) {
 
-        guard Reachability.isConnectedToNetwork() else{
+        guard Reachability.isConnectedToNetwork() else {
             Singleton.sharedSingleton.showToast(message: "Please check your internet connection")
             return
         }

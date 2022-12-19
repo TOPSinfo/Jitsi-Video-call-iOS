@@ -33,7 +33,7 @@ class CreateGroupVC: UIViewController {
 
     var objGroup: GroupDetailObject = GroupDetailObject()
     var isForDetail: Bool = false
-    
+
     @IBOutlet weak var btnCreateGroup: UIButton!
 
     override func viewDidLoad() {
@@ -58,7 +58,7 @@ class CreateGroupVC: UIViewController {
     @IBAction func btn_backButtonTapped(_ sender: UIButton) {
         self.navigationController?.popViewController(animated: true)
     }
-    
+
     // MARK: - Register button tapped
     @IBAction func btn_CreateGroupTapped(_ sender: UIButton) {
         if tfGroupName.text!.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
@@ -73,7 +73,7 @@ class CreateGroupVC: UIViewController {
             if let img = imgGroupImage.image {
                 let imgData = img.jpegData(compressionQuality: 1.0)
                 createGroupViewmodel.createGroupVCDelegate?.uploadImage(fileData: imgData,
-                                                                        fileName: ChildPath.userProfileImage + filename, type: .image)
+                fileName: ChildPath.userProfileImage + filename, type: .image)
             }
         }
     }
@@ -136,7 +136,7 @@ extension CreateGroupVC: UICollectionViewDelegate, UICollectionViewDataSource, U
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell",
-                                                            for: indexPath) as? UserListCollectionCell else { return UICollectionViewCell() }
+                         for: indexPath) as? UserListCollectionCell else { return UICollectionViewCell() }
         if isForDetail {
             FirebaseCloudFirestoreManager().getUserDetail(userID: self.objGroup.members[indexPath.row]) { objUser in
                 cell.lblUserName.text = objUser.fullName
@@ -152,7 +152,9 @@ extension CreateGroupVC: UICollectionViewDelegate, UICollectionViewDataSource, U
         return cell
     }
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.frame.size.width / 5, height: 115)
     }
 }
@@ -212,6 +214,6 @@ extension CreateGroupVC: FirebaseCreateGroupViewModelDelegate {
 }
 
 class UserListCollectionCell: UICollectionViewCell {
-    @IBOutlet weak var imgUser:UIImageView!
-    @IBOutlet weak var lblUserName:UILabel!
+    @IBOutlet weak var imgUser: UIImageView!
+    @IBOutlet weak var lblUserName: UILabel!
 }

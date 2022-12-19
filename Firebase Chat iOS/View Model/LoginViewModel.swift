@@ -25,15 +25,14 @@ import FirebaseStorage
 }
 
 final class LoginViewModel {
-    
+
     let firebaseViewModel: FirebaseViewModel = FirebaseViewModel() // Object of fiebaseAthView model
     weak var addMobileViewControllerDelegate: AddMobileViewControllerDelegate? // Object of controller protocol to access methos
     weak var firebaseAuthViewModelDelegate: FirebaseAuthViewModelDelegate? // instance of firebase auth delegate protocol
-    
+
     init() {
         self.addMobileViewControllerDelegate = self
     }
-    
 }
 
 extension LoginViewModel: AddMobileViewControllerDelegate {

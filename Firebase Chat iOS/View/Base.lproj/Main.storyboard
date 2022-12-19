@@ -507,10 +507,10 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="img_user" destination="C20-LN-yMG" id="zIo-RR-KG6"/>
-                        <outlet property="tf_Email" destination="zey-Mp-nkn" id="3gP-Ld-Wwk"/>
-                        <outlet property="tf_FirstNmae" destination="jmr-ga-ZoG" id="RnZ-VD-R64"/>
-                        <outlet property="tf_LastName" destination="822-z1-wCl" id="qsk-Rv-TVd"/>
+                        <outlet property="imgUser" destination="C20-LN-yMG" id="CbN-Ds-u3D"/>
+                        <outlet property="tfEmail" destination="zey-Mp-nkn" id="lyw-6R-a3i"/>
+                        <outlet property="tfFirstNmae" destination="jmr-ga-ZoG" id="VKn-09-JvP"/>
+                        <outlet property="tfLastName" destination="822-z1-wCl" id="VVV-hl-WgH"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KG4-YH-3Qh" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -658,8 +658,8 @@
                                         <color key="tintColor" name="ic_app_bar_color"/>
                                         <connections>
                                             <outlet property="imgOnlineOffLine" destination="fCW-ID-Qdt" id="63g-5I-Cjq"/>
-                                            <outlet property="img_user" destination="T8a-Hl-wS2" id="X0P-WD-ntr"/>
-                                            <outlet property="lbl_userName" destination="emI-ky-7iE" id="kdw-Lt-8AS"/>
+                                            <outlet property="imgUser" destination="T8a-Hl-wS2" id="45i-c9-Rfk"/>
+                                            <outlet property="lblUserName" destination="emI-ky-7iE" id="3ZR-LD-o74"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -711,8 +711,8 @@
                     <connections>
                         <outlet property="btnCall" destination="qfJ-xs-CrQ" id="H6S-AO-ojM"/>
                         <outlet property="btnCreate" destination="L15-ZX-Lbx" id="sFy-sl-AKP"/>
-                        <outlet property="btn_logout" destination="yEq-d1-8aA" id="Ccq-i1-2AO"/>
-                        <outlet property="tbl_userList" destination="LM0-fB-bwV" id="acm-1C-zZ8"/>
+                        <outlet property="btnLogout" destination="yEq-d1-8aA" id="MBQ-6X-qVX"/>
+                        <outlet property="tblUserList" destination="LM0-fB-bwV" id="3Ha-kk-yEC"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="q3x-qd-O6D" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

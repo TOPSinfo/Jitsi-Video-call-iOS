@@ -125,7 +125,7 @@ class Singleton: NSObject {
         }
     }
     // MARK: Loader Methods
-    func showLoder()  {
+    func showLoder() {
         if let window = Singleton.appDelegate?.window {
             MBProgressHUD.showAdded(to: window, animated: true)
         }
@@ -227,9 +227,9 @@ class Singleton: NSObject {
         return controller
     }
    // MARK: - To navigate from one to another controller
-    func navigate(from: UIViewController?, to: UIViewController?, navigationController: UINavigationController?) {
-        if from != nil && to != nil && navigationController != nil {
-            navigationController!.pushViewController(to!, animated: true)
+    func navigate(from: UIViewController?, toWhere: UIViewController?, navigationController: UINavigationController?) {
+        if from != nil && toWhere != nil && navigationController != nil {
+            navigationController!.pushViewController(toWhere!, animated: true)
         }
     }
 

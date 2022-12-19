@@ -10,8 +10,8 @@ import JitsiMeetSDK
 import FirebaseAuth
 
 class UserListCell: UITableViewCell {
-    @IBOutlet weak var img_user:UIImageView!
-    @IBOutlet weak var lbl_userName:UILabel!
+    @IBOutlet weak var imgUser: UIImageView!
+    @IBOutlet weak var lblUserName: UILabel!
     @IBOutlet weak var imgOnlineOffLine: UIImageView!
 }
 
@@ -28,8 +28,8 @@ class UserListVC: UIViewController {
     var selectedForGroupCall = [SignupUserData]()
     
     // MARK: - Outlet
-    @IBOutlet weak var tbl_userList:UITableView!
-    @IBOutlet weak var btn_logout:UIButton!
+    @IBOutlet weak var tblUserList: UITableView!
+    @IBOutlet weak var btnLogout: UIButton!
     @IBOutlet weak var btnCall: UIButton!
     @IBOutlet weak var btnCreate: UIButton!
     
@@ -45,24 +45,23 @@ class UserListVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         // Set tableview delgate and datasource
-        self.tbl_userList.delegate = self
-        self.tbl_userList.dataSource = self
+        self.tblUserList.delegate = self
+        self.tblUserList.dataSource = self
         btnCall.isHidden = true
         btnCreate.isHidden = true
-        
+
         // Will call to get list of register user
-        
+
         print(currentUId)
         Singleton.sharedSingleton.doOnlineOffline(isOnline: true)
         firebaseViewModel.firebaseCloudFirestoreManager.setGroupCallListner(userID: currentUId) { _ in
-            
+
         } failure: { (_) in
-            
         }
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         // set delegate of auth view model
         isFirstTime = true
@@ -71,17 +70,17 @@ class UserListVC: UIViewController {
         userViewModel.firebaseAuthViewModelDelegate = self
         isMultipleSelection = false
         selectedForGroupCall = []
-        tbl_userList.reloadData()
+        tblUserList.reloadData()
         btnCall.isHidden = true
         btnCreate.isHidden = true
     }
-    
+
     override func viewDidDisappear(_ animated: Bool) {
         Singleton.userListner?.remove()
     }
-    
+
     // MARK: - USer will logout from auth session and app
-    @IBAction func btn_logout(_ sender:UIButton) {
+    @IBAction func btn_logout(_ sender: UIButton) {
         Singleton.sharedSingleton.doOnlineOffline(isOnline: false)
         userViewModel.firebaseViewModel.logautUser { (_) in
             Singleton.sharedSingleton.setNavigation()
@@ -89,43 +88,42 @@ class UserListVC: UIViewController {
             Singleton.sharedSingleton.showToast(message: error)
         }
     }
-    
+
     @IBAction func btnGroupCallClick(_ sender: Any) {
         if isMultipleSelection == true {
             isMultipleSelection = false
             selectedForGroupCall = []
-            tbl_userList.reloadData()
+            tblUserList.reloadData()
             btnCall.isHidden = true
             btnCreate.isHidden = true
         } else {
             newCallAlert()
         }
     }
-    
-    @IBAction func btnChatGroup(_ sender:UIButton) {
+
+    @IBAction func btnChatGroup(_ sender: UIButton) {
         if isMultipleSelection == true {
             isMultipleSelection = false
             selectedForGroupCall = []
-            tbl_userList.reloadData()
+            tblUserList.reloadData()
             btnCreate.isHidden = true
         } else {
             self.isMultipleSelection = true
             btnCreate.isHidden = false
         }
     }
-    
+
     @IBAction func btnCreateClick(_ sender: Any) {
         if selectedForGroupCall.count > 1 {
-            guard let vcCG = Singleton.sharedSingleton.getController(storyName: Singleton.StoryboardName.Main, controllerName: Singleton.ControllerName.CreateGroupVC) as? CreateGroupVC else { return }
+            guard let vcCG = Singleton.sharedSingleton.getController(storyName: Singleton.StoryboardName.Main,
+                            controllerName: Singleton.ControllerName.CreateGroupVC) as? CreateGroupVC else { return }
             vcCG.selectedForGroupCall = self.selectedForGroupCall
             self.navigationController?.pushViewController(vcCG, animated: true)
         } else {
-            let alert = UIAlertController(title: "", message: "Please select more than 2 user for group call", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
+            showGroupCallAlert()
         }
     }
-    
+
     @IBAction func btnCallClick(_ sender: Any) {
         if selectedForGroupCall.count > 1 {
             firebaseViewModel.firebaseCloudFirestoreManager.addGroupCall(arr: selectedForGroupCall) { (docId) in
@@ -135,10 +133,16 @@ class UserListVC: UIViewController {
                 
             }
         } else {
-            let alert = UIAlertController(title: "", message: "Please select more than 2 user for group call", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
+            showGroupCallAlert()
         }
+    }
+
+    func showGroupCallAlert() {
+        let alert = UIAlertController(title: "",
+                                      message: "Please select more than 2 user for group call",
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
     
     func newCallAlert() {
@@ -146,13 +150,13 @@ class UserListVC: UIViewController {
         
         for item in AppDelegate.standard.arrForActiveCallList where item.userIds.count > 2 {
 //            if item.userIds.count > 2 {
-                alert.addAction(UIAlertAction(title: "Call From \(item.HostName)" , style: .default, handler: { _ in
+                alert.addAction(UIAlertAction(title: "Call From \(item.HostName)", style: .default, handler: { _ in
                     self.objJitsi.viewController = self
                     self.objJitsi.openJetsiViewWithUser(roomid: item.documentId)
                 }))
 //            }
         }
-        
+
         alert.addAction(UIAlertAction(title: "New Group Call", style: .default, handler: { _ in
             self.isMultipleSelection = true
             self.btnCall.isHidden = false
@@ -164,7 +168,7 @@ class UserListVC: UIViewController {
         self.present(alert, animated: true, completion: nil)
     
     }
-    
+
     deinit {
         Singleton.userListner?.remove()
     }
@@ -183,83 +187,77 @@ extension UserListVC: FirebaseAuthViewModelDelegate {
     
     // will get call when user list recieve
     func didGetUserList(_ userlist: Array<Any>) {
-        
+
         if let users = userlist as? [SignupUserData] {
-            
+
             if isFirstTime {
                 isFirstTime = false
                 self.userArray = users
             } else {
                 for user in users {
-                    if user.type == .added {
-                        self.userArray.append(user)
-                    } else if user.type == .modified {
-                        if self.userArray.contains(where: {$0.uid == user.uid})
-                        {
-                            let index = self.userArray.firstIndex(where: {$0.uid == user.uid})
-                            self.userArray[index!] = user
-                        }
-                    } else if user.type == .removed {
-                        self.userArray.removeAll(where: {$0.uid == user.uid})
-                    }
+                    filterUsers(user: user)
                 }
             }
-            
+
             if isFirstTimeGroup {
                 DispatchQueue.main.async {
                     self.userViewModel.userListVCDelegate?.getGroupList()
                 }
             }
-            
-            self.tbl_userList.reloadData()
+
+            self.tblUserList.reloadData()
+        }
+    }
+
+    func filterUsers(user: SignupUserData) {
+        if user.type == .added {
+            self.userArray.append(user)
+        } else if user.type == .modified {
+            if self.userArray.contains(where: {$0.uid == user.uid}) {
+                let index = self.userArray.firstIndex(where: {$0.uid == user.uid})
+                self.userArray[index!] = user
+            }
+        } else if user.type == .removed {
+            self.userArray.removeAll(where: {$0.uid == user.uid})
         }
     }
     
     func didGetGroupList(_ userlist: Array<Any>) {
-        
+
         isFirstTimeGroup = false
-        
+
         if let users = userlist as? [SignupUserData] {
-        
+
             for user in users {
-                
-                print(user.fullName ,user.isGroup)
-                
+
+                print(user.fullName, user.isGroup)
+
                 guard let members = user.objGroupDetail?.members else { continue }
-                
+
                 if !members.contains(where: {$0 == currentUId}) {
                     self.userArray.removeAll(where: {$0.uid == user.uid})
                     continue
                 }
-                
-                if user.type == .added {
-                    self.userArray.append(user)
-                } else if user.type == .modified {
-                    if self.userArray.contains(where: {$0.uid == user.uid}) {
-                        let index = self.userArray.firstIndex(where: {$0.uid == user.uid})
-                        self.userArray[index!] = user
-                    }
-                } else if user.type == .removed {
-                    self.userArray.removeAll(where: {$0.uid == user.uid})
-                }
+
+                filterUsers(user: user)
             }
-            self.tbl_userList.reloadData()
+            self.tblUserList.reloadData()
         }
     }
 }
-
 
 // MARK: - Extended tableview delegate and datasource method
 extension UserListVC: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.userArray.count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "userListCell") as? UserListCell else { return UITableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "userListCell") as? UserListCell
+        else { return UITableViewCell() }
         let item = self.userArray[indexPath.row]
-        cell.lbl_userName.text = item.firstName + " " + item.lastName
-        cell.img_user.setUserImageUsingUrl(item.profile_image , isUser: true)
+        cell.lblUserName.text = item.firstName + " " + item.lastName
+        cell.imgUser.setUserImageUsingUrl(item.profile_image, isUser: true)
         cell.imgOnlineOffLine.backgroundColor = item.isOnline ? .systemGreen : .lightGray
         cell.imgOnlineOffLine.borderWidth = 1
         cell.imgOnlineOffLine.cornerRadius = 5
@@ -273,7 +271,7 @@ extension UserListVC: UITableViewDataSource, UITableViewDelegate {
         }
         return cell
     }
-    
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let item = self.userArray[indexPath.row]
         if isMultipleSelection == true {
@@ -282,8 +280,8 @@ extension UserListVC: UITableViewDataSource, UITableViewDelegate {
                 Singleton.sharedSingleton.showToast(message: "You can select only users not group.")
                 return
             }
-            
-            let cell = tbl_userList.cellForRow(at: indexPath)
+
+            let cell = tblUserList.cellForRow(at: indexPath)
             if self.selectedForGroupCall.contains(where: {
                 $0.uid == item.uid
             }) {
@@ -296,14 +294,14 @@ extension UserListVC: UITableViewDataSource, UITableViewDelegate {
                 cell?.accessoryType = .checkmark
                 self.selectedForGroupCall.append(item)
             }
-            self.tbl_userList.reloadData()
+            self.tblUserList.reloadData()
         } else {
-            guard let vcc = Singleton.sharedSingleton.getController(storyName: Singleton.StoryboardName.Main, controllerName: Singleton.ControllerName.ChatVC) as? ChatVC else { return }
+            guard let vcc = Singleton.sharedSingleton.getController(storyName: Singleton.StoryboardName.Main,
+                            controllerName: Singleton.ControllerName.ChatVC) as? ChatVC else { return }
             vcc.userID = item.uid
             vcc.userName = item.firstName + " " + item.lastName
             vcc.objOppoUser = item
-            Singleton.sharedSingleton.navigate(from: self, to: vcc, navigationController: self.navigationController)
+            Singleton.sharedSingleton.navigate(from: self, toWhere: vcc, navigationController: self.navigationController)
         }
     }
 }
-

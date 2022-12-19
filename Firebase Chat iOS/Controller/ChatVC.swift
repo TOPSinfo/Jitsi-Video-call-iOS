@@ -17,41 +17,40 @@ import SKPhotoBrowser
 // MARK: - Custom delegate
 protocol ChatVCDelegate: AnyObject {
     func uploadMediea(_ filename: String, file: Data, type: MediaType)
-    func uploadVideo(_ files:[(filename: String, file:Data, type: MediaType)])
+    func uploadVideo(_ files: [(filename: String, file: Data, type: MediaType)])
     func getMessageList(_ touserID: String, isForGroup: Bool)
-    func sendMessage(conversationID: String, messageID: String, dic: [String:Any])
+    func sendMessage(conversationID: String, messageID: String, dic: [String: Any])
     func checkUserisOnline(_ senderID: String)
 }
 
 class ChatVC: UIViewController {
 
     var objJitsi: JitsiManager = JitsiManager()
-    
+
     // MARK: - chat view model object
     let chatviewmodel: ChatViewModel = ChatViewModel()
     let firebaseViewModel: FirebaseViewModel = FirebaseViewModel()
 
     // MARK: - outlet
-    @IBOutlet weak var tvMessage:KMPlaceholderTextView!
-    @IBOutlet weak var btnSend:UIButton!
-    @IBOutlet weak var constantHtTextfview:NSLayoutConstraint!
-    
-    @IBOutlet weak var tblChat:UITableView!
-    @IBOutlet weak var btnBack:UIButton!
-    @IBOutlet weak var lblTitle:UILabel!
-    @IBOutlet weak var lblIsOnline:UILabel!
-    
+    @IBOutlet weak var tvMessage: KMPlaceholderTextView!
+    @IBOutlet weak var btnSend: UIButton!
+    @IBOutlet weak var constantHtTextfview: NSLayoutConstraint!
+
+    @IBOutlet weak var tblChat: UITableView!
+    @IBOutlet weak var btnBack: UIButton!
+    @IBOutlet weak var lblTitle: UILabel!
+    @IBOutlet weak var lblIsOnline: UILabel!
+
     @IBOutlet weak var contantBottomOfTextfield: NSLayoutConstraint!
-    
+
     @IBOutlet weak var btnCameraInfo: UIButton!
-    
-    
+
     // MARK: - Variable
     var userID = String()
     var messaes = [MessageClass]()
     var isFirstTime = true
     var userName = String()
-    
+
     var selectedAssets = [TLPHAsset]()
     var objOppoUser: SignupUserData = SignupUserData()
     var arrayForGroupUserDetails: [SignupUserData] = []
@@ -64,31 +63,35 @@ class ChatVC: UIViewController {
         self.dismissKey()
         setupView()
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         IQKeyboardManager.shared.enable = false
         IQKeyboardManager.shared.enableAutoToolbar = false
         chatviewmodel.firebasechatViewModelDelegate = self
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         IQKeyboardManager.shared.enable = true
         IQKeyboardManager.shared.enableAutoToolbar = true
     }
-    
+
     // MARK: - Setup UI
     func setupView() {
-        
+
         self.lblTitle.text = userName
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-            NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow),
+                                               name: UIResponder.keyboardWillShowNotification, object: nil)
+            NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide),
+                                                   name: UIResponder.keyboardWillHideNotification, object: nil)
         
         
         tblChat.register(UINib(nibName: "ChatReceiverCell", bundle: nil), forCellReuseIdentifier: "ChatReceiverCell")
         tblChat.register(UINib(nibName: "ChatSenderCell", bundle: nil), forCellReuseIdentifier: "ChatSenderCell")
-        tblChat.register(UINib(nibName: "ChatReceiverImageCell", bundle: nil), forCellReuseIdentifier: "ChatReceiverImageCell")
-        tblChat.register(UINib(nibName: "ChatSenderImageCell", bundle: nil), forCellReuseIdentifier: "ChatSenderImageCell")
+        tblChat.register(UINib(nibName: "ChatReceiverImageCell", bundle: nil),
+                         forCellReuseIdentifier: "ChatReceiverImageCell")
+        tblChat.register(UINib(nibName: "ChatSenderImageCell", bundle: nil),
+                         forCellReuseIdentifier: "ChatSenderImageCell")
         
         tblChat.delegate = self
         tblChat.dataSource = self
@@ -124,7 +127,8 @@ class ChatVC: UIViewController {
     
     // MARK: - Keyboard methods
     func dismissKey() {
-        let tap: UITapGestureRecognizer = UITapGestureRecognizer( target: self, action: #selector(dismissKeyboard(sender:)))
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer( target: self,
+                                                                  action: #selector(dismissKeyboard(sender:)))
         tap.cancelsTouchesInView = false
         tblChat.addGestureRecognizer(tap)
     }
@@ -161,21 +165,21 @@ class ChatVC: UIViewController {
             self.contantBottomOfTextfield.constant = 8
         }
     }
-    
+
     // MARK: - will scroll at last position when new message arrive or send
-    private func scrollToBottom(){
+    private func scrollToBottom() {
         DispatchQueue.main.async {
             let indexPath = IndexPath(
-                row: self.tblChat.numberOfRows(inSection:  0) - 1,
+                row: self.tblChat.numberOfRows(inSection: 0) - 1,
                 section: 0)
-            if self.tblChat.numberOfRows(inSection:  0) > 1 {
+            if self.tblChat.numberOfRows(inSection: 0) > 1 {
                 self.tblChat.scrollToRow(at: indexPath, at: .bottom, animated: true)
             }
         }
     }
-    
+
     // MARK: - Button Action
-    @IBAction func btn_sendMessageTapped(_ sender:UIButton) {
+    @IBAction func btn_sendMessageTapped(_ sender: UIButton) {
         
         if tvMessage.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             Singleton.sharedSingleton.showToast(message: Singleton.AlertMessages.enterMessage)
@@ -188,9 +192,9 @@ class ChatVC: UIViewController {
             converastionID = objOppoUser.uid
         }
         
-        let db: Firestore = Firestore.firestore()
-        let messageID = db.collection("Messages").document(converastionID).collection("message").document().documentID
-        var dic = [String:Any]()
+        let dbc: CollectionReference = Firestore.firestore().collection("Messages")
+        let messageID = dbc.document(converastionID).collection("message").document().documentID
+        var dic = [String: Any]()
         dic["docId"] = messageID
         dic["messageText"] = self.tvMessage.text ?? ""
         dic["receiverId"] = userID
@@ -217,7 +221,7 @@ class ChatVC: UIViewController {
         for item in AppDelegate.standard.arrForActiveCallList {
             var isAllAvailable: Bool = true
             for userId in arrUsers {
-                if (item.userIds.contains(userId + "___InActive") || item.userIds.contains(userId + "___Active")) {
+                if item.userIds.contains(userId + "___InActive") || item.userIds.contains(userId + "___Active") {
                 } else {
                     isAllAvailable = false
                     break
@@ -247,19 +251,20 @@ class ChatVC: UIViewController {
     }
     
     @IBAction func btnGroupInfoClick(_ sender: Any) {
-        guard let vcCG = Singleton.sharedSingleton.getController(storyName: Singleton.StoryboardName.Main, controllerName: Singleton.ControllerName.CreateGroupVC) as? CreateGroupVC else { return }
+        guard let vcCG = Singleton.sharedSingleton.getController(storyName: Singleton.StoryboardName.Main,
+                        controllerName: Singleton.ControllerName.CreateGroupVC) as? CreateGroupVC else { return }
         vcCG.objGroup = self.objOppoUser.objGroupDetail ?? GroupDetailObject()
         vcCG.isForDetail = true
         self.present(vcCG, animated: true, completion: nil)
     }
     
-    @IBAction func btn_backTapped(_ sender:UIButton) {
+    @IBAction func btn_backTapped(_ sender: UIButton) {
         Singleton.converstaonListner?.remove()
         Singleton.onlineOfflineLisnter?.remove()
         self.navigationController?.popViewController(animated: true)
     }
     
-    @IBAction func btn_pickPhoto(_ sender:UIButton) {
+    @IBAction func btn_pickPhoto(_ sender: UIButton) {
         openImagePicker(self)
     }
     
@@ -456,7 +461,7 @@ extension ChatVC: UITableViewDataSource, UITableViewDelegate {
                 cell?.btnPlay.tag = indexPath.row
                 cell?.lblDate.text = item.timestamp
                 if objOppoUser.isGroup {
-                    let arr = arrayForGroupUserDetails.filter( {$0.uid == item.senderId })
+                    let arr = arrayForGroupUserDetails.filter({ $0.uid == item.senderId })
                     if arr.count > 0 {
                         cell?.lblUserName.text = arr[0].fullName
                     }
@@ -474,11 +479,9 @@ extension ChatVC: UITableViewDataSource, UITableViewDelegate {
                 cell.lblDate.text = item.timestamp
                 DispatchQueue.main.async {
                     cell.viewBubble.roundCorners([.topRight, .bottomLeft, .bottomRight], radius: 5)
-                    
                 }
-                
                 if objOppoUser.isGroup {
-                    let arr = arrayForGroupUserDetails.filter( {$0.uid == item.senderId })
+                    let arr = arrayForGroupUserDetails.filter({ $0.uid == item.senderId })
                     if arr.count > 0 {
                         cell.lblUserName.text = arr[0].fullName
                     }
@@ -490,16 +493,15 @@ extension ChatVC: UITableViewDataSource, UITableViewDelegate {
         }
         
     }
-    
+
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
     }
-    
-    @objc func btn_play(_ sender:UIButton) {
+
+    @objc func btn_play(_ sender: UIButton) {
         
         let item = self.messaes[sender.tag]
         if item.messageType == Singleton.MessageType.VIDEO {
-            
             if let url = URL(string: item.videoUrl) {
                 let player = AVPlayer(url: url)
                 let vcPlayer = AVPlayerViewController()
@@ -507,11 +509,10 @@ extension ChatVC: UITableViewDataSource, UITableViewDelegate {
                 vcPlayer.player?.play()
                 self.present(vcPlayer, animated: true, completion: nil)
             }
-            
         }
     }
     
-    @objc func btn_showFullImage(_ sender:UITapGestureRecognizer) {
+    @objc func btn_showFullImage(_ sender: UITapGestureRecognizer) {
         
         guard let imgview = sender.view as? UIImageView else {
             return
@@ -549,7 +550,7 @@ extension ChatVC: FirebaseChatViewModelDelegate {
         }
         let db: Firestore = Firestore.firestore()
         let messageID = db.collection("Messages").document(converastionID).collection("message").document().documentID
-        var dic = [String:Any]()
+        var dic = [String: Any]()
         dic["docId"] = messageID
         dic["messageText"] = ""
         dic["receiverId"] = userID
@@ -575,7 +576,7 @@ extension ChatVC: FirebaseChatViewModelDelegate {
         // self.chatviewmodel.chatVCDelegate?.sendMessage(conversationID: converastionID, messageID: messageID, dic: dic)
     }
     
-    func didUploadMedia(_ url: StorageReference?, task:StorageUploadTask?, type: Any) {
+    func didUploadMedia(_ url: StorageReference?, task: StorageUploadTask?, type: Any) {
         
         let senderID = Auth.auth().currentUser?.uid ?? ""
         var converastionID = Singleton.sharedSingleton.getOneToOneID(senderID: senderID, receiverID: userID)
@@ -584,7 +585,7 @@ extension ChatVC: FirebaseChatViewModelDelegate {
         }
         let db: Firestore = Firestore.firestore()
         let messageID = db.collection("Messages").document(converastionID).collection("message").document().documentID
-        var dic = [String:Any]()
+        var dic = [String: Any]()
         dic["docId"] = messageID
         dic["messageText"] = ""
         dic["receiverId"] = userID
@@ -670,46 +671,46 @@ extension ChatVC: FirebaseChatViewModelDelegate {
 }
 
 extension ChatVC: TLPhotosPickerViewControllerDelegate, CropViewControllerDelegate, croppedVideoDeleget {
-    
+
     func cropViewController(_ cropViewController: CropViewController, didCropToImage image: UIImage, withRect cropRect: CGRect, angle: Int) {
-        
+
         cropViewController.dismiss(animated: true, completion: nil)
-        
+
         let data = image.jpegData(compressionQuality: 1.0)
         var fileName = ""
-        for i in self.selectedAssets {
-            fileName = i.originalFileName ?? ""
+        for ind in self.selectedAssets {
+            fileName = ind.originalFileName ?? ""
         }
-        
+
         self.chatviewmodel.chatVCDelegate?.uploadMediea(ChildPath.chatImage + fileName, file: data!, type: .image)
     }
-    
+
     // TLPhotosPickerViewControllerDelegate
     func shouldDismissPhotoPicker(withTLPHAssets: [TLPHAsset]) -> Bool {
         // use selected order, fullresolution image
         self.selectedAssets = withTLPHAssets
         return true
     }
-    
+
     func photoPickerDidCancel() {
         // cancel
     }
-    
+
     func dismissComplete() {
         // picker viewcontroller dismiss completion
-        
-        for i in self.selectedAssets {
-            
-            if i.type == .photo || i.type == .livePhoto {
-                
-                let cropViewController = CropViewController(croppingStyle: .default, image: i.fullResolutionImage ?? UIImage())
+
+        for ind in self.selectedAssets {
+
+            if ind.type == .photo || ind.type == .livePhoto {
+
+                let cropViewController = CropViewController(croppingStyle: .default, image: ind.fullResolutionImage ?? UIImage())
                 cropViewController.delegate = self
                 self.present(cropViewController, animated: true, completion: nil)
-                
-            } else if i.type == .video {
-                
-                i.exportVideoFile { URL, _ in
-                    
+
+            } else if ind.type == .video {
+
+                ind.exportVideoFile { URL, _ in
+
                     DispatchQueue.main.async {
                         let videoCropVc = VideoCropperVC(nibName: "videoCropperVC", bundle: nil)
                         videoCropVc.asset = AVAsset(url: URL)
@@ -721,34 +722,34 @@ extension ChatVC: TLPhotosPickerViewControllerDelegate, CropViewControllerDelega
             }
         }
     }
-        
+
     func didExceedMaximumNumberOfSelection(picker: TLPhotosPickerViewController) {
         // exceed max selection
     }
-    
+
     func handleNoAlbumPermissions(picker: TLPhotosPickerViewController) {
         // handle denied albums permissions case
     }
-    
+
     func handleNoCameraPermissions(picker: TLPhotosPickerViewController) {
         // handle denied camera permissions case
     }
-    
+
     func cropedVideoUrl(videoURL: String) {
-        
+
         if let url = URL(string: videoURL) {
-        
+
             let image = Singleton.sharedSingleton.createThumbnailOfVideoFromRemoteUrl(url: "\(url)")
-            
+
             var array = [(filename: String, file: Data, type: MediaType)]()
-            
+
             if let img = image {
                 let data = img.jpegData(compressionQuality: 1.0)!
                 let name = url.lastPathComponent.components(separatedBy: ".")[0] + ".jpeg"
                 array.append((filename: ChildPath.chatImage
                               + name, file: data, type: .image))
             }
-            
+
             do {
                 let data = try Data(contentsOf: url)
                 let filename = url.lastPathComponent
@@ -756,9 +757,8 @@ extension ChatVC: TLPhotosPickerViewControllerDelegate, CropViewControllerDelega
                               + filename, file: data, type: .video))
                 self.chatviewmodel.chatVCDelegate?.uploadVideo(array)
             } catch {
-                
+
             }
         }
     }
 }
-

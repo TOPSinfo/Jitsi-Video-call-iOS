@@ -62,7 +62,8 @@ class AddMobileViewController: UIViewController {
         txtMobileNumber.autocorrectionType = .no
         txtMobileNumber.textContentType = .telephoneNumber
         let number = phonenumberKit.getFormattedExampleNumber(forCountry: cpv.selectedCountry.code,
-                                                              ofType: .mobile, withFormat: .international, withPrefix: false)
+                                                              ofType: .mobile,
+                                                              withFormat: .international, withPrefix: false)
         txtMobileNumber.placeholder = "\(number ?? "")"
 
     }
@@ -110,14 +111,14 @@ class AddMobileViewController: UIViewController {
             return
         }
 
-        var PhoneNumber: String = "\(cpv.selectedCountry.phoneCode)\(phoneNumberWithoutCountryCode ?? "")"
-        PhoneNumber = PhoneNumber.replacingOccurrences(of: "(", with: "")
-        PhoneNumber = PhoneNumber.replacingOccurrences(of: ")", with: "")
-        PhoneNumber = PhoneNumber.replacingOccurrences(of: "-", with: "")
-        PhoneNumber = PhoneNumber.replacingOccurrences(of: " ", with: "")
+        var phoneNumber: String = "\(cpv.selectedCountry.phoneCode)\(phoneNumberWithoutCountryCode ?? "")"
+        phoneNumber = phoneNumber.replacingOccurrences(of: "(", with: "")
+        phoneNumber = phoneNumber.replacingOccurrences(of: ")", with: "")
+        phoneNumber = phoneNumber.replacingOccurrences(of: "-", with: "")
+        phoneNumber = phoneNumber.replacingOccurrences(of: " ", with: "")
 
-        phoneNumberUserEntered = PhoneNumber
-        self.userInfo.phone = PhoneNumber
+        phoneNumberUserEntered = phoneNumber
+        self.userInfo.phone = phoneNumber
 
         // MARK: - call delegate to vefify number
         self.loginViewModel.addMobileViewControllerDelegate?.buttonClicked(phone: self.phoneNumberUserEntered)
@@ -158,7 +159,6 @@ class MyGBTextField: PhoneNumberTextField {
             return "US"
         }
         set {
-//            self.defaultRegion = newValue
         } // exists for backward compatibility
     }
 }
@@ -174,10 +174,11 @@ extension AddMobileViewController: FirebaseAuthViewModelDelegate {
 
     // MARK: - Will call from view model will navigate to OTP screen
     func sendOTP() {
-        guard let vcOTP = Singleton.sharedSingleton.getController(storyName: Singleton.StoryboardName.Main,
-                                                                  controllerName: Singleton.ControllerName.OTPViewController) as? OTPViewController else { return }
+        let singletone = Singleton.sharedSingleton
+        guard let vcOTP = singletone.getController(storyName: Singleton.StoryboardName.Main,
+        controllerName: Singleton.ControllerName.OTPViewController) as? OTPViewController else { return }
         vcOTP.userInfo = self.userInfo
-        Singleton.sharedSingleton.navigate(from: self, to: vcOTP, navigationController: self.navigationController)
+        Singleton.sharedSingleton.navigate(from: self, toWhere: vcOTP, navigationController: self.navigationController)
     }
     // MARK: Will show error.
     func error(error: String, sign: Bool) {

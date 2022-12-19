@@ -10,11 +10,11 @@ import UIKit
 class ChatSenderImageCell: UITableViewCell {
 
     @IBOutlet weak var lblDate: UILabel!
-    @IBOutlet weak var imgMedia:UIImageView!
-    @IBOutlet weak var btnPlay:UIButton!
-    @IBOutlet weak var imgTick:UIImageView!
-    @IBOutlet weak var viewBGColor:UIView!
-    @IBOutlet weak var viewCircelProgress:CircularProgressView!
+    @IBOutlet weak var imgMedia: UIImageView!
+    @IBOutlet weak var btnPlay: UIButton!
+    @IBOutlet weak var imgTick: UIImageView!
+    @IBOutlet weak var viewBGColor: UIView!
+    @IBOutlet weak var viewCircelProgress: CircularProgressView!
 
     override func awakeFromNib() {
         super.awakeFromNib()
