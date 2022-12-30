@@ -17,32 +17,32 @@ protocol RegisterUserVCDelegate: AnyObject {
 }
 
 class RegisterUserVC: UIViewController {
-    
+
     // MARK: - variable
     let registerViewModel: RegisterViewModel = RegisterViewModel()
     var userID = String()
-    
+
     // MARK: - Outlet
     @IBOutlet weak var tfFirstNmae: UITextField!
     @IBOutlet weak var tfLastName: UITextField!
     @IBOutlet weak var tfEmail: UITextField!
     @IBOutlet weak var imgUser: UIImageView!
-    
+
     var selectedAssets = [TLPHAsset]()
-    
+
     // MARK: - Controller life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         // will set delegate firebase Auth view model
         self.registerViewModel.firebaseAuthViewModelDelegate = self
     }
-    
+
     // MARK: - Register button tapped
     @IBAction func btn_registerTapped(_ sender: UIButton) {
-        
+
         if tfFirstNmae.text!.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             Singleton.sharedSingleton.showToast(message: Singleton.AlertMessages.enterFirstName)
         } else if tfLastName.text!.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -55,7 +55,7 @@ class RegisterUserVC: UIViewController {
         } else if selectedAssets.count == 0 {
             Singleton.sharedSingleton.showToast(message: Singleton.AlertMessages.profileImage)
         } else {
-            
+
             var filename = String()
             for indx in selectedAssets {
                 filename = indx.extType().rawValue
@@ -67,11 +67,11 @@ class RegisterUserVC: UIViewController {
             }
         }
     }
-    
+
     @IBAction func btn_pickPhoto(_ sender: UIButton) {
         openImagePicker(self)
     }
-    
+
     @IBAction func btn_back(_ sender: UIButton) {
         Singleton.sharedSingleton.doOnlineOffline(isOnline: false)
         registerViewModel.firebaseViewModel.logautUser { (_) in
@@ -80,19 +80,18 @@ class RegisterUserVC: UIViewController {
             Singleton.sharedSingleton.showToast(message: error)
         }
     }
-    
 }
 
 // MARK: - Extended firebase Auth view model
 extension RegisterUserVC: FirebaseAuthViewModelDelegate {
-    
+
     func didUploadUserImage(task: StorageUploadTask?, reference: StorageReference?) {
- 
+
         Singleton.sharedSingleton.showLoder()
         if let task = task {
-            
+
             task.observe(.success) { _ in
-                
+
                 reference?.downloadURL(completion: { url, _ in
                     Singleton.sharedSingleton.hideLoader()
                     guard let downloadURL = url else {
@@ -100,7 +99,7 @@ extension RegisterUserVC: FirebaseAuthViewModelDelegate {
                         print("download fail")
                         return
                     }
-                    
+
                     let uid = Auth.auth().currentUser?.uid ?? ""
                     var dic = [String: Any]()
                     dic["email"] = self.tfEmail.text ?? ""
@@ -115,7 +114,7 @@ extension RegisterUserVC: FirebaseAuthViewModelDelegate {
                     rvmd?.buttonClicked(userID: Auth.auth().currentUser?.uid ?? "", dic: dic)
                 })
             }
-            
+
             task.observe(.failure) { _ in
                 Singleton.sharedSingleton.showToast(message: "Registration fail")
                 Singleton.sharedSingleton.hideLoader()
@@ -148,36 +147,36 @@ extension RegisterUserVC: TLPhotosPickerViewControllerDelegate, CropViewControll
         self.imgUser.image = image
         cropViewController.dismiss(animated: true, completion: nil)
     }
-    
+
     // TLPhotosPickerViewControllerDelegate
     func shouldDismissPhotoPicker(withTLPHAssets: [TLPHAsset]) -> Bool {
         // use selected order, fullresolution image
         self.selectedAssets = withTLPHAssets
         return true
     }
-    
+
     func photoPickerDidCancel() {
         // cancel
     }
-    
+
     func dismissComplete() {
         // picker viewcontroller dismiss completion
-        for i in selectedAssets {
+        for index in selectedAssets {
             let cropViewController = CropViewController(croppingStyle: .circular,
-                                                        image: i.fullResolutionImage ?? UIImage())
+                                                        image: index.fullResolutionImage ?? UIImage())
             cropViewController.delegate = self
             self.present(cropViewController, animated: true, completion: nil)
         }
     }
-        
+
     func didExceedMaximumNumberOfSelection(picker: TLPhotosPickerViewController) {
         // exceed max selection
     }
-    
+
     func handleNoAlbumPermissions(picker: TLPhotosPickerViewController) {
         // handle denied albums permissions case
     }
-    
+
     func handleNoCameraPermissions(picker: TLPhotosPickerViewController) {
         // handle denied camera permissions case
     }

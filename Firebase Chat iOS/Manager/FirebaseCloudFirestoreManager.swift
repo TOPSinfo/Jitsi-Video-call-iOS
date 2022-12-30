@@ -16,18 +16,18 @@ enum MessageStatus {
 }
 
 class FirebaseCloudFirestoreManager {
-    
+
     // MARK: - firestore database object
-    var db: Firestore = Firestore.firestore()
+    var dbf: Firestore = Firestore.firestore()
     // MARK: - check user is registred or not
     func checkUserAvailableQuery(uid: String) -> Query {
-        let userRef = db.collection("USER")
+        let userRef = dbf.collection("USER")
         return userRef.whereField("uid", isEqualTo: uid)
     }
     // MARK: - register User using basic detail
     func registerUser(userID: String, dic: [String: Any], completion: @escaping(() -> Void), failure: @escaping((_ error: String) -> Void)) {
-        db.collection("USER").document(userID).setData(dic) { (error) in
-            if let error = error{
+        dbf.collection("USER").document(userID).setData(dic) { (error) in
+            if let error = error {
                 failure(error.localizedDescription)
             } else {
                 completion()
@@ -36,7 +36,7 @@ class FirebaseCloudFirestoreManager {
     }
 
     func createGroup(groupID: String, dic: [String: Any], completion: @escaping(() -> Void), failure: @escaping((_ error: String) -> Void)) {
-        db.collection("GroupDetail").document(groupID).setData(dic) { error in
+        dbf.collection("GroupDetail").document(groupID).setData(dic) { error in
             if let error = error{
                 failure(error.localizedDescription)
             } else {
@@ -46,8 +46,8 @@ class FirebaseCloudFirestoreManager {
     }
 
     // MARK: - get current user detail using user_id
-    func getUserDetail(userID: String, completion: @escaping((_ arrayUsers: SignupUserData) -> Void), failure: @escaping((_ error: String) -> Void)){
-        db.collection("USER").document(userID).getDocument(completion: { (documentSnapshot, error) in
+    func getUserDetail(userID: String, completion: @escaping((_ arrayUsers: SignupUserData) -> Void), failure: @escaping((_ error: String) -> Void)) {
+        dbf.collection("USER").document(userID).getDocument(completion: { (documentSnapshot, error) in
             if let error = error {
                 failure(error.localizedDescription)
             } else {
@@ -66,9 +66,9 @@ class FirebaseCloudFirestoreManager {
     }
 
     // MARK: - Get all user who are registred in except self
-    func getAlluser(completion: @escaping((_ arrayUsers: [SignupUserData]) -> Void), failure: @escaping((_ error: String) -> Void)){
+    func getAlluser(completion: @escaping((_ arrayUsers: [SignupUserData]) -> Void), failure: @escaping((_ error: String) -> Void)) {
         let uid = Auth.auth().currentUser?.uid ?? "0"
-        Singleton.userListner = db.collection("USER").whereField("uid", isNotEqualTo: uid).addSnapshotListener { querySnapshot, error  in
+        Singleton.userListner = dbf.collection("USER").whereField("uid", isNotEqualTo: uid).addSnapshotListener { querySnapshot, error  in
             if let error = error {
                 failure(error.localizedDescription)
             } else {
@@ -80,13 +80,11 @@ class FirebaseCloudFirestoreManager {
                             let user = SignupUserData.init(fromDictionary: diff.document.data())
                             user.type = .added
                             array.append(user)
-                        }
-                        else if diff.type == .modified {
+                        } else if diff.type == .modified {
                             let user = SignupUserData.init(fromDictionary: diff.document.data())
                             user.type = .modified
                             array.append(user)
-                        }
-                        else if diff.type == .removed {
+                        } else if diff.type == .removed {
                             let user = SignupUserData.init(fromDictionary: diff.document.data())
                             user.type = .removed
                             array.append(user)
@@ -99,9 +97,9 @@ class FirebaseCloudFirestoreManager {
     }
 
     // MARK: - Get all user who are registred in except self
-    func getGroupUser(completion: @escaping((_ arrayUsers: [SignupUserData]) -> Void), failure: @escaping((_ error: String) -> Void)){
+    func getGroupUser(completion: @escaping((_ arrayUsers: [SignupUserData]) -> Void), failure: @escaping((_ error: String) -> Void)) {
         _ = Auth.auth().currentUser?.uid ?? "0"
-        Singleton.groupListner = self.db.collection("GroupDetail").whereField("members", arrayContainsAny:[AppDelegate.standard.objCurrentUser.uid]).addSnapshotListener { querySnapshot, error  in
+        Singleton.groupListner = self.dbf.collection("GroupDetail").whereField("members", arrayContainsAny: [AppDelegate.standard.objCurrentUser.uid]).addSnapshotListener { querySnapshot, error  in
             if let error = error {
                 failure(error.localizedDescription)
             } else {
@@ -113,13 +111,11 @@ class FirebaseCloudFirestoreManager {
                             let user = SignupUserData.init(fromDictionaryGroup: diff.document.data())
                             user.type = .added
                             arrayGrouop.append(user)
-                        }
-                        else if diff.type == .modified {
+                        } else if diff.type == .modified {
                             let user = SignupUserData.init(fromDictionaryGroup: diff.document.data())
                             user.type = .modified
                             arrayGrouop.append(user)
-                        }
-                        else if diff.type == .removed {
+                        } else if diff.type == .removed {
                             let user = SignupUserData.init(fromDictionaryGroup: diff.document.data())
                             user.type = .removed
                             arrayGrouop.append(user)
@@ -133,18 +129,18 @@ class FirebaseCloudFirestoreManager {
 
     // MARK: - TO Get conversation between two users with realtime update lithner
     func getConversation(toUserid: String, isForGroup: Bool, completion: @escaping((_ arrayUsers: [MessageClass]) -> Void), failure: @escaping((_ error: String) -> Void)) {
-        let id = Auth.auth().currentUser?.uid ?? ""
-        var docid = Singleton.sharedSingleton.getOneToOneID(senderID: id, receiverID: toUserid)
+        let cid = Auth.auth().currentUser?.uid ?? ""
+        var docid = Singleton.sharedSingleton.getOneToOneID(senderID: cid, receiverID: toUserid)
         if isForGroup == true {
            docid = toUserid
         }
-        Singleton.converstaonListner = db.collection("Messages").document(docid).collection("message").order(by: "timestamp", descending: false).addSnapshotListener(includeMetadataChanges: false) { querySnapshot, error in
+        Singleton.converstaonListner = dbf.collection("Messages").document(docid).collection("message").order(by: "timestamp", descending: false).addSnapshotListener(includeMetadataChanges: false) { querySnapshot, error in
             if let error = error {
                 failure(error.localizedDescription)
             } else {
                 var messages = [MessageClass]()
                 if let documents = querySnapshot?.documents, documents.count > 0 {
-                    
+
                     // This is the on change listner
                     querySnapshot!.documentChanges.forEach({ (diff) in
                         if diff.type == .added {
@@ -152,14 +148,12 @@ class FirebaseCloudFirestoreManager {
                             message.type = .added
                             message.docId = diff.document.documentID
                             messages.append(message)
-                        }
-                        else if diff.type == .modified {
+                        } else if diff.type == .modified {
                             let message = MessageClass.init(fromDictionary: diff.document.data())
                             message.type = .modified
                             message.docId = diff.document.documentID
                             messages.append(message)
-                        }
-                        else if diff.type == .removed {
+                        } else if diff.type == .removed {
                             let message = MessageClass.init(fromDictionary: diff.document.data())
                             message.type = .removed
                             message.docId = diff.document.documentID
@@ -189,7 +183,7 @@ class FirebaseCloudFirestoreManager {
     func sendMessage(conversationID: String, messageID: String, dic: [String: Any], completion: @escaping((_ arrayUsers: MessageClass) -> Void), failure: @escaping((_ error: String) -> Void)) {
         print("docID:-", conversationID)
         print("messageID", messageID)
-        db.collection("Messages").document(conversationID).collection("message").document(messageID).setData(dic) { (error) in
+        dbf.collection("Messages").document(conversationID).collection("message").document(messageID).setData(dic) { (error) in
             if let error = error {
                 failure(error.localizedDescription)
             } else {
@@ -210,8 +204,8 @@ class FirebaseCloudFirestoreManager {
     // MARK: - Add Group Call Details
     func addGroupCall(arr: [SignupUserData], completion: @escaping((_ error: String) -> Void), failure: @escaping((_ error: String) -> Void)) {
         let objCurrentUser = Auth.auth().currentUser
-        var arrUserid = arr.map( {$0.uid} )
-        arrUserid = arrUserid.map( {$0 + "___InActive"})
+        var arrUserid = arr.map({ $0.uid })
+        arrUserid = arrUserid.map({ $0 + "___InActive" })
         arrUserid.append((objCurrentUser?.uid ?? "") + "___Active")
         arrUserid.sort { $0 < $1 }
         var dict: [String: Any] = [:]
@@ -219,17 +213,17 @@ class FirebaseCloudFirestoreManager {
         dict["CallStatus"] = "Active"
         dict["HostId"] = objCurrentUser?.uid ?? ""
         dict["HostName"] = AppDelegate.standard.objCurrentUser.fullName
-        let groupCall = db.collection("GroupCall").document()
-        let id = groupCall.documentID
+        let groupCall = dbf.collection("GroupCall").document()
+        let gid = groupCall.documentID
         groupCall.setData(dict)
-        completion(id)
+        completion(gid)
     }
 
     // MARK: - Add Group Call Details
     func addGroupCallForDetailPage(arr: [String], completion: @escaping((_ error: String) -> Void), failure: @escaping((_ error: String) -> Void)) {
         let objCurrentUser = Auth.auth().currentUser
         var arrUserid = arr
-        arrUserid = arrUserid.map( {$0 + "___InActive"})
+        arrUserid = arrUserid.map({ $0 + "___InActive" })
         arrUserid.append((objCurrentUser?.uid ?? "") + "___Active")
         arrUserid.sort { $0 < $1 }
         var dict: [String: Any] = [:]
@@ -237,15 +231,15 @@ class FirebaseCloudFirestoreManager {
         dict["CallStatus"] = "Active"
         dict["HostId"] = objCurrentUser?.uid ?? ""
         dict["HostName"] = AppDelegate.standard.objCurrentUser.fullName
-        let groupCall = db.collection("GroupCall").document()
-        let id = groupCall.documentID
+        let groupCall = dbf.collection("GroupCall").document()
+        let gid = groupCall.documentID
         groupCall.setData(dict)
-        completion(id)
+        completion(gid)
     }
 
     // MARK: - Add Group Call Details
     func setGroupCallListner(userID: String, completion: @escaping((_ roomId: String) -> Void), failure: @escaping((_ error: String) -> Void)) {
-        db.collection("GroupCall").whereField("userIds", arrayContainsAny:[userID + "___Active", userID + "___InActive"])
+        dbf.collection("GroupCall").whereField("userIds", arrayContainsAny: [userID + "___Active", userID + "___InActive"])
             .whereField("CallStatus", isEqualTo: "Active").addSnapshotListener(includeMetadataChanges: true) { querySnapshot, error in
             if let err = error {
                 print(err.localizedDescription)
@@ -260,11 +254,9 @@ class FirebaseCloudFirestoreManager {
                             let dict = diff.document.data()
                             AppDelegate.standard.arrForActiveCallList.append(ActiveCallList(fromDictionary: dict, dId: diff.document.documentID))
                             completion(diff.document.documentID)
-                        }
-                        else if diff.type == .modified {
+                        } else if diff.type == .modified {
                             print("modify")
-                        }
-                        else if diff.type == .removed {
+                        } else if diff.type == .removed {
                             print("removed")
                         }
                     })
@@ -272,7 +264,7 @@ class FirebaseCloudFirestoreManager {
             }
         }
 
-        db.collection("GroupCall").whereField("userIds", arrayContainsAny:[userID + "___Active", userID + "___InActive"])
+        dbf.collection("GroupCall").whereField("userIds", arrayContainsAny:[userID + "___Active", userID + "___InActive"])
             .whereField("CallStatus", isEqualTo: "InActive").addSnapshotListener(includeMetadataChanges: true) { querySnapshot, error in
             if let err = error {
                 print(err.localizedDescription)
@@ -294,7 +286,7 @@ class FirebaseCloudFirestoreManager {
 
     // MARK: - Change group/one to one call status
     func changeCallStatus(_ roomId: String, isActive: Bool) {
-        let docRef = db
+        let docRef = dbf
             .collection("GroupCall")
             .document(roomId)
 
@@ -332,12 +324,12 @@ class FirebaseCloudFirestoreManager {
     }
 
     func doOnlineOffline(_ isOnline: Bool, userID: String) {
-        db.collection("USER").document(userID).updateData(["isOnline": isOnline]) { _ in
+        dbf.collection("USER").document(userID).updateData(["isOnline": isOnline]) { _ in
         }
     }
 
-    func checkUserIsOnline(userID: String, completion: @escaping((_ isOnline: Bool) -> Void), failure: @escaping((_ error: String) -> Void)){
-        Singleton.onlineOfflineLisnter = db.collection("USER").whereField("uid", isEqualTo: userID).addSnapshotListener { querySnapshot, error  in
+    func checkUserIsOnline(userID: String, completion: @escaping((_ isOnline: Bool) -> Void), failure: @escaping((_ error: String) -> Void)) {
+        Singleton.onlineOfflineLisnter = dbf.collection("USER").whereField("uid", isEqualTo: userID).addSnapshotListener { querySnapshot, error  in
             if let error = error {
                 failure(error.localizedDescription)
             } else {
@@ -348,18 +340,16 @@ class FirebaseCloudFirestoreManager {
                         if diff.type == .added {
                             let user = SignupUserData.init(fromDictionary: diff.document.data())
                             array.append(user)
-                        }
-                        else if diff.type == .modified {
+                        } else if diff.type == .modified {
                             let user = SignupUserData.init(fromDictionary: diff.document.data())
                             array.append(user)
-                        }
-                        else if diff.type == .removed {
+                        } else if diff.type == .removed {
                             let user = SignupUserData.init(fromDictionary: diff.document.data())
                             array.append(user)
                         }
                     })
                 }
-                
+
                 if array.count > 0 {
                     completion(array[0].isOnline)
                 } else {
@@ -371,7 +361,7 @@ class FirebaseCloudFirestoreManager {
  
     // MARK: - Change group/one to one call status
     func getCurrentUserDetails(_ userId: String) {
-        let docRef = db
+        let docRef = dbf
             .collection("USER")
             .document(userId)
         // Get data

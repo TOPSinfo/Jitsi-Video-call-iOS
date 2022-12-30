@@ -84,26 +84,24 @@ class ChatVC: UIViewController {
                                                name: UIResponder.keyboardWillShowNotification, object: nil)
             NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide),
                                                    name: UIResponder.keyboardWillHideNotification, object: nil)
-        
-        
         tblChat.register(UINib(nibName: "ChatReceiverCell", bundle: nil), forCellReuseIdentifier: "ChatReceiverCell")
         tblChat.register(UINib(nibName: "ChatSenderCell", bundle: nil), forCellReuseIdentifier: "ChatSenderCell")
         tblChat.register(UINib(nibName: "ChatReceiverImageCell", bundle: nil),
                          forCellReuseIdentifier: "ChatReceiverImageCell")
         tblChat.register(UINib(nibName: "ChatSenderImageCell", bundle: nil),
                          forCellReuseIdentifier: "ChatSenderImageCell")
-        
+
         tblChat.delegate = self
         tblChat.dataSource = self
-        
+
         chatviewmodel.chatVCDelegate?.getMessageList(userID, isForGroup: objOppoUser.isGroup)
         chatviewmodel.chatVCDelegate?.checkUserisOnline(userID)
-        
+
         if objOppoUser.isGroup {
             btnGroupInfo.isHidden = false
             lblIsOnline.isHidden = true
             for item in self.objOppoUser.objGroupDetail?.members ?? [] {
-                
+
                 if item.isEmpty { continue }
                 
                 firebaseViewModel.firebaseCloudFirestoreManager.getUserDetail(userID: item) { objUser in
@@ -117,14 +115,14 @@ class ChatVC: UIViewController {
             }
         }
     }
-    
+
     func reloadVisibleCells() {
         guard let visibleRows = tblChat.indexPathsForVisibleRows else { return }
         tblChat.beginUpdates()
         tblChat.reloadRows(at: visibleRows, with: .none)
         tblChat.endUpdates()
     }
-    
+
     // MARK: - Keyboard methods
     func dismissKey() {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer( target: self,
@@ -140,22 +138,22 @@ class ChatVC: UIViewController {
     @objc func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             if self.contantBottomOfTextfield.constant == 8 {
-                if #available(iOS 13.0, *) {
+//                if #available(iOS 13.0, *) {
+//                    let window = Singleton.appDelegate?.window
+//                    let bottomPadding = window?.safeAreaInsets.bottom
+//                    UIView.animate(withDuration: 1.0) {
+//                        self.contantBottomOfTextfield.constant = keyboardSize.height + 8 - (bottomPadding ?? 0)
+//                        self.view.layoutSubviews()
+//                    }
+//                } else {
                     let window = Singleton.appDelegate?.window
                     let bottomPadding = window?.safeAreaInsets.bottom
-                    UIView.animate(withDuration: 1.0) {
-                        self.contantBottomOfTextfield.constant = keyboardSize.height + 8 - (bottomPadding ?? 0)
-                        self.view.layoutSubviews()
-                    }
-                } else {
-                    let window = Singleton.appDelegate?.window
-                        let bottomPadding = window?.safeAreaInsets.bottom
                     
                     UIView.animate(withDuration: 1.0) {
                         self.contantBottomOfTextfield.constant = keyboardSize.height + 8 - (bottomPadding ?? 0)
                         self.view.layoutSubviews()
                     }
-                }
+//                }
             }
         }
     }
@@ -180,7 +178,7 @@ class ChatVC: UIViewController {
 
     // MARK: - Button Action
     @IBAction func btn_sendMessageTapped(_ sender: UIButton) {
-        
+
         if tvMessage.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             Singleton.sharedSingleton.showToast(message: Singleton.AlertMessages.enterMessage)
             return
@@ -208,7 +206,7 @@ class ChatVC: UIViewController {
         // MARK: - this will call send message controller
         self.chatviewmodel.chatVCDelegate?.sendMessage(conversationID: converastionID, messageID: messageID, dic: dic)
     }
-    
+
     @IBAction func btnVCallClick(_ sender: Any) {
         var arrUsers: [String] = []
         if objOppoUser.isGroup {
@@ -249,7 +247,7 @@ class ChatVC: UIViewController {
             }
         }
     }
-    
+
     @IBAction func btnGroupInfoClick(_ sender: Any) {
         guard let vcCG = Singleton.sharedSingleton.getController(storyName: Singleton.StoryboardName.Main,
                         controllerName: Singleton.ControllerName.CreateGroupVC) as? CreateGroupVC else { return }
@@ -257,17 +255,17 @@ class ChatVC: UIViewController {
         vcCG.isForDetail = true
         self.present(vcCG, animated: true, completion: nil)
     }
-    
+
     @IBAction func btn_backTapped(_ sender: UIButton) {
         Singleton.converstaonListner?.remove()
         Singleton.onlineOfflineLisnter?.remove()
         self.navigationController?.popViewController(animated: true)
     }
-    
+
     @IBAction func btn_pickPhoto(_ sender: UIButton) {
         openImagePicker(self)
     }
-    
+
     deinit {
         Singleton.converstaonListner?.remove()
         Singleton.onlineOfflineLisnter?.remove()
@@ -279,13 +277,13 @@ extension ChatVC: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return messaes.count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
+
         let item = self.messaes[indexPath.row]
-        
+
         if item.senderId == Auth.auth().currentUser?.uid ?? "" {
-            
+
             if item.messageType == Singleton.MessageType.IMAGE {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "ChatSenderImageCell") as? ChatSenderImageCell
                 cell?.imgMedia.setUserImageUsingUrl(item.url, isUser: false)
@@ -295,7 +293,7 @@ extension ChatVC: UITableViewDataSource, UITableViewDelegate {
                 cell?.imgMedia.tag = indexPath.row
                 cell?.imgMedia.addGestureRecognizer(tap)
                 cell?.lblDate.text = item.timestamp
-                
+
                 if item.status == Singleton.MessageStatus.SEND {
                     cell?.imgTick.image = #imageLiteral(resourceName: "ic_singletick")
                 } else if item.status == Singleton.MessageStatus.READ {
@@ -303,9 +301,9 @@ extension ChatVC: UITableViewDataSource, UITableViewDelegate {
                 } else if item.status == Singleton.MessageStatus.UPLOADING {
                     cell?.imgTick.image = #imageLiteral(resourceName: "ic_clock")
                 }
-                
+
                 cell?.viewCircelProgress.isHidden = true
-                
+
                 if let task = item.task {
                     _ = task.observe(.progress) { snapshot in
                         let percentComplete = 100.0 * Double(snapshot.progress!.completedUnitCount)
@@ -316,9 +314,9 @@ extension ChatVC: UITableViewDataSource, UITableViewDelegate {
                         if percentComplete == 100 {
                             cell?.viewCircelProgress.isHidden = true
                             // MARK: - this will call send message controller
-                            var filter = Singleton.localFileUpload.filter({$0["docId"] as? String ?? "" == item.docId})
+                            var filter = Singleton.localFileUpload.filter({ $0["docId"] as? String ?? "" == item.docId })
                             if filter.count > 0 {
-                                Singleton.localFileUpload.removeAll(where: {$0["docId"] as? String ?? "" == filter[0]["docId"] as? String ?? ""})
+                                Singleton.localFileUpload.removeAll(where: { $0["docId"] as? String ?? "" == filter[0]["docId"] as? String ?? "" })
                                 item.reference!.downloadURL { (url, _) in
                                     guard let downloadURL = url else {
                                         return
@@ -331,9 +329,10 @@ extension ChatVC: UITableViewDataSource, UITableViewDelegate {
                                         converastionID = self.objOppoUser.uid
                                     }
                                     let messageID = filter[0]["docId"] as? String ?? ""
-                                    self.chatviewmodel.chatVCDelegate?.sendMessage(conversationID: converastionID, messageID: messageID, dic: filter[0])
+                                    self.chatviewmodel.chatVCDelegate?.sendMessage(conversationID: converastionID,
+                                                                                   messageID: messageID,
+                                                                                   dic: filter[0])
                                 }
-                                
                                 print(item.url)
                             }
                         }
@@ -341,11 +340,11 @@ extension ChatVC: UITableViewDataSource, UITableViewDelegate {
                 } else {
                     cell?.viewCircelProgress.isHidden = true
                 }
-                
+
                 return cell ?? UITableViewCell()
-                
+
             } else if item.messageType == Singleton.MessageType.VIDEO {
-                
+
                 let cell = tableView.dequeueReusableCell(withIdentifier: "ChatSenderImageCell") as? ChatSenderImageCell
                 cell?.btnPlay.isHidden = false
                 cell?.imgMedia.setUserImageUsingUrl(item.url, isUser: false)
@@ -356,13 +355,13 @@ extension ChatVC: UITableViewDataSource, UITableViewDelegate {
                 } else if item.status == Singleton.MessageStatus.UPLOADING {
                     cell?.imgTick.image = #imageLiteral(resourceName: "ic_clock")
                 }
-                
+
                 cell?.btnPlay.addTarget(self, action: #selector(btn_play(_:)), for: .touchUpInside)
                 cell?.btnPlay.tag = indexPath.row
                 cell?.lblDate.text = item.timestamp
                 var filter = Singleton.localFileUpload.filter({$0["docId"] as? String ?? "" == item.docId})
                 if let task = item.task {
-                    _ = task.observe(.success) { snapshot in
+                    _ = task.observe(.success) { _ in
                         // Upload completed successfully
                         if filter.count > 0 {
                             item.reference!.downloadURL { (url, _) in
@@ -376,16 +375,15 @@ extension ChatVC: UITableViewDataSource, UITableViewDelegate {
                     }
                 }
                 cell?.viewCircelProgress.isHidden = true
-                
+
                 if let task = item.videoTask {
                     _ = task.observe(.progress) { snapshot in
                         let percentComplete = 100.0 * Double(snapshot.progress!.completedUnitCount)
                         / Double(snapshot.progress!.totalUnitCount)
                         cell?.viewCircelProgress.progress = Float(percentComplete)
                         cell?.viewCircelProgress.isHidden = percentComplete == 100.0
-                        
                     }
-                    _ = task.observe(.success) { snapshot in
+                    _ = task.observe(.success) { _ in
                         // Upload completed successfully
                         cell?.viewCircelProgress.isHidden = true
                         if filter.count > 0 {
@@ -410,8 +408,6 @@ extension ChatVC: UITableViewDataSource, UITableViewDelegate {
                 } else {
                     cell?.viewCircelProgress.isHidden = true
                 }
-
-                
                 return cell ?? UITableViewCell()
             } else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "ChatSenderCell") as? ChatSenderCell
@@ -444,7 +440,7 @@ extension ChatVC: UITableViewDataSource, UITableViewDelegate {
                 cell?.imgMedia.addGestureRecognizer(tap)
                 cell?.lblDate.text = item.timestamp
                 if objOppoUser.isGroup {
-                    let arr = arrayForGroupUserDetails.filter( {$0.uid == item.senderId })
+                    let arr = arrayForGroupUserDetails.filter({ $0.uid == item.senderId })
                     if arr.count > 0 {
                         cell?.lblUserName.text = arr[0].fullName
                     }
@@ -541,15 +537,16 @@ extension ChatVC: FirebaseChatViewModelDelegate {
         self.lblIsOnline.text = isOnline ? "Online":"Offline"
     }
     
-    func didUploadVideo(_ imageRef: StorageReference?, imageTask: StorageUploadTask?, videoRef: StorageReference?, videoTask: StorageUploadTask?) {
+    func didUploadVideo(_ imageRef: StorageReference?, imageTask: StorageUploadTask?,
+                        videoRef: StorageReference?, videoTask: StorageUploadTask?) {
         
         let senderID = Auth.auth().currentUser?.uid ?? ""
         var converastionID = Singleton.sharedSingleton.getOneToOneID(senderID: senderID, receiverID: userID)
         if objOppoUser.isGroup {
             converastionID = objOppoUser.uid
         }
-        let db: Firestore = Firestore.firestore()
-        let messageID = db.collection("Messages").document(converastionID).collection("message").document().documentID
+        let dbs: CollectionReference = Firestore.firestore().collection("Messages")
+        let messageID = dbs.document(converastionID).collection("message").document().documentID
         var dic = [String: Any]()
         dic["docId"] = messageID
         dic["messageText"] = ""
@@ -571,11 +568,9 @@ extension ChatVC: FirebaseChatViewModelDelegate {
         self.messaes.append(message)
         self.tblChat.reloadData()
         scrollToBottom()
-        
-        // MARK: - this will call send message controller
-        // self.chatviewmodel.chatVCDelegate?.sendMessage(conversationID: converastionID, messageID: messageID, dic: dic)
+
     }
-    
+
     func didUploadMedia(_ url: StorageReference?, task: StorageUploadTask?, type: Any) {
         
         let senderID = Auth.auth().currentUser?.uid ?? ""
@@ -626,44 +621,40 @@ extension ChatVC: FirebaseChatViewModelDelegate {
         self.tvMessage.text = ""
     }
     
-    func getMessages(_ arrayMessage: Array<Any>) {
+    func getMessages(_ arrayMessage: [MessageClass]) {
         if let array = arrayMessage as? [MessageClass] {
             if isFirstTime {
                 isFirstTime = false
                 self.messaes = array
             } else {
-                
-                for i in array {
-                    
-                    if i.type == .added {
-                        if Singleton.MessageType.IMAGE == i.messageType || Singleton.MessageType.VIDEO == i.messageType {
-                            if self.messaes.contains(where: {$0.docId == i.docId}) {
-                                let index = self.messaes.firstIndex(where: {$0.docId == i.docId})
-                                self.messaes[index!] = i
+                for ind in array {
+                    if ind.type == .added {
+                        let smi = Singleton.MessageType.self
+                        if smi.IMAGE == ind.messageType || smi.VIDEO == ind.messageType {
+                            if self.messaes.contains(where: {$0.docId == ind.docId}) {
+                                let index = self.messaes.firstIndex(where: {$0.docId == ind.docId})
+                                self.messaes[index!] = ind
                             } else {
-                                self.messaes.append(i)
+                                self.messaes.append(ind)
                             }
                         } else {
-                            self.messaes.append(i)
+                            self.messaes.append(ind)
                         }
-                    } else if i.type == .modified {
-                        
-                        if self.messaes.contains(where: {$0.docId == i.docId}) {
-                            let index = self.messaes.firstIndex(where: {$0.docId == i.docId})
-                            self.messaes[index!] = i
+                    } else if ind.type == .modified {
+                        if self.messaes.contains(where: {$0.docId == ind.docId}) {
+                            let index = self.messaes.firstIndex(where: {$0.docId == ind.docId})
+                            self.messaes[index!] = ind
                         }
-                        
-                    } else if i.type == .removed {
-                        self.messaes.removeAll(where: {$0.docId == i.docId})
+                    } else if ind.type == .removed {
+                        self.messaes.removeAll(where: {$0.docId == ind.docId})
                     }
                 }
             }
         }
-        
         self.tblChat.reloadData()
         scrollToBottom()
     }
-    
+
     // MARK: Will show error.
     func error(error: String, sign: Bool) {
         Singleton.sharedSingleton.showToast(message: error)
@@ -672,7 +663,8 @@ extension ChatVC: FirebaseChatViewModelDelegate {
 
 extension ChatVC: TLPhotosPickerViewControllerDelegate, CropViewControllerDelegate, croppedVideoDeleget {
 
-    func cropViewController(_ cropViewController: CropViewController, didCropToImage image: UIImage, withRect cropRect: CGRect, angle: Int) {
+    func cropViewController(_ cropViewController: CropViewController,
+                            didCropToImage image: UIImage, withRect cropRect: CGRect, angle: Int) {
 
         cropViewController.dismiss(animated: true, completion: nil)
 
@@ -703,7 +695,8 @@ extension ChatVC: TLPhotosPickerViewControllerDelegate, CropViewControllerDelega
 
             if ind.type == .photo || ind.type == .livePhoto {
 
-                let cropViewController = CropViewController(croppingStyle: .default, image: ind.fullResolutionImage ?? UIImage())
+                let cropViewController = CropViewController(croppingStyle: .default,
+                                                            image: ind.fullResolutionImage ?? UIImage())
                 cropViewController.delegate = self
                 self.present(cropViewController, animated: true, completion: nil)
 

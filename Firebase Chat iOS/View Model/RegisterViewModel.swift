@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 final class RegisterViewModel {
-    
+
     let firebaseViewModel: FirebaseViewModel = FirebaseViewModel()
     weak var registerVCDelegate: RegisterUserVCDelegate?
     weak var firebaseAuthViewModelDelegate: FirebaseAuthViewModelDelegate?
@@ -24,35 +24,34 @@ extension RegisterViewModel: RegisterUserVCDelegate {
     
     // MARK: Upload user Image
     func uploadImage(fileData: Data?, fileName: String, type: MediaType) {
-        
-        guard Reachability.isConnectedToNetwork() else{
+
+        guard Reachability.isConnectedToNetwork() else {
             Singleton.sharedSingleton.showToast(message: "Please check your internet connection")
             return
         }
-        
-        firebaseViewModel.firebaseStorageManager.uploadImage(childPath: fileName, imageNeedstoUpload: fileData, type: type) { task, ref  in
+
+        firebaseViewModel.firebaseStorageManager.uploadImage(childPath: fileName,
+                                                             imageNeedstoUpload: fileData, type: type) { task, ref  in
             if task != nil {
                 self.firebaseAuthViewModelDelegate?.didUploadUserImage?(task: task, reference: ref)
             } else {
                 self.firebaseAuthViewModelDelegate?.error?(error: "fail to upload image", sign: false)
             }
         }
-
     }
-    
+
     // MARK: Button click from cotroller and register user in databse
-    func buttonClicked(userID: String, dic: [String:Any]) {
-        
-        guard Reachability.isConnectedToNetwork() else{
+    func buttonClicked(userID: String, dic: [String: Any]) {
+
+        guard Reachability.isConnectedToNetwork() else {
             Singleton.sharedSingleton.showToast(message: "Please check your internet connection")
             return
         }
-        
+
         firebaseViewModel.firebaseCloudFirestoreManager.registerUser(userID: userID, dic: dic) {
             self.firebaseAuthViewModelDelegate?.register?(true)
         } failure: { (error) in
             self.firebaseAuthViewModelDelegate?.error?(error: error, sign: false)
         }
-        
     }
 }

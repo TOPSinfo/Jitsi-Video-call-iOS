@@ -85,7 +85,7 @@ class VideoCropperVC: UIViewController {
     @IBAction func btnBackTapped(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
     }
-    
+
     @IBAction func btnPlayPauseTapped(_ sender: UIButton) {
         guard let player = player else { return }
         // button_play
@@ -271,14 +271,14 @@ extension VideoCropperVC: ICGVideoTrimmerDelegate {
         player?.pause()
         btnPlayPause.setImage(#imageLiteral(resourceName: "button_play"), for: .normal)
         lblPalyPause.text = "Play"
-        let (_, sm, ss) = secondsToHoursMinutesSeconds(seconds: Int(startTime.rounded()))
-        let (_, em, es) = secondsToHoursMinutesSeconds(seconds: Int(endTime.rounded()))
+        let (_, smm, sss) = secondsToHoursMinutesSeconds(seconds: Int(startTime.rounded()))
+        let (_, emm, ess) = secondsToHoursMinutesSeconds(seconds: Int(endTime.rounded()))
         
         let duration = Int(self.endTime!.rounded() - self.startTime!.rounded())
         self.videoSeekBar.value = 0 // Float(Int(self.startTime!.rounded()))
         self.videoSeekBar.minimumValue = 0 // Float(Int(self.startTime!.rounded()))
         self.videoSeekBar.maximumValue = Float(duration)
-        self.lblSelectedTime.text = String(format: "%02d:%02d - %02d:%02d", sm, ss, em, es)
+        self.lblSelectedTime.text = String(format: "%02d:%02d - %02d:%02d", smm, sss, emm, ess)
         print(duration)
     }
 

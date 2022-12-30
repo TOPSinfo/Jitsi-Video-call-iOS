@@ -11,21 +11,21 @@ import UIKit
 import Firebase
 
 // This is user model
-class SignupUserData {
+class SignupUserData: NSObject {
 
     var email: String = ""
     var firstName: String = ""
     var lastName: String = ""
     var phone: String = ""
     var uid: String = ""
-    var profile_image: String = ""
+    var profileImage: String = ""
     var createdAt: Timestamp = Timestamp(date: Date())
     var isOnline: Bool = false
     var type: DocumentChangeType?
     var isGroup: Bool = false
     var objGroupDetail: GroupDetailObject?
 
-    init() {
+    override init() {
 
     }
 
@@ -36,10 +36,10 @@ class SignupUserData {
         lastName = dictionary["last_name"] as? String ?? ""
         phone = dictionary["phone"] as? String ?? ""
         uid = dictionary["uid"] as? String ?? ""
-        profile_image = dictionary["profile_image"] as? String ?? ""
+        profileImage = dictionary["profile_image"] as? String ?? ""
         isOnline = dictionary["isOnline"] as? Bool ?? false
         createdAt = dictionary["createdAt"] as? Timestamp ?? Timestamp(date: Date())
-        print("\(firstName)   \(createdAt.dateValue())")
+        print("\(firstName) \(createdAt.dateValue())")
         isGroup = false
     }
 
@@ -49,7 +49,7 @@ class SignupUserData {
         lastName = ""
         phone = dictionary["phone"] as? String ?? ""
         uid = dictionary["id"] as? String ?? ""
-        profile_image = dictionary["groupIcon"] as? String ?? ""
+        profileImage = dictionary["groupIcon"] as? String ?? ""
         isOnline = dictionary["isOnline"] as? Bool ?? false
         isGroup = true
         createdAt = dictionary["createdAt"] as? Timestamp ?? Timestamp(date: Date())
@@ -63,12 +63,12 @@ class SignupUserData {
 
 // This is group model
 class GroupDetailObject {
-    
+
     var adminId: String = ""
     var adminName: String = ""
     var createdAt: String = ""
     var groupIcon: String = ""
-    var id: String = ""
+    var gid: String = ""
     var members: [String] = []
     var name: String = ""
 
@@ -81,7 +81,7 @@ class GroupDetailObject {
         adminName = dictionary["adminName"] as? String ?? ""
         createdAt = dictionary["createdAt"] as? String ?? ""
         groupIcon = dictionary["groupIcon"] as? String ?? ""
-        id = dictionary["id"] as? String ?? ""
+        gid = dictionary["id"] as? String ?? ""
         name = dictionary["name"] as? String ?? ""
         members = dictionary["members"] as? [String] ?? []
     }

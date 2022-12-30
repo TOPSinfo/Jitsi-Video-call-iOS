@@ -140,14 +140,14 @@ extension CreateGroupVC: UICollectionViewDelegate, UICollectionViewDataSource, U
         if isForDetail {
             FirebaseCloudFirestoreManager().getUserDetail(userID: self.objGroup.members[indexPath.row]) { objUser in
                 cell.lblUserName.text = objUser.fullName
-                cell.imgUser.setUserImageUsingUrl(objUser.profile_image, isUser: true)
+                cell.imgUser.setUserImageUsingUrl(objUser.profileImage, isUser: true)
             } failure: { _ in
-                
+
             }
         } else {
             let item = self.selectedForGroupCall[indexPath.row]
             cell.lblUserName.text = item.fullName
-            cell.imgUser.setUserImageUsingUrl(item.profile_image, isUser: true)
+            cell.imgUser.setUserImageUsingUrl(item.profileImage, isUser: true)
         }
         return cell
     }

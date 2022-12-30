@@ -29,7 +29,7 @@ final class CreateGroupViewModel {
 extension CreateGroupViewModel: CreateGroupVCDelegate {
 
     func createGroup(groupID: String, dic: [String: Any]) {
-        guard Reachability.isConnectedToNetwork() else{
+        guard Reachability.isConnectedToNetwork() else {
             Singleton.sharedSingleton.showToast(message: "Please check your internet connection")
             return
         }

@@ -20,8 +20,8 @@ import FirebaseStorage
     @objc optional func checkAvalability(_ isRegisterd: Bool) // wil call afte user check query
     @objc optional func error(error: String, sign: Bool) // will call when firebase return error
     @objc optional func register(_ isRegister: Bool) // when user successfully registre
-    @objc optional func didGetUserList(_ userlist: Array<Any>) // call when user will get list from firestore
-    @objc optional func didGetGroupList(_ userlist: Array<Any>)
+    @objc optional func didGetUserList(_ userlist: [SignupUserData]) // call when user will get list from firestore
+    @objc optional func didGetGroupList(_ userlist: [SignupUserData])
 }
 
 final class LoginViewModel {

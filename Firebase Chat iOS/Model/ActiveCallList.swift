@@ -9,9 +9,9 @@ import UIKit
 
 class ActiveCallList: NSObject {
 
-    var CallStatus: String = ""
-    var HostId: String = ""
-    var HostName: String = ""
+    var callStatus: String = ""
+    var hostId: String = ""
+    var hostName: String = ""
     var documentId: String = ""
     var userIds: [String] = []
 
@@ -20,9 +20,9 @@ class ActiveCallList: NSObject {
     }
 
     init(fromDictionary dictionary: [String: Any], dId: String) {
-        CallStatus = dictionary["CallStatus"] as? String ?? ""
-        HostId = dictionary["HostId"] as? String ?? ""
-        HostName = dictionary["HostName"] as? String ?? ""
+        callStatus = dictionary["CallStatus"] as? String ?? ""
+        hostId = dictionary["HostId"] as? String ?? ""
+        hostName = dictionary["HostName"] as? String ?? ""
         userIds = dictionary["userIds"] as? [String] ?? []
         documentId = dId
     }

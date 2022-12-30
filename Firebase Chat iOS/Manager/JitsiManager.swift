@@ -46,8 +46,7 @@ class JitsiManager: NSObject {
             let userdata = AppDelegate.standard.objCurrentUser
 
             builder.userInfo = JitsiMeetUserInfo.init(displayName: userdata.fullName, andEmail: userdata.email,
-                                                      andAvatar: URL(string: userdata.profile_image))
-            
+                                                      andAvatar: URL(string: userdata.profileImage))
             // Settings for audio and video
             // builder.audioMuted = true
 //             builder.videoMuted = true

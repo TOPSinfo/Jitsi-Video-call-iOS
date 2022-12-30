@@ -53,7 +53,7 @@ class OTPViewController: UIViewController, UITextViewDelegate {
     // MARK: - Controller Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         showKeyboard()
         setupUI()
         verifyPhoneNumber()
@@ -62,7 +62,7 @@ class OTPViewController: UIViewController, UITextViewDelegate {
         pinView.didFinishCallback = { [weak self] _ in
             self!.pinEntered()
         }
-        
+
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -77,13 +77,13 @@ class OTPViewController: UIViewController, UITextViewDelegate {
 
             for viewT in self.pinView.subviews {
                 for viewTT in viewT.subviews {
-                    for (i, viewTTT) in viewTT.subviews.enumerated() {
+                    for (ind, viewTTT) in viewTT.subviews.enumerated() {
                         for viewTTTT in viewTTT.subviews {
                             for viewTTTTT in viewTTTT.subviews {
                                 for viewTTTTTT in viewTTTTT.subviews {
                                     if let viewTf = viewTTTTTT as? UITextField {
                                         viewTf.text = ""
-                                        if i == 0 {
+                                        if ind == 0 {
                                             if #available(iOS 12.0, *) {
                                                 viewTf.textContentType = .oneTimeCode
                                             }

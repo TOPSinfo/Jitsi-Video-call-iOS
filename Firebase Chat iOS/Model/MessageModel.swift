@@ -10,7 +10,7 @@ import FirebaseFirestore
 import FirebaseStorage
 
 // Comversation model
-class MessageClass {
+class MessageClass: NSObject {
 
     var messageText: String = ""
     var receiverId: String = ""
@@ -27,7 +27,7 @@ class MessageClass {
     var videoTask: StorageUploadTask?
     var videoRef: StorageReference?
 
-    init() {
+    override init() {
 
     }
 

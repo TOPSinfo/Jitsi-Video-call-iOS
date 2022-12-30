@@ -8,9 +8,8 @@
 import Foundation
 import Firebase
 
-
 final class FirebaseViewModel {
-    
+
     let firebaseAuthManager: FirebaseAuthManager = FirebaseAuthManager()
     let firebaseCloudFirestoreManager: FirebaseCloudFirestoreManager = FirebaseCloudFirestoreManager()
     let firebaseStorageManager: FirebaseStorageManager = FirebaseStorageManager()
@@ -22,16 +21,16 @@ final class FirebaseViewModel {
     // MARK: Verify Phone method
     func verifyPhone(phone:String, completion: @escaping((_ verificationID:String) -> Void), failure: @escaping((_ error: String) -> Void)) {
     
-        guard Reachability.isConnectedToNetwork() else{
+        guard Reachability.isConnectedToNetwork() else {
             Singleton.sharedSingleton.showToast(message: "Please check your internet connection")
             return
         }
         
-        firebaseAuthManager.verifyPhoneNumber(phoneNumber: phone) { (id, error) in
+        firebaseAuthManager.verifyPhoneNumber(phoneNumber: phone) { (identity, error) in
             if let error = error {
                 failure(error.localizedDescription)
             } else {
-                completion(id)
+                completion(identity)
             }
         }
     }
@@ -44,7 +43,7 @@ final class FirebaseViewModel {
             return
         }
         
-        firebaseAuthManager.login(credential:credential) { (result, error) in
+        firebaseAuthManager.login(credential: credential) { (result, error) in
             if let error = error {
                 failure(error.localizedDescription)
             } else {
@@ -58,7 +57,6 @@ final class FirebaseViewModel {
             Singleton.sharedSingleton.showToast(message: "Please check your internet connection")
             return
         }
-        
         Singleton.sharedSingleton.showLoder()
         firebaseAuthManager.signOut(completion: {
             Singleton.sharedSingleton.hideLoader()
@@ -68,6 +66,4 @@ final class FirebaseViewModel {
             failure(error)
         }
     }
-   
 }
-

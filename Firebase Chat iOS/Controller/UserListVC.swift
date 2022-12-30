@@ -21,28 +21,28 @@ protocol UserListVCDelegate: AnyObject {
 }
 
 class UserListVC: UIViewController {
-    
+
     // MARK: - Variable
     let userViewModel: UserListViewModel = UserListViewModel()
     var userArray = [SignupUserData]()
     var selectedForGroupCall = [SignupUserData]()
-    
+
     // MARK: - Outlet
     @IBOutlet weak var tblUserList: UITableView!
     @IBOutlet weak var btnLogout: UIButton!
     @IBOutlet weak var btnCall: UIButton!
     @IBOutlet weak var btnCreate: UIButton!
-    
+
     var isFirstTime = true
     var isFirstTimeGroup = true
     fileprivate var jitsiMeetView: JitsiMeetView?
-    
+
     var isMultipleSelection: Bool = false
     let currentUId = Auth.auth().currentUser?.uid ?? ""
     let firebaseViewModel: FirebaseViewModel = FirebaseViewModel()
-    
+
     var objJitsi: JitsiManager = JitsiManager()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -144,13 +144,13 @@ class UserListVC: UIViewController {
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
-    
+
     func newCallAlert() {
         let alert = UIAlertController(title: "Please select a call", message: "", preferredStyle: .actionSheet)
-        
+
         for item in AppDelegate.standard.arrForActiveCallList where item.userIds.count > 2 {
 //            if item.userIds.count > 2 {
-                alert.addAction(UIAlertAction(title: "Call From \(item.HostName)", style: .default, handler: { _ in
+                alert.addAction(UIAlertAction(title: "Call From \(item.hostName)", style: .default, handler: { _ in
                     self.objJitsi.viewController = self
                     self.objJitsi.openJetsiViewWithUser(roomid: item.documentId)
                 }))
@@ -161,12 +161,12 @@ class UserListVC: UIViewController {
             self.isMultipleSelection = true
             self.btnCall.isHidden = false
         }))
-        
+
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in
-            
+
         }))
         self.present(alert, animated: true, completion: nil)
-    
+
     }
 
     deinit {
@@ -177,16 +177,16 @@ class UserListVC: UIViewController {
 extension UserListVC: FirebaseAuthViewModelDelegate {
     // MARK: Will show error.
     func error(error: String, sign: Bool) {
-        
+
         if isFirstTimeGroup {
             userViewModel.userListVCDelegate?.getGroupList()
         }
-        
+
         Singleton.sharedSingleton.showToast(message: error)
     }
-    
+
     // will get call when user list recieve
-    func didGetUserList(_ userlist: Array<Any>) {
+    func didGetUserList(_ userlist: [SignupUserData]) {
 
         if let users = userlist as? [SignupUserData] {
 
@@ -222,7 +222,7 @@ extension UserListVC: FirebaseAuthViewModelDelegate {
         }
     }
     
-    func didGetGroupList(_ userlist: Array<Any>) {
+    func didGetGroupList(_ userlist: [SignupUserData]) {
 
         isFirstTimeGroup = false
 
@@ -257,7 +257,7 @@ extension UserListVC: UITableViewDataSource, UITableViewDelegate {
         else { return UITableViewCell() }
         let item = self.userArray[indexPath.row]
         cell.lblUserName.text = item.firstName + " " + item.lastName
-        cell.imgUser.setUserImageUsingUrl(item.profile_image, isUser: true)
+        cell.imgUser.setUserImageUsingUrl(item.profileImage, isUser: true)
         cell.imgOnlineOffLine.backgroundColor = item.isOnline ? .systemGreen : .lightGray
         cell.imgOnlineOffLine.borderWidth = 1
         cell.imgOnlineOffLine.cornerRadius = 5
@@ -275,7 +275,7 @@ extension UserListVC: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let item = self.userArray[indexPath.row]
         if isMultipleSelection == true {
-            
+
             if item.isGroup {
                 Singleton.sharedSingleton.showToast(message: "You can select only users not group.")
                 return
@@ -301,7 +301,8 @@ extension UserListVC: UITableViewDataSource, UITableViewDelegate {
             vcc.userID = item.uid
             vcc.userName = item.firstName + " " + item.lastName
             vcc.objOppoUser = item
-            Singleton.sharedSingleton.navigate(from: self, toWhere: vcc, navigationController: self.navigationController)
+            Singleton.sharedSingleton.navigate(from: self, toWhere: vcc,
+                                               navigationController: self.navigationController)
         }
     }
 }

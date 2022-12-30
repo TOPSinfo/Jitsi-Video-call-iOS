@@ -37,7 +37,7 @@ extension UserListViewModel: UserListVCDelegate {
             self.firebaseAuthViewModelDelegate?.error?(error: error, sign: false)
         }
     }
-    
+
     func getGroupList() {
 
         guard Reachability.isConnectedToNetwork() else {

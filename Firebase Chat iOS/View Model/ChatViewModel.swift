@@ -13,7 +13,7 @@ import FirebaseStorage
     @objc optional func didUploadVideo(_ imageRef: StorageReference?,
                                        imageTask: StorageUploadTask?,
                                        videoRef: StorageReference?, videoTask: StorageUploadTask?)
-    @objc optional func getMessages(_ arrayMessage: Array<Any>)
+    @objc optional func getMessages(_ arrayMessage: [MessageClass])
     @objc optional func didSendMessage(_ message: Any)
     @objc optional func error(error: String, sign: Bool)
     @objc optional func didCheck(_ isOnline: Bool)
@@ -37,30 +37,30 @@ extension ChatViewModel: ChatVCDelegate {
             Singleton.sharedSingleton.showToast(message: "Please check your internet connection")
             return
         }
-        
+
         firebaseViewModel.firebaseCloudFirestoreManager.checkUserIsOnline(userID: userID) { result in
-            
+
             self.firebasechatViewModelDelegate?.didCheck?(result)
-            
+
         } failure: { error in
             Singleton.sharedSingleton.showToast(message: error)
         }
     }
-    
+
     func uploadVideo(_ files: [(filename: String, file: Data, type: MediaType)]) {
-        
+
         guard Reachability.isConnectedToNetwork() else {
             Singleton.sharedSingleton.showToast(message: "Please check your internet connection")
             return
         }
-        
+
         Singleton.sharedSingleton.showLoder()
         var imageTask: StorageUploadTask?
         var videoTask: StorageUploadTask?
         var imageRef: StorageReference?
         var videoRef: StorageReference?
         let group = DispatchGroup()
-        
+
         for file in files {
             group.enter()
             let fbm = firebaseViewModel.firebaseStorageManager
@@ -101,7 +101,7 @@ extension ChatViewModel: ChatVCDelegate {
 
     func uploadMediea(_ filename: String, file: Data, type: MediaType) {
 
-        guard Reachability.isConnectedToNetwork() else{
+        guard Reachability.isConnectedToNetwork() else {
             Singleton.sharedSingleton.showToast(message: "Please check your internet connection")
             return
         }

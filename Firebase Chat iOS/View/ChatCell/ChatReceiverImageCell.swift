@@ -12,7 +12,7 @@ class ChatReceiverImageCell: UITableViewCell {
     @IBOutlet weak var imgMedia: UIImageView!
     @IBOutlet weak var btnPlay: UIButton!
     @IBOutlet weak var lblDate: UILabel!
-    
+
     @IBOutlet weak var lblUserName: UILabel!
     @IBOutlet weak var viewBGColor: UIView!
     @IBOutlet weak var consUserNameHeight: NSLayoutConstraint!
