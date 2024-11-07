@@ -7,7 +7,8 @@
 
 import UIKit
 import CoreData
-import Firebase
+import FirebaseAuth
+import FirebaseCore
 import IQKeyboardManagerSwift
 
 @main
@@ -27,7 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         // MARK: Enable IQKeyboard
-        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.isEnabled = true
         // MARK: Firebase configuration
         FirebaseApp.configure()
 

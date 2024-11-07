@@ -9,7 +9,9 @@ import Foundation
 import UIKit
 import MBProgressHUD
 import Toast_Swift
-import Firebase
+import FirebaseAuth
+import FirebaseCore
+import FirebaseFirestore
 import AVKit
 
 class Singleton: NSObject {

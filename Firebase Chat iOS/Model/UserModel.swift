@@ -8,7 +8,7 @@
 import Foundation
 import FirebaseFirestore
 import UIKit
-import Firebase
+import FirebaseAuth
 
 // This is user model
 class SignupUserData: NSObject {

@@ -292,6 +292,10 @@ viewController.configure = configure
 
 public struct TLPhotosPickerConfigure {
     public var customLocalizedTitle: [String: String] = ["Camera Roll": "Camera Roll"] // Set [:] if you want use default localized title of album
+    public var tapHereToChange = "Tap here to change"
+    public var cancelTitle = "Cancel"
+    public var doneTitle = "Done"
+    public var emptyMessage = "No albums"
     public var emptyImage: UIImage? = nil
     public var usedCameraButton = true
     public var usedPrefetch = false
@@ -308,6 +312,8 @@ public struct TLPhotosPickerConfigure {
     public var preventAutomaticLimitedAccessAlert = true // newest iOS 14
     public var mediaType: PHAssetMediaType? = nil
     public var numberOfColumn = 3
+    public var minimumLineSpacing: CGFloat = 5
+    public var minimumInteritemSpacing: CGFloat = 5
     public var singleSelectedMode = false
     public var maxSelectedAssets: Int? = nil //default: inf
     public var fetchOption: PHFetchOptions? = nil //default: creationDate

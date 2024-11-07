@@ -6,9 +6,11 @@
 //
 
 import UIKit
-import Firebase
+import FirebaseAuth
+import FirebaseCore
 import TLPhotoPicker
 import CropViewController
+import FirebaseStorage
 
 // MARK: - custom delegate methos
 protocol RegisterUserVCDelegate: AnyObject {

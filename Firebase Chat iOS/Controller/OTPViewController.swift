@@ -9,7 +9,7 @@
 import UIKit
 import SVPinView
 import AuthenticationServices
-import Firebase
+import FirebaseAuth
 import FirebaseFirestore
 
 // MARK: - Custom delegate

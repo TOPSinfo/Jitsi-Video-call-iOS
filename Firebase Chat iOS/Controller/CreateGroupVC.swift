@@ -7,9 +7,11 @@
 
 import UIKit
 import FirebaseStorage
-import Firebase
+import FirebaseAuth
 import TLPhotoPicker
 import CropViewController
+import FirebaseFirestoreInternal
+import FirebaseCore
 
 protocol CreateGroupVCDelegate: AnyObject {
     func uploadImage(fileData: Data?, fileName: String, type: MediaType)

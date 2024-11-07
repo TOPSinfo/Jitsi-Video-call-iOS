@@ -11,10 +11,6 @@ import Foundation
 final class Formatter {
     weak var regexManager: RegexManager?
 
-    init(phoneNumberKit: PhoneNumberKit) {
-        self.regexManager = phoneNumberKit.regexManager
-    }
-
     init(regexManager: RegexManager) {
         self.regexManager = regexManager
     }
@@ -106,10 +102,8 @@ final class Formatter {
 }
 
 public extension PhoneNumber {
-    /**
-     Adjust national number for display by adding leading zero if needed. Used for basic formatting functions.
-     - Returns: A string representing the adjusted national number.
-     */
+    /// Adjust national number for display by adding leading zero if needed. Used for basic formatting functions.
+    /// - Returns: A string representing the adjusted national number.
     func adjustedNationalNumber() -> String {
         if self.leadingZero == true {
             return "0" + String(nationalNumber)

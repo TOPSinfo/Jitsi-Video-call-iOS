@@ -49,12 +49,13 @@ public struct TLPHAsset {
         }
     }
     
-    public func extType() -> ImageExtType {
-        var ext = ImageExtType.png
-        if let fileName = self.originalFileName, let extention = URL(string: fileName)?.pathExtension.lowercased() {
-            ext = ImageExtType(rawValue: extention) ?? .png
-        }
-        return ext
+    public func extType(defaultExt: ImageExtType = .png) -> ImageExtType {
+        guard let fileName = self.originalFileName,
+              let encodedFileName = fileName.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+              let extention = URL(string: encodedFileName)?.pathExtension.lowercased() else {
+                  return defaultExt
+              }
+        return ImageExtType(rawValue: extention) ?? defaultExt
     }
     
     @discardableResult
@@ -320,7 +321,7 @@ public struct TLPHAsset {
         }
     }
     
-    init(asset: PHAsset?) {
+    public init(asset: PHAsset?) {
         self.phAsset = asset
     }
 
@@ -355,6 +356,11 @@ public struct TLAssetsCollection {
         get {
             guard let count = self.fetchResult?.count, count > 0 else { return self.useCameraButton ? 1 : 0 }
             return count + (self.useCameraButton ? 1 : 0)
+        }
+    }
+    var assetCount: Int {
+        get {
+            return self.fetchResult?.count ?? 0
         }
     }
     

@@ -8,7 +8,7 @@
 import Foundation
 import FirebaseFirestore
 import CodableFirebase
-import Firebase
+import FirebaseAuth
 
 enum MessageStatus {
     case image

@@ -6,13 +6,15 @@
 //
 
 import UIKit
-import Firebase
+//import Firebase
 import FirebaseFirestore
 import IQKeyboardManagerSwift
 import TLPhotoPicker
 import CropViewController
 import AVKit
 import SKPhotoBrowser
+import FirebaseStorage
+import FirebaseAuth
 
 // MARK: - Custom delegate
 protocol ChatVCDelegate: AnyObject {
@@ -65,13 +67,13 @@ class ChatVC: UIViewController {
     }
 
     override func viewWillAppear(_ animated: Bool) {
-        IQKeyboardManager.shared.enable = false
+        IQKeyboardManager.shared.isEnabled = false
         IQKeyboardManager.shared.enableAutoToolbar = false
         chatviewmodel.firebasechatViewModelDelegate = self
     }
 
     override func viewWillDisappear(_ animated: Bool) {
-        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.isEnabled = true
         IQKeyboardManager.shared.enableAutoToolbar = true
     }
 

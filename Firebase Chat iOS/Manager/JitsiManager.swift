@@ -7,7 +7,7 @@
 
 import UIKit
 import JitsiMeetSDK
-import Firebase
+import FirebaseAuth
 
 class JitsiManager: NSObject {
 

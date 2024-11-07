@@ -10,7 +10,7 @@ import UIKit
 import CountryPickerView
 import PhoneNumberKit
 import IQKeyboardManagerSwift
-import Firebase
+//import Firebase
 import FirebaseFirestore
 
 // MARK: - Controller custom protocol
@@ -30,7 +30,7 @@ class AddMobileViewController: UIViewController {
     var userInfo = SignupUserData()
     var phoneNumberUserEntered: String = ""
     var phoneNumber: PhoneNumber!
-    var phonenumberKit = PhoneNumberKit()
+    var phonenumberKit = PhoneNumberUtility()
 
     // MARK: Viewmodel instancce
     private let loginViewModel: LoginViewModel = LoginViewModel()
@@ -38,7 +38,8 @@ class AddMobileViewController: UIViewController {
     // MARK: - Controller lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        IQKeyboardManager.shared.toolbarDoneBarButtonItemText = "Continue"
+        
+//        IQKeyboardManager.shared.toolbarConfiguration.doneBarButtonConfiguration!.title = "Continue"
         txtMobileNumber.addTarget(self, action: #selector(mobileNumberTextDidChange(_:)), for: .editingChanged)
         setupUI()
     }

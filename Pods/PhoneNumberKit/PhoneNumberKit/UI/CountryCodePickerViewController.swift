@@ -1,19 +1,25 @@
-
-#if canImport(UIKit)
+#if os(iOS)
 
 import UIKit
 
-@available(iOS 11.0, *)
-public protocol CountryCodePickerDelegate: class {
+public protocol CountryCodePickerDelegate: AnyObject {
     func countryCodePickerViewControllerDidPickCountry(_ country: CountryCodePickerViewController.Country)
 }
 
-@available(iOS 11.0, *)
 public class CountryCodePickerViewController: UITableViewController {
+    lazy var searchController: UISearchController = {
+        let searchController = UISearchController(searchResultsController: nil)
+        searchController.searchBar.placeholder = NSLocalizedString(
+            "PhoneNumberKit.CountryCodePicker.SearchBarPlaceholder",
+            value: "Search Country Codes",
+            comment: "Placeholder for country code search field")
 
-    lazy var searchController = UISearchController(searchResultsController: nil)
+        return searchController
+    }()
 
-    public let phoneNumberKit: PhoneNumberKit
+    public let utility: PhoneNumberUtility
+
+    public let options: CountryCodePickerOptions
 
     let commonCountryCodes: [String]
 
@@ -22,10 +28,10 @@ public class CountryCodePickerViewController: UITableViewController {
     var hasCurrent = true
     var hasCommon = true
 
-    lazy var allCountries = phoneNumberKit
+    lazy var allCountries = utility
         .allCountries()
-        .compactMap({ Country(for: $0, with: self.phoneNumberKit) })
-        .sorted(by: { $0.name.caseInsensitiveCompare($1.name) == .orderedAscending })
+        .compactMap({ Country(for: $0, with: self.utility) })
+        .sorted(by: { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending })
 
     lazy var countries: [[Country]] = {
         let countries = allCountries
@@ -43,11 +49,11 @@ public class CountryCodePickerViewController: UITableViewController {
                 return collection
             }
 
-        let popular = commonCountryCodes.compactMap({ Country(for: $0, with: phoneNumberKit) })
+        let popular = commonCountryCodes.compactMap({ Country(for: $0, with: utility) })
 
         var result: [[Country]] = []
         // Note we should maybe use the user's current carrier's country code?
-        if hasCurrent, let current = Country(for: PhoneNumberKit.defaultRegionCode(), with: phoneNumberKit) {
+        if hasCurrent, let current = Country(for: PhoneNumberUtility.defaultRegionCode(), with: utility) {
             result.append([current])
         }
         hasCommon = hasCommon && !popular.isEmpty
@@ -63,25 +69,25 @@ public class CountryCodePickerViewController: UITableViewController {
 
     lazy var cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(dismissAnimated))
 
-    /**
-     Init with a phone number kit instance. Because a PhoneNumberKit initialization is expensive you can must pass a pre-initialized instance to avoid incurring perf penalties.
-
-     - parameter phoneNumberKit: A PhoneNumberKit instance to be used by the text field.
-     - parameter commonCountryCodes: An array of country codes to display in the section below the current region section. defaults to `PhoneNumberKit.CountryCodePicker.commonCountryCodes`
-     */
+    /// Init with a phone number kit instance. Because a `PhoneNumberUtility` initialization is expensive you can must pass a pre-initialized instance to avoid incurring perf penalties.
+    ///
+    /// - parameter utility: A `PhoneNumberUtility` instance to be used by the text field.
+    /// - parameter commonCountryCodes: An array of country codes to display in the section below the current region section. defaults to `PhoneNumberUtility.CountryCodePicker.commonCountryCodes`
     public init(
-        phoneNumberKit: PhoneNumberKit,
-        commonCountryCodes: [String] = PhoneNumberKit.CountryCodePicker.commonCountryCodes)
-    {
-        self.phoneNumberKit = phoneNumberKit
+        utility: PhoneNumberUtility,
+        options: CountryCodePickerOptions?,
+        commonCountryCodes: [String] = CountryCodePicker.commonCountryCodes) {
+        self.utility = utility
         self.commonCountryCodes = commonCountryCodes
+        self.options = options ?? CountryCodePickerOptions()
         super.init(style: .grouped)
         self.commonInit()
     }
 
     required init?(coder aDecoder: NSCoder) {
-        self.phoneNumberKit = PhoneNumberKit()
-        self.commonCountryCodes = PhoneNumberKit.CountryCodePicker.commonCountryCodes
+        self.utility = PhoneNumberUtility()
+        self.commonCountryCodes = CountryCodePicker.commonCountryCodes
+        self.options = CountryCodePickerOptions()
         super.init(coder: aDecoder)
         self.commonInit()
     }
@@ -93,22 +99,38 @@ public class CountryCodePickerViewController: UITableViewController {
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.backgroundColor = .clear
+
         navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = !CountryCodePicker.alwaysShowsSearchBar
+
         definesPresentationContext = true
+
+        if let tintColor = options.tintColor {
+            view.tintColor = tintColor
+            navigationController?.navigationBar.tintColor = tintColor
+        }
+
+        if let backgroundColor = options.backgroundColor {
+            tableView.backgroundColor = backgroundColor
+        }
+
+        if let separator = options.separatorColor {
+            tableView.separatorColor = separator
+        }
     }
 
-    public override func viewWillAppear(_ animated: Bool) {
+    override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if let nav = navigationController {
             shouldRestoreNavigationBarToHidden = nav.isNavigationBarHidden
             nav.setNavigationBarHidden(false, animated: true)
         }
-        if let nav = navigationController, nav.isBeingPresented && nav.viewControllers.count == 1 {
+        if let nav = navigationController, nav.isBeingPresented, nav.viewControllers.count == 1 {
             navigationItem.setRightBarButton(cancelButton, animated: true)
         }
     }
 
-    public override func viewWillDisappear(_ animated: Bool) {
+    override public func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(shouldRestoreNavigationBarToHidden, animated: true)
     }
@@ -121,28 +143,52 @@ public class CountryCodePickerViewController: UITableViewController {
         isFiltering ? filteredCountries[indexPath.row] : countries[indexPath.section][indexPath.row]
     }
 
-    public override func numberOfSections(in tableView: UITableView) -> Int {
+    override public func numberOfSections(in tableView: UITableView) -> Int {
         isFiltering ? 1 : countries.count
     }
 
-    public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         isFiltering ? filteredCountries.count : countries[section].count
     }
 
-    public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    override public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Cell.reuseIdentifier, for: indexPath)
         let country = self.country(for: indexPath)
 
+        if let cellBackgroundColor = options.cellBackgroundColor {
+            cell.backgroundColor = cellBackgroundColor
+        }
+
         cell.textLabel?.text = country.prefix + " " + country.flag
+
+        if let textLabelColor = options.textLabelColor {
+            cell.textLabel?.textColor = textLabelColor
+        }
+
+        if let detailTextLabelColor = options.detailTextLabelColor {
+            cell.detailTextLabel?.textColor = detailTextLabelColor
+        }
+
         cell.detailTextLabel?.text = country.name
 
-        cell.textLabel?.font = .preferredFont(forTextStyle: .callout)
-        cell.detailTextLabel?.font = .preferredFont(forTextStyle: .body)
+        if let textLabelFont = options.textLabelFont {
+            cell.textLabel?.font = textLabelFont
+        }
+
+        if let detailTextLabelFont = options.detailTextLabelFont {
+            cell.detailTextLabel?.font = detailTextLabelFont
+        }
+
+        if let cellBackgroundColorSelection = options.cellBackgroundColorSelection {
+            let view = UIView()
+            view.backgroundColor = cellBackgroundColorSelection
+            cell.selectedBackgroundView = view
+        }
 
         return cell
     }
 
-    public override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    override public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if isFiltering {
             return nil
         } else if section == 0, hasCurrent {
@@ -155,7 +201,7 @@ public class CountryCodePickerViewController: UITableViewController {
         return countries[section].first?.name.first.map(String.init)
     }
 
-    public override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+    override public func sectionIndexTitles(for tableView: UITableView) -> [String]? {
         guard !isFiltering else {
             return nil
         }
@@ -173,16 +219,14 @@ public class CountryCodePickerViewController: UITableViewController {
         }
     }
 
-    public override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    override public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let country = self.country(for: indexPath)
         delegate?.countryCodePickerViewControllerDidPickCountry(country)
         tableView.deselectRow(at: indexPath, animated: true)
     }
 }
 
-@available(iOS 11.0, *)
 extension CountryCodePickerViewController: UISearchResultsUpdating {
-
     var isFiltering: Bool {
         searchController.isActive && !isSearchBarEmpty
     }
@@ -202,23 +246,20 @@ extension CountryCodePickerViewController: UISearchResultsUpdating {
     }
 }
 
-
 // MARK: Types
 
-@available(iOS 11.0, *)
 public extension CountryCodePickerViewController {
-
     struct Country {
         public var code: String
         public var flag: String
         public var name: String
         public var prefix: String
 
-        public init?(for countryCode: String, with phoneNumberKit: PhoneNumberKit) {
+        public init?(for countryCode: String, with utility: PhoneNumberUtility) {
             let flagBase = UnicodeScalar("🇦").value - UnicodeScalar("A").value
             guard
                 let name = (Locale.current as NSLocale).localizedString(forCountryCode: countryCode),
-                let prefix = phoneNumberKit.countryCode(for: countryCode)?.description
+                let prefix = utility.countryCode(for: countryCode)?.description
             else {
                 return nil
             }
@@ -239,13 +280,13 @@ public extension CountryCodePickerViewController {
     }
 
     class Cell: UITableViewCell {
-
         static let reuseIdentifier = "Cell"
 
         override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
             super.init(style: .value2, reuseIdentifier: Self.reuseIdentifier)
         }
 
+        @available(*, unavailable)
         required init?(coder: NSCoder) {
             fatalError("init(coder:) has not been implemented")
         }
