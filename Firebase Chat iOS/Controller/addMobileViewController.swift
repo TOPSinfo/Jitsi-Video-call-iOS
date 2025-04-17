@@ -66,7 +66,19 @@ class AddMobileViewController: UIViewController {
                                                               ofType: .mobile,
                                                               withFormat: .international, withPrefix: false)
         txtMobileNumber.placeholder = "\(number ?? "")"
-
+        
+        // Add toolbar on mobile number field
+        let numberToolbar = UIToolbar()
+        numberToolbar.barStyle = .default
+        numberToolbar.items = [
+        UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
+        UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(doneWithNumberPad))]
+        numberToolbar.sizeToFit()
+        txtMobileNumber.inputAccessoryView = numberToolbar
+    }
+    
+    @objc func doneWithNumberPad() {
+        txtMobileNumber.resignFirstResponder()
     }
 
     // MARK: - Button Action

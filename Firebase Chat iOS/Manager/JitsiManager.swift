@@ -17,8 +17,8 @@ class JitsiManager: NSObject {
     override init() {
         let defaultOptions = JitsiMeetConferenceOptions.fromBuilder { (builder) in
             // for JaaS replace url with https://8x8.vc
-//            builder.serverURL = URL(string: "https://jitsi.topsdemo.in")
-            builder.serverURL = URL(string: "https://meet.jit.si")
+            builder.serverURL = URL(string: "https://jitsi.topsdemo.in")
+            // builder.serverURL = URL(string: "https://meet.jit.si")
 
             // for JaaS use the obtained Jitsi JWT
             // builder.token = "SampleJWT"
@@ -28,6 +28,7 @@ class JitsiManager: NSObject {
             builder.setFeatureFlag("toolbox.enabled", withBoolean: true)
             builder.setFeatureFlag("filmstrip.enabled", withBoolean: true)
             builder.setFeatureFlag("ios.screensharing.enabled", withBoolean: true)
+            builder.setFeatureFlag("resolution", withBoolean: true)
 //            builder.setFeatureFlag("ios.recording.enabled", withBoolean: true)
         }
         JitsiMeet.sharedInstance().defaultConferenceOptions = defaultOptions
