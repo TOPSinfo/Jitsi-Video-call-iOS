@@ -20,6 +20,8 @@ class JitsiManager: NSObject {
             builder.serverURL = URL(string: "https://jitsi.topsdemo.in")
             // builder.serverURL = URL(string: "https://meet.jit.si")
 
+            // Old Flags
+            /*
             // for JaaS use the obtained Jitsi JWT
             // builder.token = "SampleJWT"
             builder.welcomePageEnabled = false
@@ -30,6 +32,54 @@ class JitsiManager: NSObject {
             builder.setFeatureFlag("ios.screensharing.enabled", withBoolean: true)
             builder.setFeatureFlag("resolution", withBoolean: true)
 //            builder.setFeatureFlag("ios.recording.enabled", withBoolean: true)
+             */
+            
+            // New Flags
+            builder.serverURL = URL(string: "https://jitsi.topsdemo.in/")
+            builder.setFeatureFlag("toolbox.enabled", withBoolean: true)
+            builder.setFeatureFlag("filmstrip.enabled", withBoolean: false)
+            builder.setFeatureFlag("ios.screensharing.enabled", withBoolean: false)
+            builder.setFeatureFlag("add-people.enabled", withBoolean: false)
+            builder.setFeatureFlag("invite.enabled", withBoolean: false)
+            builder.setFeatureFlag("chat.enabled", withBoolean: false)
+            builder.setFeatureFlag("kick-out.enabled", withBoolean: false)
+            builder.setFeatureFlag("live-streaming.enabled", withBoolean: false)
+            builder.setFeatureFlag("meeting-password.enabled", withBoolean: false)
+            builder.setFeatureFlag("calendar.enabled", withBoolean: false)
+            builder.setFeatureFlag("lobby-mode.enabled", withBoolean: false)
+            builder.setFeatureFlag("help-view.enabled", withBoolean: false)
+            builder.setFeatureFlag("close-captions.enabled", withBoolean: false)
+            builder.setFeatureFlag("call-integration.enabled", withBoolean: false)
+            builder.setFeatureFlag("close-captions.enabled", withBoolean: false)
+            builder.setFeatureFlag("toolbox.alwaysVisible", withBoolean: false)
+            builder.setFeatureFlag("help.enabled", withBoolean: false)
+            builder.setFeatureFlag("raise-hand.enabled", withBoolean: false)
+            builder.setFeatureFlag("meeting-name.enabled", withBoolean: false)
+            builder.setFeatureFlag("ios.screensharing.enabled", withBoolean: false)
+            builder.setFeatureFlag("prejoinpage.enabled", withBoolean: false)
+            builder.setFeatureFlag("participants.enabled", withBoolean: false)
+            // builder.setFeatureFlag("resolution", withBoolean: true)
+            builder.setFeatureFlag("notifications.enabled", withBoolean: false)
+            
+            builder.setFeatureFlag("pip.enabled", withValue: false) // Enable PiP mode
+            builder.setFeatureFlag("tile-view.enabled", withValue: true) // Ensure tile view is enabled
+            // Ensure local video is visible
+            builder.setFeatureFlag("filmstrip.enabled", withValue: true) // Show local video as PiP
+            
+            // Tool Box
+            builder.setFeatureFlag("overflow-menu.enabled", withBoolean: false)
+            builder.setFeatureFlag("car-mode.enabled", withValue: false) // Car mode in overflow menu
+            builder.setFeatureFlag("tile-view.enabled", withValue: false) // Tile view in overflow menu
+            // builder.setFeatureFlag("filmstrip.enabled", withValue: false)
+            builder.setFeatureFlag("breakout-rooms.enabled", withValue: false) // Break-out in overflow menu
+            builder.setFeatureFlag("low-bandwidth.enabled", withValue: false) // Low-bandwidth in overflow menu
+            builder.setFeatureFlag("stats.enabled", withValue: false) // overflow menu
+            builder.setFeatureFlag("settings.enabled", withValue: false) // Settings in overflow menu
+            builder.setFeatureFlag("participants.enabled", withValue: false) // overlow menu
+            builder.setFeatureFlag("video-share.enabled", withValue: false) // Video share in overflow menu
+            builder.setFeatureFlag("security-options.enabled", withValue: false) // Security in overflow menu
+            builder.setFeatureFlag("recording.enabled", withBoolean: false) // Recording in overflow menu
+            builder.setFeatureFlag("ios.recording.enabled", withBoolean: false) // Recording in overflow menu
         }
         JitsiMeet.sharedInstance().defaultConferenceOptions = defaultOptions
     }
@@ -51,7 +101,7 @@ class JitsiManager: NSObject {
             // Settings for audio and video
             // builder.audioMuted = true
 //             builder.videoMuted = true
-            builder.welcomePageEnabled = false
+            // builder.welcomePageEnabled = false
 //            builder.setFeatureFlag("meeting-password.enabled", withBoolean: false)
 //            builder.setFeatureFlag("add-people.enabled", withBoolean: false)
 //            builder.setFeatureFlag("invite.enabled", withBoolean: false)

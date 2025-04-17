@@ -1,0 +1,3 @@
+Pods/JitsiWebRTC/WebRTC.xcframework/macos-arm64_x86_64/dSYMs/WebRTC.dSYM/Contents/Resources/DWARF/WebRTC filter=lfs diff=lfs merge=lfs -text
+Pods/JitsiWebRTC/WebRTC.xcframework/ios-arm64/dSYMs/WebRTC.dSYM/Contents/Resources/DWARF/WebRTC filter=lfs diff=lfs merge=lfs -text
+Pods/JitsiWebRTC/WebRTC.xcframework/ios-arm64_x86_64-simulator/dSYMs/WebRTC.dSYM/Contents/Resources/DWARF/WebRTC filter=lfs diff=lfs merge=lfs -text

@@ -20,17 +20,23 @@ variant_for_slice()
   "JitsiMeetSDK.xcframework/ios-arm64")
     echo ""
     ;;
-  "JitsiMeetSDK.xcframework/ios-x86_64-simulator")
+  "JitsiMeetSDK.xcframework/ios-arm64_x86_64-simulator")
     echo "simulator"
     ;;
-  "WebRTC.xcframework/ios-arm64")
+  "hermes.xcframework/ios-arm64")
     echo ""
     ;;
-  "WebRTC.xcframework/ios-x86_64-simulator")
+  "hermes.xcframework/ios-arm64_x86_64-maccatalyst")
+    echo "maccatalyst"
+    ;;
+  "hermes.xcframework/ios-arm64_x86_64-simulator")
     echo "simulator"
     ;;
-  "WebRTC.xcframework/macos-x86_64")
+  "hermes.xcframework/xros-arm64")
     echo ""
+    ;;
+  "hermes.xcframework/xros-arm64_x86_64-simulator")
+    echo "simulator"
     ;;
   esac
 }
@@ -41,17 +47,23 @@ archs_for_slice()
   "JitsiMeetSDK.xcframework/ios-arm64")
     echo "arm64"
     ;;
-  "JitsiMeetSDK.xcframework/ios-x86_64-simulator")
-    echo "x86_64"
+  "JitsiMeetSDK.xcframework/ios-arm64_x86_64-simulator")
+    echo "arm64 x86_64"
     ;;
-  "WebRTC.xcframework/ios-arm64")
+  "hermes.xcframework/ios-arm64")
     echo "arm64"
     ;;
-  "WebRTC.xcframework/ios-x86_64-simulator")
-    echo "x86_64"
+  "hermes.xcframework/ios-arm64_x86_64-maccatalyst")
+    echo "arm64 x86_64"
     ;;
-  "WebRTC.xcframework/macos-x86_64")
-    echo "x86_64"
+  "hermes.xcframework/ios-arm64_x86_64-simulator")
+    echo "arm64 x86_64"
+    ;;
+  "hermes.xcframework/xros-arm64")
+    echo "arm64"
+    ;;
+  "hermes.xcframework/xros-arm64_x86_64-simulator")
+    echo "arm64 x86_64"
     ;;
   esac
 }
@@ -135,6 +147,6 @@ install_xcframework() {
   echo "Copied $source to $destination"
 }
 
-install_xcframework "${PODS_ROOT}/JitsiMeetSDK/Frameworks/JitsiMeetSDK.xcframework" "JitsiMeetSDK" "framework" "ios-arm64" "ios-x86_64-simulator"
-install_xcframework "${PODS_ROOT}/JitsiMeetSDK/Frameworks/WebRTC.xcframework" "JitsiMeetSDK" "framework" "ios-arm64" "ios-x86_64-simulator"
+install_xcframework "${PODS_ROOT}/JitsiMeetSDK/Frameworks/JitsiMeetSDK.xcframework" "JitsiMeetSDK" "framework" "ios-arm64" "ios-arm64_x86_64-simulator"
+install_xcframework "${PODS_ROOT}/JitsiMeetSDK/Frameworks/hermes.xcframework" "JitsiMeetSDK" "framework" "ios-arm64" "ios-arm64_x86_64-maccatalyst" "ios-arm64_x86_64-simulator"
 

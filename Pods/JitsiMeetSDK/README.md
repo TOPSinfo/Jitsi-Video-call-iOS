@@ -1,14 +1,9 @@
 # Jitsi Meet iOS SDK releases
 
 This repository contains the binaries for the **[Jitsi Meet]() iOS SDK**. Each
-release is tagged in this repository and is composed of 2 frameworks:
+release is tagged in this repository and is composed of following framework:
 
-- JitsiMeet.framework
-- WebRTC.framework
-
-It is **strongly advised** to use the provided WebRTC framework and not
-replace it with any other build, since the provided one is known to work
-with the SDK.
+- JitsiMeetSDK.xcframework
 
 ## Using the SDK
 
@@ -17,7 +12,7 @@ do so, add the `JitsiMeetSDK` dependency to your existing `Podfile` or create
 a new one following this example:
 
 ```
-platform :ios, '11.0'
+platform :ios, '15.1'
 
 workspace 'JitsiMeetSDKTest.xcworkspace'
 
@@ -25,14 +20,6 @@ target 'JitsiMeetSDKTest' do
   project 'JitsiMeetSDKTest.xcodeproj'
 
   pod 'JitsiMeetSDK'
-end
-
-post_install do |installer|
-  installer.pods_project.targets.each do |target|
-    target.build_configurations.each do |config|
-      config.build_settings['ENABLE_BITCODE'] = 'NO'
-    end
-  end
 end
 ```
 
@@ -64,3 +51,7 @@ Please report all issues related to this SDK to the [Jitsi Meet]() repository.
 
 [CocoaPods]: https://cocoapods.org
 [Jitsi Meet]: https://github.com/jitsi/jitsi-meet
+
+## Release notes
+Latest release notes:
+https://github.com/jitsi/jitsi-meet-release-notes/blob/master/CHANGELOG-MOBILE-SDKS.md#ios

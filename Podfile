@@ -19,12 +19,12 @@ pod 'FirebaseAnalytics'
 pod 'IQKeyboardManagerSwift'
 pod 'MBProgressHUD'
 pod 'Toast-Swift'
-pod "TLPhotoPicker", '~> 2.1'
+pod "TLPhotoPicker"
 pod 'ICGVideoTrimmer'
 pod 'CropViewController'
 pod 'SKPhotoBrowser'
-pod 'Nuke', '~> 10.4'
-pod 'JitsiMeetSDK', '~> 3.10.4'
+pod 'Nuke'
+pod 'JitsiMeetSDK'
 
   target 'Firebase Chat iOSTests' do
     inherit! :search_paths
